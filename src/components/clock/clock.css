@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.clock__wrapper.invisible {
+    display: none;
+}
+
+.clock__wrapper {
+    position: fixed;
+    transition: opacity 2s;
+    z-index: 1;
+}
+
+.clock__wrapper.one {
+    top: 1em;
+    left: 1em;
+}
+
+.clock__wrapper.two {
+    top: 1em;
+    right: 1em;
+}
+
+.clock__wrapper.three {
+    bottom: 1em;
+    right: 1em;
+}
+
+.clock__wrapper.four {
+    bottom: 1em;
+    left: 1em;
+}
+
+.clock {
+    font-family: 'PT Sans', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 1em;
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#time {
+    font-size: 3em;
+}
+
+#time__period {
+    font-size: 1.7em;
+}
+
+#date {
+    font-size: 1.1em;
+}
+
+#week-day,
+#year-date,
+#year {
+    padding-left: .2ch;
+    padding-right: .2ch;
+}

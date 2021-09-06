@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
+
+.search__wrapper {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+
+.search__wrapper.invisible {
+    display: none;
+}
+
+.search_bar__wrapper {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    transition: opacity 1.3s;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+}
+
+.search_bar__wrapper.one {
+    top: calc(100% / 20);
+}
+
+.search_bar__wrapper.two {
+    top: calc(100% / 12 * 2);
+}
+
+.search_bar__wrapper.three {
+    top: calc(100% / 12 * 7);
+}
+
+.search_bar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #fff;
+    border-radius: 20px;
+    border: white 2px solid;
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 37em;
+    min-height: 3em;
+    border-radius: 40px;
+    box-shadow: 0 0 4em rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.search_bar__input {
+    font-size: 1.3em;
+    color: inherit;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 40px;
+    width: 80%;
+    min-height: inherit;
+    padding-left: 1em;
+}
+
+.search_bar__icon {
+    transform: scale(1.4);
+    padding-left: 1.5em;
+    cursor: pointer;
+}
+
+.search_bar__input::placeholder {
+    color: rgb(241, 241, 241);
+}
+
+.search_bar__input:focus {
+    outline: none;
+}
