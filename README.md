@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# Mytab
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**I'm currently rewriting the whole thing in React in a MERN style of things. MyTab may be not a browser extension anymore but just a website itself. Wait for updates!**
 
-## Available Scripts
+Custom Tab Page, made for weebs and osu! players!  
+  
+Over 60+ pictures picked out by hand!
 
-In the project directory, you can run:
+## How to install
 
-### `npm start`
+1. Install [Python 3.7+](https://www.python.org/downloads/release/python-370/) with pip
+2. Download this repository by downloading the zip file or using ``git clone https://github.com/Ari24-cb24/mytab.git``
+3. Run ``python3 setup.py`` to install required packages
+4. Start the server with ``python3 server.py`` in the server folder
+5. (Optional) Create a shortcut in your Startup folder, which links to server.py.
+6. Open ``localhost:4444`` in your browser to access the site
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Adding own images*
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. Navigate to ``server/static/images``
+2. Add your image
 
-### `npm test`
+## Adding external URLs as images*
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Navigate to ``server/static/resources``
+2. Open ``urls.json``
+3. Add a new image
 
-### `npm run build`
+## Moving widgets around*
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Navigate to ``server/static/resources``
+2. Open ``settings.json``
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You will see 2 keys (currently only the time widget and the search bar),
+  
+``time`` and ``search-bar``  
+  
+the corresponding number indicates where the widget belongs to.  
+Scroll down to get more information, which number does what,
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+\* <i> Will be implemented in the settings page </i>
 
-### `npm run eject`
+## Widget list
+- <a href="#Search-bar"> Search bar </a>
+- <a href="#Digital-time"> Digital time </a>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<div id="Search-bar">
+  <h2> Search bar </h2>
+  
+  - Default Position: Top-mid (2)
+  - Positions:
+    1. (1) Top
+    2. (2) Top mid
+    3. (3) bottom
+  
+</div>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<div id="Digital-time">
+  <h2> Digital time </h2>
+  
+  - Default Position: Left lower corner (4)
+  - Positions:
+    1. (1) Left upper corner
+    2. (2) Right upper corner
+    3. (3) Right lower corner
+    4. (4) Left lower corner
+  
+</div>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Todo list
 
-## Learn More
+~~- Make Searchbar padding with percents not with fixed size~~  
+- Create pythonw application
+- Add a "block image" feature in the control panel
+- Add Spotify Widget
+- Add Music Visualizer
+- Add Background Changer every x seconds
+- Setup a Webserver
+- Custom Playlists
+  - Galery
+- Adding an email widget
+- Design settings page
+  - Adding external URLs as images
+  - Adding image files
+  - Adding new widgets
+  - Moving widgets around
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Previews
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![prev-1](https://i.imgur.com/hzJJox4.png)
+![prev-2](https://i.imgur.com/sMK2wqJ.png)
+![prev-3](https://i.imgur.com/ePqod2K.png)
