@@ -1,6 +1,6 @@
-# Mytab
+# MyAnimeTab
 
-**I'm currently rewriting the whole thing in React in a MERN style of things. MyTab may be not a browser extension anymore but just a website itself. Wait for updates!**
+**I'm currently rewriting the whole thing in React in a MERN style of things. MyAnimeTab may be not a browser extension anymore but just a website itself. Wait for updates!**
 
 Custom Tab Page, made for weebs and osu! players!  
   
@@ -9,7 +9,7 @@ Over 60+ pictures picked out by hand!
 ## How to install
 
 1. Install [Python 3.7+](https://www.python.org/downloads/release/python-370/) with pip
-2. Download this repository by downloading the zip file or using ``git clone https://github.com/Ari24-cb24/mytab.git``
+2. Download this repository by downloading the zip file or using ``git clone https://github.com/Ari24-cb24/myanimetab.git``
 3. Run ``python3 setup.py`` to install required packages
 4. Start the server with ``python3 server.py`` in the server folder
 5. (Optional) Create a shortcut in your Startup folder, which links to server.py.
