@@ -13,9 +13,11 @@ class ControlBar extends React.Component {
         super(props);
 
         this.collapse = this.collapse.bind(this);
+        this.lockImage = this.lockImage.bind(this);
 
         this.state = {
-            collapsed: false
+            collapsed: false,
+            locked: false
         };
     }
 
@@ -31,6 +33,12 @@ class ControlBar extends React.Component {
         });
     }
 
+    lockImage(e) {
+        this.setState({
+            locked: !this.state.locked
+        });
+    }
+
     componentDidMount() {
         EventHandler.listenEvent("blurall", "controlbar", this.onBlurTrigger.bind(this));
     }
@@ -40,20 +48,24 @@ class ControlBar extends React.Component {
             <div className="control_menu__wrapper">
                 <div className={`control_menu ${this.state.collapsed ? 'collapsed' : ''}`}>
                     <div className="settings__wrapper control_menu_item__wrapper">
-                        <div className="settings">
+                        <div className="settings" onClick={
+                            EventHandler.triggerEvent("settings_window_state", {opened: true})
+                        }>
                             <SettingsIcon />
                         </div>
                     </div>
 
                     <div className="next_image__wrapper control_menu_item__wrapper">
-                        <div className="next_image">
+                        <div className="next_image" onClick={
+                            EventHandler.triggerEvent("skip_image")
+                        }>
                             <SkipNextIcon />
                         </div>
                     </div>
 
                     <div className="lock_image__wrapper control_menu_item__wrapper">
-                        <div className="lock_image">
-                            <LockOpenIcon />
+                        <div className="lock_image" onClick={this.lockImage}>
+                            { this.state.locked ? <LockIcon /> : <LockOpenIcon /> }
                         </div>
                     </div>
 
