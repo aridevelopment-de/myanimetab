@@ -14,7 +14,7 @@ let savedOptions = {
         "clock": true,
         "clock.time_zone": "Auto",
         "clock.time_format": "24h",
-        "clock.auto_hide": 1,
+        "clock.auto_hide": 0,
         "clock.position": "four",
         "switch_wallpaper": false,
         "switch_wallpaper.when_switch": "Only on Page Visit",

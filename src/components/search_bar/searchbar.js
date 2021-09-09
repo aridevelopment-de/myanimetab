@@ -1,9 +1,11 @@
 import React from 'react';
 import SearchSuggestions from './searchsuggestions';
-import SearchEngine from '../../utils/searchengine';
-import SuggestionCaller from '../../utils/searchsuggestioncaller';
 import SearchIcon from '@material-ui/icons/Search';
 import './searchbar.css';
+import SearchEngine from '../../utils/searchengine';
+import SuggestionCaller from '../../utils/searchsuggestioncaller';
+import EventHandler from '../../utils/eventhandler';
+import Settings from '../../utils/settings';
 
 export default class SearchBar extends React.Component {
     constructor(props) {
@@ -16,11 +18,22 @@ export default class SearchBar extends React.Component {
         this.onInputFocus = this.onInputFocus.bind(this);
 
         this.state = {
-            showing: true,
+            showing: props.showing,
             focused: true,
             content: "",
-            suggestions: ["Apfel", "Arzt", "Abeth", "Armanda", "Arol"]
+            opacity: props.showing ? 1 : 0,
+            suggestions: []
         };
+    }
+
+    onBlurTrigger(data) {
+        this.setState({
+            opacity: data.blur ? Settings.getUserSetting("search_bar.auto_hide") : 1
+        });
+    }
+
+    componentDidMount() {
+        EventHandler.listenEvent("blurall", "searchbar", this.onBlurTrigger.bind(this))
     }
 
     onIconClick(e) {
@@ -61,7 +74,8 @@ export default class SearchBar extends React.Component {
 
     render() {
         return (
-            <div className={`search__wrapper ${this.state.showing ? 'visible' : 'invisible'}`}>
+            <div className={`search__wrapper ${this.state.showing ? 'visible' : 'invisible'}`}
+                 style={{opacity: this.state.opacity}}>
                 <div className={`search_bar__wrapper ${this.props.position}`}>
                     <div className="search_bar">
                         <input className="search_bar__input" onKeyUp={this.onKeyUp} onInput={this.onInputChange} onBlur={this.onInputBlur} onFocus={this.onInputFocus} value={this.state.content} type="text" spellCheck="false" placeholder="Search" tabIndex="0" autoFocus />

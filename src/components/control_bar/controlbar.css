@@ -1,0 +1,52 @@
+.control_menu__wrapper {
+    position: absolute;
+    top: 0.7em;
+    right: 0.7em;
+    left: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.control_menu__wrapper.one {
+    justify-content: flex-start;
+}
+
+.control_menu__wrapper.two {
+    justify-content: flex-end;
+}
+
+.control_menu {
+    padding: 0.7em;
+    border-radius: 20px;
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: hidden;
+    transition: transform 1s, opacity 2s;
+    z-index: 2;
+    transform: translateY(0%);
+}
+
+.control_menu.collapsed {
+    transform: translateY(-80%);
+}
+
+.control_menu_item__wrapper:not(.expand_less__wrapper) {
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+}
+
+.expand_less__wrapper {
+    padding-top: 0.25em;
+}
+
+.control_menu_item__wrapper div svg {
+    color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.5);
+    transition: color 300ms;
+    cursor: pointer;
+}
+
+.control_menu_item__wrapper div svg:hover {
+    color: rgba(255, 255, 255, 0.8);
+}

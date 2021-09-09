@@ -1,18 +1,29 @@
 import React from "react";
+import EventHandler from "../../utils/eventhandler";
 import TimeUtils from "../../utils/timeutils";
+import Settings from "../../utils/settings";
 import './clock.css'
 
 class Clock extends React.Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
-            showing: true,
+            showing: props.showing,
+            opacity: props.showing ? 1 : 0,
             currentTime: new Date()
         };
     }
 
+    onBlurTrigger(data) {
+        this.setState({
+            opacity: data.blur ? Settings.getUserSetting("clock.auto_hide") : 1
+        });
+    }
+
     componentDidMount() {
+        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger.bind(this));
+
         setInterval(() => {
             let currentDate = new Date();
             let currentFmtDate = TimeUtils.convertTimeToClockFormat(currentDate);
@@ -30,7 +41,8 @@ class Clock extends React.Component {
         let currentFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime);
 
         return (
-            <div className={`clock__wrapper ${this.props.position} ${this.state.showing ? 'visible' : 'invisible'}`}>
+            <div className={`clock__wrapper ${this.props.position} ${this.state.showing ? 'visible' : 'invisible'}`}
+                 style={{opacity: this.state.opacity}}>
                 <div className="clock">
                     <div className="time__wrapper">
                         <span id="time"> {currentFmtDate.time} </span>

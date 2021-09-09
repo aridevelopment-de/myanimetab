@@ -11,6 +11,10 @@ const TimeUtils = {
             yearDate: dateData[1] + ", ",
             year: dateData[2]
         };
+    },
+
+    getSeconds(date) {
+        return date.getTime() / 1000;
     }
 };
 
