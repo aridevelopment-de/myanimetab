@@ -1,7 +1,29 @@
+::-webkit-scrollbar {
+    width: 4px;
+    margin: 5px;
+}
+
+::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:hover {
+    border-radius: 1.5px;
+    background-color: rgba(145, 145, 145, 1);
+}
+
 .App {
     background-repeat: no-repeat;
     background-position: center center !important;
     background-attachment: fixed;
     background-size: cover;
     opacity: 1;  
+}
+
+.abs-fit {
+    position: absolute;
+    inset: 0;
+}
+
+.material-icons {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

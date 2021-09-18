@@ -3,6 +3,7 @@ import React from 'react';
 import SearchBar from './components/search_bar/searchbar';
 import Clock from './components/clock/clock';
 import ControlBar from "./components/control_bar/controlbar";
+import SettingsComponent from "./components/settings/SettingsComponent";
 import Settings from './utils/settings';
 import TimeUtils from './utils/timeutils';
 import EventHandler from './utils/eventhandler';
@@ -58,6 +59,7 @@ class App extends React.Component {
                    showing={Settings.getUserSetting("search_bar")}/>
         <Clock position={Settings.getUserSetting("clock.position")}
                showing={Settings.getUserSetting("clock")}/>
+        <SettingsComponent />
       </div>
     );
   }

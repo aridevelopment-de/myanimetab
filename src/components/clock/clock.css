@@ -41,6 +41,7 @@
 
 #time {
     font-size: 3em;
+    margin-right: -8px;
 }
 
 #time__period {

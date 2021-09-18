@@ -29,7 +29,7 @@ class ControlBar extends React.Component {
 
     onBlurTrigger(data) {
         this.setState({
-            collapsed: data.blur
+            collapsed: true
         });
     }
 
@@ -48,17 +48,17 @@ class ControlBar extends React.Component {
             <div className="control_menu__wrapper">
                 <div className={`control_menu ${this.state.collapsed ? 'collapsed' : ''}`}>
                     <div className="settings__wrapper control_menu_item__wrapper">
-                        <div className="settings" onClick={
+                        <div className="settings" onClick={ function() {
                             EventHandler.triggerEvent("settings_window_state", {opened: true})
-                        }>
+                        }}>
                             <SettingsIcon />
                         </div>
                     </div>
 
                     <div className="next_image__wrapper control_menu_item__wrapper">
-                        <div className="next_image" onClick={
+                        <div className="next_image" onClick={ function() {
                             EventHandler.triggerEvent("skip_image")
-                        }>
+                        }}>
                             <SkipNextIcon />
                         </div>
                     </div>
