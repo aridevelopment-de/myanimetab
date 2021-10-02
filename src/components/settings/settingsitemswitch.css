@@ -1,0 +1,31 @@
+/* Custom on/off switcher */
+.settings_switch {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 12px;
+    width: 32px;
+    cursor: pointer;
+    user-select: none;
+    background-color: #CECECE;
+    border-color: #CECECE;
+    transition: background-color 200ms, border-color 200ms;
+}
+
+.settings_switch:after {
+    display: block;
+    content: "";
+    background-color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: transform 200ms;
+}
+
+.settings_switch.checked {
+    background-color: #2F54EB;
+    border-color: #2F54EB;
+}
+
+.settings_switch.checked:after {
+    transform: translateX(100%);
+}

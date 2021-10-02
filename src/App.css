@@ -16,7 +16,7 @@
     opacity: 1;  
 }
 
-.abs-fit {
+.abs_fit {
     position: absolute;
     inset: 0;
 }

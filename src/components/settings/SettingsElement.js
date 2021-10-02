@@ -1,4 +1,6 @@
 import React from "react";
+import SettingsItemSwitch from './SettingsItemSwitch';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SETTINGS_DESCRIPTOR from "../../utils/settingsdescriptor";
 
 class SettingsElement extends React.Component {
@@ -12,9 +14,7 @@ class SettingsElement extends React.Component {
                 <div className="settings_item__title">
                     <p className="settings_item__title_text"> { this.props.descriptor.name } </p>
                     <div className="settings_item__title_options">
-                        <div className="settings_switch checked">
-
-                        </div>
+                        <SettingsItemSwitch />
                     </div>
                 </div>
                 <div className="settings_item__content">
@@ -24,7 +24,7 @@ class SettingsElement extends React.Component {
                             <div className="settings_select">
                                 <div className="settings_select__current_item">
                                     <span className="settings_select__current_item__text">5 s</span>
-                                    <span className="material_icons settings_select__current_item__icon"> arrow_drop_down </span>
+                                    <ArrowDropDownIcon className="settings_select__current_item__icon" />
                                 </div>
                                 <div className="settings_select__options" style={{ display: "none" }}>
                                     <div className="settings_select__options_item"> 5 s </div>
