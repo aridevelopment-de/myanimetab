@@ -1,6 +1,6 @@
 # MyAnimeTab
 
-**I'm currently rewriting the whole thing in React in a MERN style of things. MyAnimeTab may be not a browser extension anymore but just a website itself. Wait for updates!**
+**I'm currently rewriting the whole thing in React. Progress so far: About 90% finished**
 
 Custom Tab Page, made for weebs and osu! players!  
   
