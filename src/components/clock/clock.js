@@ -11,7 +11,8 @@ class Clock extends React.Component {
         this.state = {
             showing: props.showing,
             opacity: props.showing ? 1 : 0,
-            currentTime: new Date()
+            currentTime: new Date(),
+            intervalId: 0
         };
     }
 
@@ -24,17 +25,23 @@ class Clock extends React.Component {
     componentDidMount() {
         EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger.bind(this));
 
-        setInterval(() => {
-            let currentDate = new Date();
-            let currentFmtDate = TimeUtils.convertTimeToClockFormat(currentDate);
-            let lastFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime);
+        this.setState({
+            intervalId: setInterval(() => {
+                let currentDate = new Date();
+                let currentFmtDate = TimeUtils.convertTimeToClockFormat(currentDate);
+                let lastFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime);
 
-            if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
-                this.setState({
-                    currentTime: currentDate
-                });
-            }
-        }, 1000);
+                if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
+                    this.setState({
+                        currentTime: currentDate
+                    });
+                }
+            }, 1000)
+        })
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.intervalId);
     }
 
     render() {

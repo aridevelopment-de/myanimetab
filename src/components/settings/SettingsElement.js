@@ -1,41 +1,52 @@
 import React from "react";
 import SettingsItemSwitch from './SettingsItemSwitch';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import SettingsFormItem from "./SettingsFormItem";
+import Settings from "../../utils/settings";
+import EventHandler from "../../utils/eventhandler";
 import SETTINGS_DESCRIPTOR from "../../utils/settingsdescriptor";
 
 class SettingsElement extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            disabled: !Settings.getUserSetting(props.descriptorId)
+        };
+
+        this.getDisabled = this.getDisabled.bind(this);
+    }
+
+    componentDidMount() {
+        EventHandler.listenEvent(this.props.descriptorId + "_state", this.props.descriptorId, data => {
+            this.setState({
+                disabled: data.checked
+            });
+        });
+    }
+
+    getDisabled() {
+        if (Settings.getUserSetting(this.props.descriptorId) === undefined) {
+            return '';
+        }
+
+        return this.state.disabled === true ? 'disabled' : ''
     }
 
     render() {
         return (
-            <div className="settings_item">
+            <div className={`settings_item ${this.getDisabled()}`}>
                 <div className="settings_item__title">
                     <p className="settings_item__title_text"> { this.props.descriptor.name } </p>
                     <div className="settings_item__title_options">
-                        <SettingsItemSwitch />
+                        <SettingsItemSwitch eventKey={this.props.descriptorId} />
                     </div>
                 </div>
                 <div className="settings_item__content">
-                    <div className="settings_item__form_item">
-                        <p className="settings_item__form_item_label"> Time Lapse </p>
-                        <div className="settings_item__form_item_content">
-                            <div className="settings_select">
-                                <div className="settings_select__current_item">
-                                    <span className="settings_select__current_item__text">5 s</span>
-                                    <ArrowDropDownIcon className="settings_select__current_item__icon" />
-                                </div>
-                                <div className="settings_select__options" style={{ display: "none" }}>
-                                    <div className="settings_select__options_item"> 5 s </div>
-                                    <div className="settings_select__options_item"> 10 s </div>
-                                    <div className="settings_select__options_item"> 30 s </div>
-                                    <div className="settings_select__options_item"> 1 min </div>
-                                    <div className="settings_select__options_item"> 5 min </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {
+                        this.props.descriptor.content.map(formBody => 
+                            <SettingsFormItem type={formBody.type} data={formBody.values} label={formBody.name} descriptorId={this.props.descriptorId + "." + formBody.id} key={this.props.descriptorId + "." + formBody.id}/>
+                        )
+                    }
                 </div>
             </div>
         )

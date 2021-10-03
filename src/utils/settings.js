@@ -44,11 +44,11 @@ const Settings = {
     },
     set: function(key, value) {
         savedOptions[key] = value;
-        this.saveSettings();
+        // this.saveSettings();
     },
     setUserSetting: function(key, value) {
         savedOptions["user_settings"][key] = value;
-        this.saveSettings();
+        // this.saveSettings();
     }
 }
 

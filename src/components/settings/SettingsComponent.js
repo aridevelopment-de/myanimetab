@@ -44,8 +44,8 @@ class SettingsComponent extends React.Component {
                                     <div className="settings__scroller_content">
                                         <div className="settings_list">
                                             {
-                                                SETTINGS_DESCRIPTOR.map(descriptor => 
-                                                    <SettingsElement descriptor={ descriptor } descriptorId = { descriptor.id } key={ descriptor.id} />
+                                                SETTINGS_DESCRIPTOR.SETTINGS_DESCRIPTOR.map(descriptor => 
+                                                    <SettingsElement descriptor={ descriptor } descriptorId = { descriptor.id } key={ descriptor.id } />
                                                 )
                                             }
                                         </div>
