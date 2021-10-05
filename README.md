@@ -70,21 +70,7 @@ Scroll down to get more information, which number does what,
 
 ## Todo list
 
-~~- Make Searchbar padding with percents not with fixed size~~  
-- Create pythonw application
-- Add a "block image" feature in the control panel
-- Add Spotify Widget
-- Add Music Visualizer
-- Add Background Changer every x seconds
-- Setup a Webserver
-- Custom Playlists
-  - Galery
-- Adding an email widget
-- Design settings page
-  - Adding external URLs as images
-  - Adding image files
-  - Adding new widgets
-  - Moving widgets around
+<i> See [Todo.md](https://github.com/Ari24-cb24/myanimetab/blob/master/TODO.md) for more information </i>
 
 
 ### Previews
