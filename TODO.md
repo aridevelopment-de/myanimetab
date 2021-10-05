@@ -24,6 +24,9 @@
         - [ ] Use google/... calendar or own calendar
         - [ ] Add appointments
         - [ ] Show appointments to day
+    + [ ] Anime2you widget?
+        - [ ] Complete Anime/Manga/Lightnovel Feed
+        - [ ] Personal feed
     + [ ] Email Widget?
         - [ ] Show inbox
         - [ ] Send emails
