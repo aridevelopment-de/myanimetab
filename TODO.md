@@ -3,10 +3,33 @@
 <i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i>
 
 * [ ] Reimplement everything in react
-* [ ] Widget list
-    + [ ] Email Widget
+* [ ] Widgets
+    + [ ] Clock Widget
+        - [ ] Add alarm clock
     + [ ] Spotify Widget
+        - [ ] Control timestamp
+        - [ ] Pause/Skip song
+        - [ ] Choose playlist
+        - [ ] Link the current spotify song to specific images
     + [ ] Weather Widget
+        - [ ] Set current location
+        - [ ] See forecast up to 7 days
+    + [ ] Notes widget
+        - [ ] Add notes
+    + [ ] Todo Widget
+        - [ ] Add Todo elements
+        - [ ] Check Todo elements
+        - [ ] Remove them
+    + [ ] Calendar widget
+        - [ ] Use google/... calendar or own calendar
+        - [ ] Add appointments
+        - [ ] Show appointments to day
+    + [ ] Email Widget?
+        - [ ] Show inbox
+        - [ ] Send emails
+    + [ ] Stock Widget?
+        - [ ] Show current price for bitcoin and other stocks
+        - [ ] Show graph 
 * [ ] Image Playlists
     + [ ] Add Image via upload?
     + [ ] Add image via url
