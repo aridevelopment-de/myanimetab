@@ -3,70 +3,28 @@
 **I'm currently rewriting the whole thing in React. Progress so far: About 90% finished**
 
 Custom Tab Page, made for weebs and osu! players!  
+Inspired by https://mytab.me/ (but I added my own features)  
   
 Over 60+ pictures picked out by hand!
 
 ## How to install
 
-1. Install [Python 3.7+](https://www.python.org/downloads/release/python-370/) with pip
+~~1. Install [Python 3.7+](https://www.python.org/downloads/release/python-370/) with pip
 2. Download this repository by downloading the zip file or using ``git clone https://github.com/Ari24-cb24/myanimetab.git``
 3. Run ``python3 setup.py`` to install required packages
 4. Start the server with ``python3 server.py`` in the server folder
 5. (Optional) Create a shortcut in your Startup folder, which links to server.py.
-6. Open ``localhost:4444`` in your browser to access the site
+6. Open ``localhost:4444`` in your browser to access the site~~
 
-## Adding own images*
+## Adding own images
 
-1. Navigate to ``server/static/images``
-2. Add your image
-
-## Adding external URLs as images*
-
-1. Navigate to ``server/static/resources``
-2. Open ``urls.json``
-3. Add a new image
-
-## Moving widgets around*
-
-1. Navigate to ``server/static/resources``
-2. Open ``settings.json``
-
-You will see 2 keys (currently only the time widget and the search bar),
-  
-``time`` and ``search-bar``  
-  
-the corresponding number indicates where the widget belongs to.  
-Scroll down to get more information, which number does what,
-
-\* <i> Will be implemented in the settings page </i>
+<i> TBC (React rework)... </i>
 
 ## Widget list
 - <a href="#Search-bar"> Search bar </a>
 - <a href="#Digital-time"> Digital time </a>
 
-<div id="Search-bar">
-  <h2> Search bar </h2>
-  
-  - Default Position: Top-mid (2)
-  - Positions:
-    1. (1) Top
-    2. (2) Top mid
-    3. (3) bottom
-  
-</div>
-
-<div id="Digital-time">
-  <h2> Digital time </h2>
-  
-  - Default Position: Left lower corner (4)
-  - Positions:
-    1. (1) Left upper corner
-    2. (2) Right upper corner
-    3. (3) Right lower corner
-    4. (4) Left lower corner
-  
-</div>
-
+<i> TBC (React rework)... </i>
 
 ## Todo list
 
