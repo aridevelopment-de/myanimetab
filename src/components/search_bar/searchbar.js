@@ -36,6 +36,10 @@ export default class SearchBar extends React.Component {
         EventHandler.listenEvent("blurall", "searchbar", this.onBlurTrigger.bind(this))
     }
 
+    componentWillUnmount() {
+        EventHandler.unlistenEvent("blurall", "searchbar");
+    }
+
     onIconClick(e) {
         SearchEngine.search(this.state.content);
     }
@@ -51,7 +55,7 @@ export default class SearchBar extends React.Component {
             content: e.target.value
         });
 
-        if (this.state.content.length > 1) {
+        if (this.state.content.length > 0) {
             SuggestionCaller.fetchSearchSuggestions(e.target.value, (data) => {            
                 this.setState({
                     suggestions: data[1].slice(0, 5).map((data) => data[0])

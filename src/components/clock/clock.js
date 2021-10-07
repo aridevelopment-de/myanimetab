@@ -42,6 +42,8 @@ class Clock extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.state.intervalId);
+
+        EventHandler.unlistenEvent("blurall", "clock");
     }
 
     render() {
