@@ -43,6 +43,10 @@ class ControlBar extends React.Component {
         EventHandler.listenEvent("blurall", "controlbar", this.onBlurTrigger.bind(this));
     }
 
+    componentWillUnmount() {
+        EventHandler.unlistenEvent("blurall", "controlbar");
+    }
+
     render() {
         return (
             <div className="control_menu__wrapper">

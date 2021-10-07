@@ -3,7 +3,6 @@ import SettingsItemSwitch from './SettingsItemSwitch';
 import SettingsFormItem from "./SettingsFormItem";
 import Settings from "../../utils/settings";
 import EventHandler from "../../utils/eventhandler";
-import SETTINGS_DESCRIPTOR from "../../utils/settingsdescriptor";
 
 class SettingsElement extends React.Component {
     constructor(props) {
@@ -19,9 +18,13 @@ class SettingsElement extends React.Component {
     componentDidMount() {
         EventHandler.listenEvent(this.props.descriptorId + "_state", this.props.descriptorId, data => {
             this.setState({
-                disabled: data.checked
+                disabled: !data.checked
             });
         });
+    }
+    
+    componentWillUnmount() {
+        EventHandler.unlistenEvent(this.props.descriptorId + "_state", this.props.descriptorId);
     }
 
     getDisabled() {

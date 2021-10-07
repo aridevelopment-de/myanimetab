@@ -1,6 +1,5 @@
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import { IconButton } from '@material-ui/core';
 import './settingscomponent.css';
 import SettingsElement from './SettingsElement';
 import EventHandler from '../../utils/eventhandler';
@@ -23,6 +22,10 @@ class SettingsComponent extends React.Component {
 
     componentDidMount() {
         EventHandler.listenEvent("settings_window_state", "settings_component", this.settingsWindowStateChange.bind(this));
+    }
+
+    componentWillUnmount() {
+        EventHandler.listenEvent("settings_window_state", "settings_component");
     }
 
     render() {

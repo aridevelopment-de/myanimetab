@@ -1,5 +1,3 @@
-import Settings from './settings';
-
 const SearchEngine = {
     search: function(query) {
         if (query.length > 0) {

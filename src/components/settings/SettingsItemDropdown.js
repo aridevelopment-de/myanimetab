@@ -66,6 +66,8 @@ class SettingsItemDropdown extends React.Component {
         this.setState({
             selected: this.getSelectedValue()
         });
+
+        // EventHandler.triggerEvent("")
     }
 
     render() {
