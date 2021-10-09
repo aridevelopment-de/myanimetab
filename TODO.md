@@ -1,6 +1,7 @@
 ## Todo list
 
-<i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i>
+<i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i> <br />
+<i> but I think I should make an extension. I tested some things with iframes earlier and they worked great on extensions! </i>
 
 * [ ] Reimplement everything in react
 * [ ] Widgets
@@ -24,6 +25,9 @@
         - [ ] Use google/... calendar or own calendar
         - [ ] Add appointments
         - [ ] Show appointments to day
+    + [ ] Anime2you widget?
+        - [ ] Complete Anime/Manga/Lightnovel Feed
+        - [ ] Personal feed
     + [ ] Email Widget?
         - [ ] Show inbox
         - [ ] Send emails
