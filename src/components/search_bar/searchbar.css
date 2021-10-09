@@ -9,6 +9,9 @@
 
 .search__wrapper.invisible {
     display: none;
+    opacity: 0;
+    width: 0vw;
+    height: 0vw;
 }
 
 .search_bar__wrapper {

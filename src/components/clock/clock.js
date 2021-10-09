@@ -8,6 +8,10 @@ class Clock extends React.Component {
     constructor(props) {
         super(props);
         
+        this.startInterval = this.startInterval.bind(this);
+        this.onClockDisable = this.onClockDisable.bind(this);
+        this.onBlurTrigger = this.onBlurTrigger.bind(this);
+
         this.state = {
             showing: props.showing,
             opacity: props.showing ? 1 : 0,
@@ -17,14 +21,14 @@ class Clock extends React.Component {
     }
 
     onBlurTrigger(data) {
-        this.setState({
-            opacity: data.blur ? Settings.getUserSetting("clock.auto_hide") : 1
-        });
+        if (this.state.intervalId !== undefined) {
+            this.setState({
+                opacity: data.blur ? Settings.getUserSetting("clock.auto_hide") : 1
+            });
+        }
     }
 
-    componentDidMount() {
-        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger.bind(this));
-
+    startInterval() {
         this.setState({
             intervalId: setInterval(() => {
                 let currentDate = new Date();
@@ -37,13 +41,37 @@ class Clock extends React.Component {
                     });
                 }
             }, 1000)
-        })
+        });
+    }
+
+    onClockDisable(data) {
+        if (!data.checked) {
+            if (this.state.intervalId !== undefined) {
+                clearInterval(this.state.intervalId);
+
+                this.setState({
+                    intervalId: undefined,
+                    showing: false
+                });
+            }
+        } else {
+            this.setState({ showing: true });
+            this.startInterval();
+        }
+    }
+
+    componentDidMount() {
+        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
+        EventHandler.listenEvent("clock_state", "clock", this.onClockDisable);
+
+        this.startInterval();
     }
 
     componentWillUnmount() {
         clearInterval(this.state.intervalId);
 
         EventHandler.unlistenEvent("blurall", "clock");
+        EventHandler.unlistenEvent("clock_state", "clock");
     }
 
     render() {

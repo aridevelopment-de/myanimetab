@@ -17,6 +17,9 @@ export default class SearchBar extends React.Component {
         this.onInputBlur = this.onInputBlur.bind(this);
         this.onInputFocus = this.onInputFocus.bind(this);
 
+        this.onBlurTrigger = this.onInputFocus.bind(this);
+        this.onSearchbarDisable = this.onSearchbarDisable.bind(this);
+
         this.state = {
             showing: props.showing,
             focused: true,
@@ -32,8 +35,13 @@ export default class SearchBar extends React.Component {
         });
     }
 
+    onSearchbarDisable(data) {
+        this.setState({ showing: data.checked });
+    }
+
     componentDidMount() {
-        EventHandler.listenEvent("blurall", "searchbar", this.onBlurTrigger.bind(this))
+        EventHandler.listenEvent("blurall", "searchbar", this.onBlurTrigger);
+        EventHandler.listenEvent("search_bar_state", "searchbar", this.onSearchbarDisable);
     }
 
     componentWillUnmount() {
