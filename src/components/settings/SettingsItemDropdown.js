@@ -61,10 +61,12 @@ class SettingsItemDropdown extends React.Component {
         this.toggleSelected();
         this.setState({
             selectedLabel: value
-        });
-
-        this.setState({
-            selected: this.getSelectedValue()
+        }, () => {
+            this.setState({
+                selected: this.getSelectedValue()
+            }, () => {
+                Settings.setUserSetting(this.props.descriptorId, this.state.selected);                
+            });
         });
 
         // EventHandler.triggerEvent("")

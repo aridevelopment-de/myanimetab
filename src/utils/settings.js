@@ -47,6 +47,7 @@ const Settings = {
         // this.saveSettings();
     },
     setUserSetting: function(key, value) {
+        console.log(key + ": " + value);
         savedOptions["user_settings"][key] = value;
         // this.saveSettings();
     }

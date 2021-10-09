@@ -17,7 +17,7 @@ class SettingsItemSwitch extends React.Component {
     toggleSwitch() {
         // TODO: maybe trigger an overall event where the data contains the descriptorId
         EventHandler.triggerEvent(`${this.props.eventKey}_state`, { checked: !this.state.checked });
-        Settings.setUserSetting(this.props.eventKey, this.state.checked);
+        Settings.setUserSetting(this.props.eventKey, !this.state.checked);
         
         this.setState({
             checked: !this.state.checked

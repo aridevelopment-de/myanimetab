@@ -61,8 +61,8 @@ class Clock extends React.Component {
     }
 
     componentDidMount() {
-        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
         EventHandler.listenEvent("clock_state", "clock", this.onClockDisable);
+        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
 
         this.startInterval();
     }
