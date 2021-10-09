@@ -8,16 +8,16 @@ class Clock extends React.Component {
     constructor(props) {
         super(props);
         
+        this.startInterval = this.startInterval.bind(this);
+        this.onClockDisable = this.onClockDisable.bind(this);
+        this.onBlurTrigger = this.onBlurTrigger.bind(this);
+
         this.state = {
             showing: props.showing,
             opacity: props.showing ? 1 : 0,
             currentTime: new Date(),
             intervalId: 0
         };
-
-        this.startInterval = this.startInterval.bind(this);
-        this.onClockDisable = this.onClockDisable.bind(this);
-        this.onBlurTrigger = this.onBlurTrigger.bind(this);
     }
 
     onBlurTrigger(data) {
