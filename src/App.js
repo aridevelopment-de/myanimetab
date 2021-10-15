@@ -86,7 +86,7 @@ class App extends React.Component {
             onMouseDown={this.resetLastAction}
             >
         
-        <ControlBar />
+        <ControlBar position={Settings.getUserSetting("control_bar.position")} />
         <SearchBar position={Settings.getUserSetting("search_bar.vertical_align")} 
                    showing={Settings.getUserSetting("search_bar")}/>
         <Clock position={Settings.getUserSetting("clock.position")}
