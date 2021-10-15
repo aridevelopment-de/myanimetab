@@ -49,7 +49,7 @@ class ControlBar extends React.Component {
 
     render() {
         return (
-            <div className="control_menu__wrapper">
+            <div className={`control_menu__wrapper ${this.props.position}`}>
                 <div className={`control_menu ${this.state.collapsed ? 'collapsed' : ''}`}>
                     <div className="settings__wrapper control_menu_item__wrapper">
                         <div className="settings" onClick={ function() {
