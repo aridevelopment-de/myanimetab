@@ -90,7 +90,8 @@ class App extends React.Component {
         <SearchBar position={Settings.getUserSetting("search_bar.vertical_align")} 
                    showing={Settings.getUserSetting("search_bar")}/>
         <Clock position={Settings.getUserSetting("clock.position")}
-               showing={Settings.getUserSetting("clock")}/>
+               showing={Settings.getUserSetting("clock")}
+               timeFormat={Settings.getUserSetting("clock.time_format")}/>
         <SettingsComponent />
       </div>
     );
