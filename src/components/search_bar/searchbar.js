@@ -33,7 +33,7 @@ export default class SearchBar extends React.Component {
         this.setState({
             opacity: data.blur ? Settings.getUserSetting("search_bar.auto_hide") : 1
         }, () => {
-            console.log(this.state.opacity, Settings.getUserSetting("search_bar.auto_hide"));
+            // console.log(this.state.opacity, Settings.getUserSetting("search_bar.auto_hide"));
         });
     }
 

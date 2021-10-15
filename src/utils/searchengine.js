@@ -14,7 +14,7 @@ const SearchEngine = {
     search: function(query) {
         query = encodeURIComponent(query);
 
-        // TODO: Fix with WolframAlpha in the future
+        // TODO: Add language
 
         if (query.length > 0) {
             let url = `${ENGINES[Settings.getUserSetting('search_bar.search_engine')]}${query}`;
