@@ -31,15 +31,35 @@
     font-size: 100%;
 }
 
-.settings_label {
-    padding: 0;
+/* Multiple labels */
+#settings_labels_hr {
+    opacity: 0.5;
 }
 
-.settings_label p {
+.settings_labels {
+    padding: 0;
+    display: flex;
+    gap: 1em;
+}
+
+.settings_labels p {
     padding-top: 1em;
     font-size: 26px;
     font-weight: 500;
     color: #2f2f2f;
+    opacity: 0.5;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 13px !important;
+    transition: opacity 200ms;
+}
+
+.settings_labels p.active {
+    opacity: 1.0;
+}
+
+.settings_labels p:not(.active):hover {
+    opacity: 0.67;
 }
 
 /* Icon */
