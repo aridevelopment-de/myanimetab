@@ -1,6 +1,6 @@
 import React from "react";
-import EventHandler from "../../utils/eventhandler";
-import Settings from "../../utils/settings";
+import EventHandler from "../../../utils/eventhandler";
+import Settings from "../../../utils/settings";
 import './settingsitemswitch.css';
 
 class SettingsItemSwitch extends React.Component {

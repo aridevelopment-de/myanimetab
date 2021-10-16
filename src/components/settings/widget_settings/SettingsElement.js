@@ -1,8 +1,8 @@
 import React from "react";
 import SettingsItemSwitch from './SettingsItemSwitch';
 import SettingsFormItem from "./SettingsFormItem";
-import Settings from "../../utils/settings";
-import EventHandler from "../../utils/eventhandler";
+import Settings from "../../../utils/settings";
+import EventHandler from "../../../utils/eventhandler";
 
 class SettingsElement extends React.Component {
     constructor(props) {

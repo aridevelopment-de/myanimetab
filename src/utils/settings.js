@@ -2,7 +2,7 @@ import axios from "axios";
 
 let savedOptions = {
     "user_settings": {
-        "auto_hide": true,
+        "auto_hide": false,
         "auto_hide.time_lapse": 5,
         "control_bar.position": "two",
         "search_bar": true,

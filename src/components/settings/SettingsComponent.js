@@ -1,22 +1,40 @@
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import './settingscomponent.css';
-import SettingsElement from './SettingsElement';
 import EventHandler from '../../utils/eventhandler';
-import SETTINGS_DESCRIPTOR from '../../utils/settingsdescriptor';
+import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
 
 class SettingsComponent extends React.Component {
     constructor(props) {
         super(props);
 
+        this.switchPage = this.switchPage.bind(this);
+
+        this.pages = [
+            "Widgets",
+            "Gallery"
+        ];
+
+        this.pageComponents = {
+            "Widgets": <WidgetSettingsComponent />,
+            "Gallery": <span />
+        };
+
         this.state = {
-            opened: false
+            opened: true,
+            activePage: 0
         };
     }
 
-    settingsWindowStateChange(data) {        
+    settingsWindowStateChange(data) {              
         this.setState({
             opened: data.opened
+        });
+    }
+
+    switchPage(label) {
+        this.setState({
+            activePage: this.pages.indexOf(label)
         });
     }
 
@@ -36,9 +54,15 @@ class SettingsComponent extends React.Component {
                         <div className="settings_menu__close_icon__wrapper">
                             <CloseIcon onClick={function() {EventHandler.triggerEvent("settings_window_state", {opened: false})} } />
                         </div>
-                        <header className="settings_label">
-                            <p> Settings </p>
+                        <header className="settings_labels">
+                            {
+                                this.pages.map(e =>
+                                        <p onClick={() => this.switchPage(e)} className={this.state.activePage === this.pages.indexOf(e) ? 'active' : ''} key={e}> {e} </p>
+                                    )
+                            }
+                            
                         </header>
+                        <hr id="settings_labels_hr" />
                     </div>
                     <div className="settings_body">
                         <div className="abs_fit">
@@ -46,11 +70,7 @@ class SettingsComponent extends React.Component {
                                 <div className="settings__scroller">
                                     <div className="settings__scroller_content">
                                         <div className="settings_list">
-                                            {
-                                                SETTINGS_DESCRIPTOR.SETTINGS_DESCRIPTOR.map(descriptor => 
-                                                    <SettingsElement descriptor={ descriptor } descriptorId = { descriptor.id } key={ descriptor.id } />
-                                                )
-                                            }
+                                            {this.pageComponents[this.pages[this.state.activePage]]} 
                                         </div>
                                     </div>
                                 </div>

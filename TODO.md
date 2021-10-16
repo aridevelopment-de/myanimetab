@@ -37,7 +37,10 @@
 * [ ] Image Playlists
     + [ ] Add Image via upload?
     + [ ] Add image via url
-    + [ ] Gallery?
+    + [ ] Gallery
+        - [ ] Implement Gallery in Settings Page
+        - [ ] Above list of categories
+        - [ ] Below images from server
     + [ ] Image Playlist presets
 * [ ] Widget presets
     + [ ] The abillity to choose from a list of widgets in settings
