@@ -3,6 +3,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import './settingscomponent.css';
 import EventHandler from '../../utils/eventhandler';
 import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
+import GallerySettingsComponent from './gallery_settings/GallerySettingsComponent';
 
 class SettingsComponent extends React.Component {
     constructor(props) {
@@ -12,17 +13,19 @@ class SettingsComponent extends React.Component {
 
         this.pages = [
             "Widgets",
-            "Gallery"
+            "Gallery",
+            "..."
         ];
 
         this.pageComponents = {
             "Widgets": <WidgetSettingsComponent />,
-            "Gallery": <span />
+            "Gallery": <GallerySettingsComponent />,
+            "...": <p style={{opacity: 0.3}}> Seems like something's missing... </p>
         };
 
         this.state = {
             opened: true,
-            activePage: 0
+            activePage: 1
         };
     }
 
