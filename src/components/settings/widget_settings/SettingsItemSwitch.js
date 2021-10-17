@@ -1,6 +1,6 @@
 import React from "react";
-import EventHandler from "../../utils/eventhandler";
-import Settings from "../../utils/settings";
+import EventHandler from "../../../utils/eventhandler";
+import Settings from "../../../utils/settings";
 import './settingsitemswitch.css';
 
 class SettingsItemSwitch extends React.Component {
@@ -17,7 +17,7 @@ class SettingsItemSwitch extends React.Component {
     toggleSwitch() {
         // TODO: maybe trigger an overall event where the data contains the descriptorId
         EventHandler.triggerEvent(`${this.props.eventKey}_state`, { checked: !this.state.checked });
-        Settings.setUserSetting(this.props.eventKey, this.state.checked);
+        Settings.setUserSetting(this.props.eventKey, !this.state.checked);
         
         this.setState({
             checked: !this.state.checked

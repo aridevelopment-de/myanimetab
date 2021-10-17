@@ -17,7 +17,7 @@ export default class SearchBar extends React.Component {
         this.onInputBlur = this.onInputBlur.bind(this);
         this.onInputFocus = this.onInputFocus.bind(this);
 
-        this.onBlurTrigger = this.onInputFocus.bind(this);
+        this.onBlurTrigger = this.onBlurTrigger.bind(this);
         this.onSearchbarDisable = this.onSearchbarDisable.bind(this);
 
         this.state = {
@@ -32,6 +32,8 @@ export default class SearchBar extends React.Component {
     onBlurTrigger(data) {
         this.setState({
             opacity: data.blur ? Settings.getUserSetting("search_bar.auto_hide") : 1
+        }, () => {
+            // console.log(this.state.opacity, Settings.getUserSetting("search_bar.auto_hide"));
         });
     }
 
@@ -76,12 +78,16 @@ export default class SearchBar extends React.Component {
         this.setState({
             focused: false
         });
+
+        EventHandler.triggerEvent("searchbar_inputstate", {focus: false});
     }
     
     onInputFocus(e) {
         this.setState({
             focused: true
         });
+
+        EventHandler.triggerEvent("searchbar_inputstate", {focus: true});
     }
 
     render() {

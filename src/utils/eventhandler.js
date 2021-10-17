@@ -3,7 +3,6 @@ const EventHandler = {
     callbacks: {},
 
     triggerEvent: function(eventName, data=null) {
-        console.log(eventName);
         if (this.callbacks[eventName]) {
             Object.keys(this.callbacks[eventName]).forEach((id) => {
                 this.callbacks[eventName][id](data);

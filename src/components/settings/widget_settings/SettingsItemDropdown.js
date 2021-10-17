@@ -1,7 +1,7 @@
 import React from "react";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import Settings from "../../utils/settings";
-import settingsdescriptor from "../../utils/settingsdescriptor";
+import Settings from "../../../utils/settings";
+import settingsdescriptor from "../../../utils/settingsdescriptor";
 import './settingsitemdropdown.css'
 
 class SettingsItemDropdown extends React.Component {
@@ -61,10 +61,12 @@ class SettingsItemDropdown extends React.Component {
         this.toggleSelected();
         this.setState({
             selectedLabel: value
-        });
-
-        this.setState({
-            selected: this.getSelectedValue()
+        }, () => {
+            this.setState({
+                selected: this.getSelectedValue()
+            }, () => {
+                Settings.setUserSetting(this.props.descriptorId, this.state.selected);                
+            });
         });
 
         // EventHandler.triggerEvent("")

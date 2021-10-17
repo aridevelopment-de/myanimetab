@@ -61,8 +61,8 @@ class Clock extends React.Component {
     }
 
     componentDidMount() {
-        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
         EventHandler.listenEvent("clock_state", "clock", this.onClockDisable);
+        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
 
         this.startInterval();
     }
@@ -75,15 +75,15 @@ class Clock extends React.Component {
     }
 
     render() {
-        let currentFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime);
+        let currentFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime, Settings.getUserSetting("clock.time_format") === '12h');
 
         return (
             <div className={`clock__wrapper ${this.props.position} ${this.state.showing ? 'visible' : 'invisible'}`}
                  style={{opacity: this.state.opacity}}>
                 <div className="clock">
                     <div className="time__wrapper">
-                        <span id="time"> {currentFmtDate.time} </span>
-                        <span id="time__period"> {currentFmtDate.timePeriod} </span>
+                        <span id={ `time${this.props.timeFormat === '24h' ? '_full' : ''}` }> {currentFmtDate.time} </span>
+                        { this.props.timeFormat === '12h' ? <span id="time__period"> {currentFmtDate.timePeriod} </span> : <span />}
                     </div>
                     <div className="date__wrapper">
                         <span id="week-day"> {currentFmtDate.weekDay} </span>

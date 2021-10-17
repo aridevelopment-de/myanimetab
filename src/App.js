@@ -19,6 +19,7 @@ class App extends React.Component {
       currentBackground: 'https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp',
       lastAction: TimeUtils.getSeconds(new Date()),
       blur: false,
+      searchbarFocus: false,
       intervalId: undefined
     };
   }
@@ -37,7 +38,7 @@ class App extends React.Component {
   startBlurInterval() {
     this.setState({
       intervalId: setInterval(() => {
-        if (TimeUtils.getSeconds(new Date()) - Settings.getUserSetting("auto_hide.time_lapse") > this.state.lastAction) {
+        if (this.state.searchbarFocus === false && TimeUtils.getSeconds(new Date()) - Settings.getUserSetting("auto_hide.time_lapse") > this.state.lastAction) {
           EventHandler.triggerEvent("blurall", { blur: true });
           this.setState({ blur: true });
         } else {
@@ -51,7 +52,21 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // EventHandler.listenEvent()
+    EventHandler.listenEvent("auto_hide_state", "app", (data) => {
+      if (data.checked === false) {
+        clearInterval(this.state.intervalId);
+      } else if (data.checked === true) {
+        this.startBlurInterval();
+      }
+    });
+
+    EventHandler.listenEvent("searchbar_inputstate", "app", (data) => {
+      this.setState({
+        searchbarFocus: data.focus,
+        lastAction: TimeUtils.getSeconds(new Date())
+      });
+    })
+
     this.startBlurInterval();
   }
 
@@ -59,6 +74,8 @@ class App extends React.Component {
     if (this.intervalId !== undefined) {
       clearInterval(this.state.intervalId);
     }
+
+    EventHandler.unlistenEvent("auto_hide_state", "app");
   }
 
   render() {
@@ -69,11 +86,12 @@ class App extends React.Component {
             onMouseDown={this.resetLastAction}
             >
         
-        <ControlBar />
+        <ControlBar position={Settings.getUserSetting("control_bar.position")} />
         <SearchBar position={Settings.getUserSetting("search_bar.vertical_align")} 
                    showing={Settings.getUserSetting("search_bar")}/>
         <Clock position={Settings.getUserSetting("clock.position")}
-               showing={Settings.getUserSetting("clock")}/>
+               showing={Settings.getUserSetting("clock")}
+               timeFormat={Settings.getUserSetting("clock.time_format")}/>
         <SettingsComponent />
       </div>
     );

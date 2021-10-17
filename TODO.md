@@ -3,7 +3,7 @@
 <i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i> <br />
 <i> but I think I should make an extension. I tested some things with iframes earlier and they worked great on extensions! </i>
 
-* [ ] Reimplement everything in react
+* [x] Reimplement everything in react
 * [ ] Widgets
     + [ ] Clock Widget
         - [ ] Add alarm clock
@@ -37,7 +37,10 @@
 * [ ] Image Playlists
     + [ ] Add Image via upload?
     + [ ] Add image via url
-    + [ ] Gallery?
+    + [ ] Gallery
+        - [ ] Implement Gallery in Settings Page
+        - [ ] Above list of categories
+        - [ ] Below images from server
     + [ ] Image Playlist presets
 * [ ] Widget presets
     + [ ] The abillity to choose from a list of widgets in settings

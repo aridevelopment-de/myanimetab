@@ -2,7 +2,7 @@ import axios from "axios";
 
 let savedOptions = {
     "user_settings": {
-        "auto_hide": true,
+        "auto_hide": false,
         "auto_hide.time_lapse": 5,
         "control_bar.position": "two",
         "search_bar": true,
@@ -47,6 +47,7 @@ const Settings = {
         // this.saveSettings();
     },
     setUserSetting: function(key, value) {
+        console.log(key + ": " + value);
         savedOptions["user_settings"][key] = value;
         // this.saveSettings();
     }
