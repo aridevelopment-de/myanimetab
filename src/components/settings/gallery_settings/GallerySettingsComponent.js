@@ -90,7 +90,7 @@ class WidgetSettingsComponent extends React.Component {
         let page = this.state.selectedPage;
 
         for (let i = 0; i < this.state.images[category][page].length; i++) {
-            if (this.state.images[i][2] === id) {
+            if (this.state.images[category][page][i][2] === id) {
                 let wholeData = JSON.parse(JSON.stringify(this.state.images));
                 
                 wholeData[category][page][i][1] = !this.state.images[category][page][i][1];
@@ -105,7 +105,8 @@ class WidgetSettingsComponent extends React.Component {
 
     switchCategory(name) {
         this.setState({
-            selectedCategory: name
+            selectedCategory: name,
+            selectedPage: 0
         }, this.fetchImages);
     }
 

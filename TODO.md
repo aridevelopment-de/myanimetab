@@ -41,6 +41,7 @@
         - [x] Below images
         - [x] Load categories and images from server
         - [x] Multiple pages functionality
+        - [ ] Cache images when swapping settings or opening settings
     + [ ] Image Playlist presets (?)
     + [ ] Your own playlist
         - [ ] See selected images

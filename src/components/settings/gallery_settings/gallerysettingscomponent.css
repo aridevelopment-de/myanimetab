@@ -47,10 +47,7 @@
 
 .gallery_category.selected {
     background-color: rgba(0, 0, 0, 0.25);
-}
-
-.gallery_category.selected:hover {
-    background-color: rgba(0, 0, 0, 0.3);
+    cursor: not-allowed;
 }
 
 .gallery_category p {
@@ -137,6 +134,9 @@
     display: flex;
     justify-content: center;
     gap: 6px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 .page {
@@ -149,17 +149,24 @@
     background-color: rgb(230, 230, 230);
     box-sizing: border-box;
     border: 2px solid rgb(239, 239, 239);
+    transition: background-color 200ms,
+                border-color 200ms;
+}
+
+.page:not(.selected):hover {
+    background-color: rgb(209, 209, 209);
+    border-color: rgb(218, 218, 218);
 }
 
 .page.selected {
     background-color: transparent;
-    border: 2px solid rgba(51, 51, 51, 1);
+    border: 2px solid rgb(51, 51, 51);
     cursor: not-allowed;
 }
 
 .page.selected p {
     font-weight: 600;
-    color: rgba(51, 51, 51, 1);
+    color: rgb(51, 51, 51);
 }
 
 .page p {

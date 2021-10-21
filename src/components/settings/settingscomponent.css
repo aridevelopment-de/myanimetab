@@ -56,6 +56,7 @@
 
 .settings_labels p.active {
     opacity: 1.0;
+    cursor: not-allowed;
 }
 
 .settings_labels p:not(.active):hover {
