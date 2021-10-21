@@ -35,13 +35,18 @@
         - [ ] Show current price for bitcoin and other stocks
         - [ ] Show graph 
 * [ ] Image Playlists
-    + [ ] Add Image via upload?
-    + [ ] Add image via url
-    + [ ] Gallery
-        - [ ] Implement Gallery in Settings Page
-        - [ ] Above list of categories
-        - [ ] Below images from server
-    + [ ] Image Playlist presets
+    + [x] Gallery
+        - [x] Implement Gallery in Settings Page
+        - [x] Above list of categories
+        - [x] Below images
+        - [x] Load categories and images from server
+        - [x] Multiple pages functionality
+    + [ ] Image Playlist presets (?)
+    + [ ] Your own playlist
+        - [ ] See selected images
+        - [ ] Remove images
+        - [ ] Upload via url
+        - [ ] Add Image via upload?
 * [ ] Widget presets
     + [ ] The abillity to choose from a list of widgets in settings
     + [ ] The abillity to customize those widgets

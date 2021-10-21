@@ -21,7 +21,8 @@ let savedOptions = {
         "switch_wallpaper.playlist_order": "Ordered",
         "language.current_language": "English"
     },
-    "locked_wallpaper": "https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp"
+    "locked_wallpaper": "https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp",
+    "apiserver": 'http://localhost:9000/'
 };
 
 const Settings = {
