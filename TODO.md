@@ -2,6 +2,7 @@
 
 <i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i> <br />
 <i> but I think I should make an extension. I tested some things with iframes earlier and they worked great on extensions! </i>
+<i> also main focus is that users will upload their own work and the gallery is just something that you can use optionally </i>
 
 * [x] Reimplement everything in react
 * [ ] Widgets
@@ -41,6 +42,7 @@
         - [x] Below images
         - [x] Load categories and images from server
         - [x] Multiple pages functionality
+        - [ ] Dont use the api server to save the images but instead use online services like imgur to save them in order to avoid traffic with my server which isn't optimized for these kind of things (and I don't really have to care about certain things so much, especially copyright which I still don't know what to do about)
         - [ ] Cache images when swapping settings or opening settings
     + [ ] Image Playlist presets (?)
     + [ ] Your own playlist
