@@ -16,8 +16,8 @@ class WidgetSettingsComponent extends React.Component {
         this.fetchImages = this.fetchImages.bind(this);
         
         this.state = {
-            images: {'dummy': [['a']]}, // Cached urls
-            selectedCategory: 'dummy',
+            images: {'loading...': [['loading...']]}, // Cached urls
+            selectedCategory: 'loading...',
             selectedPage: 0,
             pageCount: 5
         };

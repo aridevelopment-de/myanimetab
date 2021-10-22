@@ -47,7 +47,7 @@ const SETTINGS_DESCRIPTOR = [
                 "id": "search_engine",
                 "type": "dropdown",
                 "values": [
-                    "Google", "Bing", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"
+                    "Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"
                 ]
             },
             {

@@ -7,7 +7,8 @@ const ENGINES = {
     "DuckDuckGo": "https://duckduckgo.com/?ia=web&q=",
     "Baidu": "https://www.baidu.com/s?wd=",
     "Ask": "https://www.ask.com/web?q=",
-    "WolframAlpha": "https://www.wolframalpha.com/input/?i="
+    "WolframAlpha": "https://www.wolframalpha.com/input/?i=",
+    "Ecosia": "https://www.ecosia.org/search?q="
 };
 
 const SearchEngine = {
