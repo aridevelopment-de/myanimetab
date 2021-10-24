@@ -1,6 +1,6 @@
 const TimeUtils = {
     convertTimeToClockFormat: function(date, hour_12) {
-        // en-US
+        // en-US/de-DE
         let timeData = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: hour_12 }).split(" ");
         let dateData = date.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).split(", ");
 
