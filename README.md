@@ -2,7 +2,7 @@
 
 Custom Tab Page, made for weebs and osu! players!  
 Inspired by [mytab.me](https://mytab.me) but with more features!
-
+ 
 
 ## How to install
 
