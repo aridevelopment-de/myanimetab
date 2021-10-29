@@ -1,10 +1,7 @@
 ## Todo list
 
-<i> I still have not decieded whetever to make mytab a chrome extension or a website. Both of them have downsides </i> <br />
-<i> but I think I should make an extension. I tested some things with iframes earlier and they worked great on extensions! </i>
-<i> also main focus is that users will upload their own work and the gallery is just something that you can use optionally </i>
-
 * [x] Reimplement everything in react
+* [x] Implement a chrome extension
 * [ ] Widgets
     + [ ] Clock Widget
         - [ ] Add alarm clock
