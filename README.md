@@ -1,20 +1,23 @@
 # MyAnimeTab
 
-**I'm currently rewriting the whole thing in React. Progress so far: About 90% finished**
-
 Custom Tab Page, made for weebs and osu! players!  
 Inspired by [mytab.me](https://mytab.me) but with more features!
-
+ 
 
 ## How to install
+
+1. Download the [latest](https://github.com/aridevelopment-de/myanimetab/releases/download/extension-build-beta/myanimetab-extension-build-beta.zip) release from github.
+2. Unzip the zipfile
+3. Open chrome
+4. Go to `chrome://extensions`
+5. Click the `Load unpacked extension` button and select the folder
+6. Try to open `chrome://newtab` and check if it works
+  
+<i> Note: The current pre-release does not contain the gallery. The gallery is localy hosted on a flask backend. This will change in newer releases </i>
+
 ## Adding own images
-## Widget list
-- <a href="#Search-bar"> Search bar </a>
-- <a href="#Digital-time"> Digital time </a>
 
-## Todo list
-
-<i> See [Todo.md](https://github.com/aridevelopment-de/myanimetab/blob/master/TODO.md) for more information </i>
+- Currently not possible
 
 
 ### Previews
