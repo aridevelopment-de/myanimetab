@@ -1,12 +1,12 @@
 import React from "react";
 import EventHandler from "../../utils/eventhandler";
 import "./controlbar.css";
-import SettingsIcon from '@material-ui/icons/Settings';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockIcon from '@material-ui/icons/Lock';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 class ControlBar extends React.Component {
     constructor(props) {

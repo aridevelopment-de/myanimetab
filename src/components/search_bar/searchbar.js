@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchSuggestions from './searchsuggestions';
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from '@mui/icons-material/Search';
 import './searchbar.css';
 import SearchEngine from '../../utils/searchengine';
 import SuggestionCaller from '../../utils/searchsuggestioncaller';

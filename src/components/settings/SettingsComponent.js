@@ -1,9 +1,11 @@
 import React from 'react';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import './settingscomponent.css';
 import EventHandler from '../../utils/eventhandler';
 import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
 import GallerySettingsComponent from './gallery_settings/GallerySettingsComponent';
+import PlaylistSettingsComponent from './playlist_settings/PlaylistSettingsComponent';
+
 
 class SettingsComponent extends React.Component {
     constructor(props) {
@@ -14,12 +16,13 @@ class SettingsComponent extends React.Component {
         this.pages = [
             "Widgets",
             "Gallery",
-            "..."
+            "Playlist"
         ];
 
         this.pageComponents = {
             "Widgets": <WidgetSettingsComponent />,
             "Gallery": <GallerySettingsComponent />,
+            "Playlist": <PlaylistSettingsComponent />,
             "...": <p style={{opacity: 0.3}}> Seems like something's missing... </p>
         };
 

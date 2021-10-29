@@ -1,9 +1,22 @@
 import React from 'react';
 import axios from 'axios';
 import Settings from '../../../utils/settings';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import './gallerysettingscomponent.css'
+
+function GalleryImage(props) {
+    return (
+        <div className={`gallery_image ${props.selected ? 'selected' : ''}`} key={props.value}>
+            <img src={props.value} alt={props.selectedCategory + "-" + props.value}/>
+            <div onClick={() => props.switchImageCallback(props.id)} className={`gallery_image_overlay ${props.selected ? 'selected' : ''}`}>
+                <div className="gallery_image_overlay__button">
+                    { props.selected ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon /> }
+                </div>
+            </div>
+        </div>
+    )
+}
 
 class WidgetSettingsComponent extends React.Component {
     constructor(props) {
@@ -19,7 +32,7 @@ class WidgetSettingsComponent extends React.Component {
             images: {'loading...': [['loading...']]}, // Cached urls
             selectedCategory: 'loading...',
             selectedPage: 0,
-            pageCount: 5
+            pageCount: 1
         };
     }
 
@@ -130,23 +143,14 @@ class WidgetSettingsComponent extends React.Component {
                 </div>
                 <div className="gallery_images">
                     {
-                        this.state.images[this.state.selectedCategory][this.state.selectedPage].map(e => (
-                                <div className={`gallery_image ${e[1] ? 'selected' : ''}`} key={e[0]}>
-                                    <img src={e[0]} alt={this.state.selectedCategory + "-" + e[0]}/>
-                                    <div onClick={() => this.switchImage(e[2])} className={`gallery_image_overlay ${e[1] ? 'selected' : ''}`}>
-                                        <div className="gallery_image_overlay__button">
-                                            { e[1] ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon /> }
-                                        </div>
-                                    </div>
-                                </div>
-                                )
-                            )
+                        this.state.images[this.state.selectedCategory][this.state.selectedPage].map(e => 
+                            <GalleryImage value={e[0]} selected={e[1]} id={e[2]} selectedCategory={this.state.selectedCategory} switchImageCallback={this.switchImage} />)
                     }
                 </div>
                 <div className="pages">
                     {
                         Array.from(Array(this.state.pageCount).keys()).map(e => 
-                            <div className={`page ${this.state.selectedPage == e ? 'selected' : ''}`} onClick={() => this.switchPage(e)} key={e+1}>
+                            <div className={`page ${this.state.selectedPage === e ? 'selected' : ''}`} onClick={() => this.switchPage(e)} key={e+1}>
                                 <p> {e+1} </p>
                             </div>
                             )
