@@ -65,9 +65,11 @@ class App extends React.Component {
         searchbarFocus: data.focus,
         lastAction: TimeUtils.getSeconds(new Date())
       });
-    })
+    });
 
-    this.startBlurInterval();
+    if (Settings.getUserSetting("auto_hide") == true) {
+      this.startBlurInterval();
+    }
   }
 
   componentWillUnmount() {
