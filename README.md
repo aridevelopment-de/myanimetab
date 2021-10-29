@@ -22,6 +22,8 @@ Inspired by [mytab.me](https://mytab.me) but with more features!
 
 ### Previews
 
-![prev-1](https://i.imgur.com/hzJJox4.png)
-![prev-2](https://i.imgur.com/sMK2wqJ.png)
-![prev-3](https://i.imgur.com/ePqod2K.png)
+![prev-1](https://i.imgur.com/sQN5Gan.png)
+![prev-2](https://i.imgur.com/ypmHM6S.png)
+![prev-3](https://i.imgur.com/OtXmu0F.png)
+![prev-4](https://i.imgur.com/Z2HqMgW.png)
+
