@@ -6,7 +6,7 @@ Inspired by [mytab.me](https://mytab.me) but with more features!
 
 ## How to install
 
-1. Download the [latest](https://github.com/aridevelopment-de/myanimetab/releases/download/extension-build-beta/myanimetab-extension-build-beta.zip) release from github.
+1. Download the [latest](https://github.com/aridevelopment-de/myanimetab/releases/download/extension-build-beta.2/myanimetab-extension-build-beta.2.zip) release from github.
 2. Unzip the zipfile
 3. Open chrome
 4. Go to `chrome://extensions`

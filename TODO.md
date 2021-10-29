@@ -51,6 +51,8 @@
     + [ ] The abillity to choose from a list of widgets in settings
     + [ ] The abillity to customize those widgets
     + [ ] Or choose a custom widget preset which you can customize as well
+* [ ] Settings Page
+    + [ ] Make settings saveable
 * [x] Make Searchbar padding with percents not with fixed size
 * [x] Add Background Changer every x seconds
 * [ ] ~~Create pythonw application~~
