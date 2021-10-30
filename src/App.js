@@ -67,7 +67,7 @@ class App extends React.Component {
       });
     });
 
-    if (Settings.getUserSetting("auto_hide") == true) {
+    if (Settings.getUserSetting("auto_hide") === true) {
       this.startBlurInterval();
     }
   }

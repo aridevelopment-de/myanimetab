@@ -28,7 +28,7 @@ class SettingsComponent extends React.Component {
 
         this.state = {
             opened: false,
-            activePage: 1
+            activePage: 0
         };
     }
 

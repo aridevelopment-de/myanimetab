@@ -1,5 +1,3 @@
-import axios from "axios";
-
 let savedOptions = {
     "user_settings": {
         "auto_hide": false,
@@ -27,12 +25,11 @@ let savedOptions = {
 
 const Settings = {
     loadSettings: function() {
-        axios.get("/api/getoptions").then((response) => {
-            savedOptions = response.data;
-        })
+        console.log("[INFO] loaded settings");
+        savedOptions = JSON.parse(localStorage.getItem('data'));
     },
     saveSettings: function() {
-        axios.post("/api/getoptions", savedOptions);
+        localStorage.setItem('data', JSON.stringify(savedOptions));
     },
     getSettings: function() {
         return savedOptions;
@@ -45,12 +42,11 @@ const Settings = {
     },
     set: function(key, value) {
         savedOptions[key] = value;
-        // this.saveSettings();
+        this.saveSettings();
     },
     setUserSetting: function(key, value) {
-        console.log(key + ": " + value);
         savedOptions["user_settings"][key] = value;
-        // this.saveSettings();
+        this.saveSettings();
     }
 }
 

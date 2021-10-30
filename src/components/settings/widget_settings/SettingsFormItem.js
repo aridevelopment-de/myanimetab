@@ -3,16 +3,12 @@ import SettingsItemDropdown from './SettingsItemDropdown';
 
 
 class SettingsFormItem extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // type: ["dropdown"]
-        // data: ["Apfel", "Birne", "Banane", "Kokossnus"]
-        // descriptorId: <key>
-        // label: <label>
-        // disabled
-
-    }
+    // Props
+    // type: ["dropdown"]
+    // data: ["Apfel", "Birne", "Banane", "Kokossnus"]
+    // descriptorId: <key>
+    // label: <label>
+    // disabled
 
     render() {
         return (
