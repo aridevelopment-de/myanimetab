@@ -51,14 +51,6 @@ const SETTINGS_DESCRIPTOR = [
                 ]
             },
             {
-                "name": "Preferred Language",
-                "id": "preferred_language",
-                "type": "dropdown",
-                "values": [
-                    "Auto", "German", "English", "Japanese"
-                ]
-            },
-            {
                 "name": "Open With",
                 "id": "open_with",
                 "type": "dropdown",
