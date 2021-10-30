@@ -17,7 +17,7 @@ let savedOptions = {
         "switch_wallpaper": false,
         "switch_wallpaper.when_switch": "Only on Page Visit",
         "switch_wallpaper.playlist_order": "Ordered",
-        "language.current_language": "English"
+        "language.current_language": "en"
     },
     "locked_wallpaper": "https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp",
     "apiserver": 'http://localhost:9000/'
@@ -45,6 +45,7 @@ const Settings = {
         this.saveSettings();
     },
     setUserSetting: function(key, value) {
+        console.log(`[SET] ${key} = ${value}`);
         savedOptions["user_settings"][key] = value;
         this.saveSettings();
     }

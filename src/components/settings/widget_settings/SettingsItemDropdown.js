@@ -31,7 +31,7 @@ class SettingsItemDropdown extends React.Component {
         })
     }
 
-    getSelectedLabel() {  
+    getSelectedLabel() {
         if (this.props.descriptorId in settingsdescriptor.VALUE_TO_REPR) {
             if (this.state.selected in settingsdescriptor.VALUE_TO_REPR[this.props.descriptorId]) {
                 return settingsdescriptor.VALUE_TO_REPR[this.props.descriptorId][this.state.selected];
@@ -41,14 +41,16 @@ class SettingsItemDropdown extends React.Component {
         return this.state.selected;
     }
 
-    getSelectedValue() {
+    getSelectedValue(idx) {
+        let realValue = this.props.data["en"][idx];
+
         if (this.props.descriptorId in settingsdescriptor.REPR_TO_VALUE) {
-            if (this.state.selectedLabel in settingsdescriptor.REPR_TO_VALUE[this.props.descriptorId]) {
-                return settingsdescriptor.REPR_TO_VALUE[this.props.descriptorId][this.state.selectedLabel];
+            if (realValue in settingsdescriptor.REPR_TO_VALUE[this.props.descriptorId]) {
+                return settingsdescriptor.REPR_TO_VALUE[this.props.descriptorId][realValue];
             }
         }
 
-        return this.state.selectedLabel;
+        return realValue;
     }
 
     toggleSelected() {
@@ -59,11 +61,14 @@ class SettingsItemDropdown extends React.Component {
 
     selectItem(value) {
         this.toggleSelected();
+
+        let idx = this.props.data[Settings.getUserSetting("language.current_language")].indexOf(value);
+
         this.setState({
             selectedLabel: value
         }, () => {
             this.setState({
-                selected: this.getSelectedValue()
+                selected: this.getSelectedValue(idx)
             }, () => {
                 Settings.setUserSetting(this.props.descriptorId, this.state.selected);                
             });
@@ -72,7 +77,7 @@ class SettingsItemDropdown extends React.Component {
         // EventHandler.triggerEvent("")
     }
 
-    render() {
+    render() {        
         return (
             <div className={`settings_select ${this.state.isSelected ? 'choosing_item' : ''}`}>
                 <div className="settings_select__current_item" onClick={this.toggleSelected}>
@@ -81,7 +86,7 @@ class SettingsItemDropdown extends React.Component {
                 </div>
                 <div className={`settings_select__options ${this.state.isSelected ? 'selected' : ''}`} style={{ display: this.state.isSelected ? "unset" : "none" }}>
                     {
-                        this.props.data.map(elem => 
+                        this.props.data[Settings.getUserSetting("language.current_language")].map(elem => 
                             <div className="settings_select__options_item" onClick={() => this.selectItem(elem)} key={elem}> {elem} </div>
                         )
                     }

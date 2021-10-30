@@ -39,7 +39,7 @@ class SettingsElement extends React.Component {
         return (
             <div className={`settings_item ${this.getDisabled()}`}>
                 <div className="settings_item__title">
-                    <p className="settings_item__title_text"> { this.props.descriptor.name } </p>
+                    <p className="settings_item__title_text"> { this.props.descriptor.name[Settings.getUserSetting("language.current_language")] } </p>
                     <div className="settings_item__title_options">
                         <SettingsItemSwitch eventKey={this.props.descriptorId} />
                     </div>

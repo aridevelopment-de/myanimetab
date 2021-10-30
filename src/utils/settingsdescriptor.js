@@ -1,6 +1,9 @@
 const SETTINGS_DESCRIPTOR = [
     {
-        "name": "Auto Hide",
+        "name": {
+            "en": "Auto Hide",
+            "de": "Autmatisches Verstecken"
+        },
         "id": "auto_hide",
         "option": {
             "type": "toggle",
@@ -8,34 +11,48 @@ const SETTINGS_DESCRIPTOR = [
         },
         "content": [
             {
-                "name": "Time Lapse",
+                "name": {
+                    "en": "Time Lapse",
+                    "de": "Zeitspanne"
+                },
                 "id": "time_lapse",
                 "type": "dropdown",
-                "values": [
-                    "5 s", "10 s", "30 s", "1 min", "5 min"
-                ]
+                "values": {
+                    "en": ["5 s", "10 s", "30 s", "1 min", "5 min"],
+                    "de": ["5 s", "10 s", "30 s", "1 min", "5 min"]
+                }
             }
         ]
     },
     {
-        "name": "Control Bar",
+        "name": {
+            "en": "Control Bar",
+            "de": "Steuerungsleiste"
+        },
         "id": "control_bar",
         "option": {
             "type": null
         },
         "content": [
             {
-                "name": "Positioning",
+                "name": {
+                    "en": "Positioning",
+                    "de": "Positionierung"
+                },
                 "id": "position",
                 "type": "dropdown",
-                "values": [
-                    "Right upper corner", "Left upper corner"
-                ]
+                "values": {
+                    "en": ["Right upper corner", "Left upper corner"],
+                    "de": ["Rechte obere Ecke", "Linke obere Ecke"]
+                }
             }
         ]
     },
     {
-        "name": "Search Bar",
+        "name": {
+            "en": "Search Bar",
+            "de": "Suchleiste"
+        },
         "id": "search_bar",
         "option": {
             "type": "toggle",
@@ -43,41 +60,60 @@ const SETTINGS_DESCRIPTOR = [
         },
         "content": [
             {
-                "name": "Search Engine",
+                "name": {
+                    "en": "Search Engine",
+                    "de": "Suchmaschine"
+                },
                 "id": "search_engine",
                 "type": "dropdown",
-                "values": [
-                    "Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"
-                ]
+                "values": {
+                    "en": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"],
+                    "de": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"]
+                }
             },
             {
-                "name": "Open With",
+                "name": {
+                    "en": "Open With",
+                    "de": "Öffne mit"
+                },
                 "id": "open_with",
                 "type": "dropdown",
-                "values": [
-                    "Current Tab", "New Tab"
-                ]
+                "values": {
+                    "en": ["Current Tab", "New Tab"],
+                    "de": ["Aktueller Tab", "Neuer Tab"]
+                }
             },
             {
-                "name": "When Autohiding",
+                "name": {
+                    "en": "When Autohiding",
+                    "de": "Beim automatischen Verstecken"
+                },
                 "id": "auto_hide",
                 "type": "dropdown",
-                "values": [
-                    "Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"
-                ]
+                "values": {
+                    "en": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"],
+                    "de": ["Sichtbar", "Versteckt", "Deckkraft 0.7", "Deckkraft 0.5", "Deckkraft 0.3"]
+                }
             },
             {
-                "name": "Vertical Alignment",
+                "name": {
+                    "en": "Vertical Alignment",
+                    "de": "Vertikale Positionierung"
+                },
                 "id": "vertical_align",
                 "type": "dropdown",
-                "values": [
-                    "1/4", "2/4", "3/4", "4/4"
-                ]
+                "values": {
+                    "en": ["1/4", "2/4", "3/4", "4/4"],
+                    "de": ["1/4", "2/4", "3/4", "4/4"]
+                }
             }
         ]
     },
     {
-        "name": "Clock",
+        "name": {
+            "en": "Clock",
+            "de": "Uhr"
+        },
         "id": "clock",
         "option": {
             "type": "toggle",
@@ -85,41 +121,60 @@ const SETTINGS_DESCRIPTOR = [
         },
         "content": [
             {
-                "name": "Time Zone",
+                "name": {
+                    "en": "Time Zone",
+                    "de": "Zeitzone"
+                },
                 "id": "time_zone",
                 "type": "dropdown",
-                "values": [
-                    "Auto", "UTC", "UTC+01", "UTC+02", "UTC-01", "UTC-02"
-                ]
+                "values": {
+                    "en": ["Auto", "UTC", "UTC+01", "UTC+02", "UTC-01", "UTC-02"],
+                    "de": ["Automatisch", "UTC", "UTC+01", "UTC+02", "UTC-01", "UTC-02"]
+                }
             },
             {
-                "name": "Time Format",
+                "name": {
+                    "en": "Time Format",
+                    "de": "Zeitformat"
+                },
                 "id": "time_format",
                 "type": "dropdown",
-                "values": [
-                    "24h", "12h"
-                ]
+                "values": {
+                    "en": ["24h", "12h"],
+                    "de": ["24h", "12h"]
+                }
             },
             {
-                "name": "When Autohiding",
+                "name": {
+                    "en": "When Autohiding",
+                    "de": "Beim automatischen Verstecken"
+                },
                 "id": "auto_hide",
                 "type": "dropdown",
-                "values": [
-                    "Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"
-                ]
+                "values": {
+                    "en": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"],
+                    "de": ["Sichtbar", "Versteckt", "Deckkraft 0.7", "Deckkraft 0.5", "Deckkraft 0.3"]
+                }
             },
             {
-                "name": "Positioning",
+                "name": {
+                    "en": "Positioning",
+                    "de": "Positionierung"
+                },
                 "id": "position",
                 "type": "dropdown",
-                "values": [
-                    "Left lower corner", "Right lower corner", "Right upper corner", "Left upper corner"
-                ]
+                "values": {
+                    "en": ["Left lower corner", "Right lower corner", "Right upper corner", "Left upper corner"],
+                    "de": ["Linke untere Ecke", "Rechte untere Ecke", "Rechte obere Ecke", "Linke obere Ecke"]
+                }
             }
         ]
     },
     {
-        "name": "Switch Wallpaper",
+        "name": {
+            "en": "Switch Wallpaper",
+            "de": "Hintergrund wechseln"
+        },
         "id": "switch_wallpaper",
         "option": {
             "type": "toggle",
@@ -127,47 +182,72 @@ const SETTINGS_DESCRIPTOR = [
         },
         "content": [
             {
-                "name": "When to switch",
+                "name": {
+                    "en": "When to switch",
+                    "de": "Wann gewechselt wird"
+                },
                 "id": "when_switch",
                 "type": "dropdown",
-                "values": [
-                    "Only on Page Visit",
-                    "Every 10 seconds",
-                    "Every 1 minute", "Every 2 minutes", "Every 5 minutes", "Every 10 minutes", "Every 30 minutes", 
-                    "Every hour"
-                ]
+                "values": {
+                    "en": [
+                        "Only on Page Visit",
+                        "Every 10 seconds",
+                        "Every minute", "Every 2 minutes", "Every 5 minutes", "Every 10 minutes", "Every 30 minutes", 
+                        "Every hour"
+                    ],
+                    "de": [
+                        "Beim Aufruf der Seite",
+                        "Jede 10 Sekunden",
+                        "Jede Minute", "Alle 2 Minuten", "Alle 5 Minuten", "Alle 10 Minuten", "Alle 30 Minuten",
+                        "Jede Stunde"
+                    ]
+                }
             },
             {
-                "name": "Playlist Order",
+                "name": {
+                    "en": "Playlist Order",
+                    "de": "Playlist Reihenfolge"
+                },
                 "id": "playlist_order",
                 "type": "dropdown",
-                "values": [
-                    "Ordered",
-                    "Shuffled"
-                ]
+                "values": {
+                    "en": ["Ordered", "Shuffled"],
+                    "de": ["Geordnet", "Zufällig"]
+                }
             }
         ]
     },
     {
-        "name": "Language",
+        "name": {
+            "en": "Language",
+            "de": "Sprache"
+        },
         "id": "language",
         "option": {
             "type": null
         },
         "content": [
             {
-                "name": "Current Language",
+                "name": {
+                    "en": "Current Language",
+                    "de": "Aktuelle Sprache"
+                },
                 "id": "current_language",
                 "type": "dropdown",
-                "values": [
-                    "English"
-                ]
+                "values": {
+                    "en": ["English", "Deutsch"],
+                    "de": ["English", "Deutsch"]
+                }
             }
         ]
     }
 ]
 
 const VALUE_TO_REPR = {
+    "language.current_language": {
+        "de": "Deutsch",
+        "en": "English"
+    },
     "auto_hide.time_lapse": {
         "5": "5 s",
         "10": "10 s",
@@ -218,6 +298,10 @@ const VALUE_TO_REPR = {
 }
 
 const REPR_TO_VALUE = {
+    "language.current_language": {
+        "Deutsch": "de",
+        "English": "en"
+    },
     "auto_hide.time_lapse": {
         "5 s": 5,
         "10 s": 10,
