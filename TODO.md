@@ -33,13 +33,13 @@
         - [ ] Show current price for bitcoin and other stocks
         - [ ] Show graph 
 * [ ] Image Playlists
-    + [x] Gallery
+    + [x] ~~Gallery~~ Decided to go for no gallery to avoid traffic and for other reasons
         - [x] Implement Gallery in Settings Page
         - [x] Above list of categories
         - [x] Below images
         - [x] Load categories and images from server
         - [x] Multiple pages functionality
-        - [ ] Dont use the api server to save the images but instead use online services like imgur to save them in order to avoid traffic with my server which isn't optimized for these kind of things (and I don't really have to care about certain things so much, especially copyright which I still don't know what to do about)
+        - [ ] Dont use the api server to save the images but instead use online services like imgur to save them in order to avoid traffic
         - [ ] Cache images when swapping settings or opening settings
     + [ ] Image Playlist presets (?)
     + [ ] Your own playlist
@@ -47,13 +47,8 @@
         - [ ] Remove images
         - [ ] Upload via url
         - [ ] Add Image via upload?
-* [ ] Widget presets
-    + [ ] The abillity to choose from a list of widgets in settings
-    + [ ] The abillity to customize those widgets
-    + [ ] Or choose a custom widget preset which you can customize as well
 * [ ] Settings Page
-    + [ ] Make settings saveable
+    + [x] Make settings saveable
+    + [ ] Widget "market"
 * [x] Make Searchbar padding with percents not with fixed size
 * [x] Add Background Changer every x seconds
-* [ ] ~~Create pythonw application~~
-* [ ] ~~Add Music Visualizer~~
