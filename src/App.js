@@ -1,5 +1,7 @@
 import './App.css';
 import React from 'react';
+import URLAddComponent from './components/url_add/URLAddComponent';
+import FullSizeImage from './components/settings/playlist_settings/FullSizeImageComponent';
 import SearchBar from './components/search_bar/searchbar';
 import Clock from './components/clock/clock';
 import ControlBar from "./components/control_bar/controlbar";
@@ -14,13 +16,18 @@ class App extends React.Component {
 
     this.resetLastAction = this.resetLastAction.bind(this);
     this.startBlurInterval = this.startBlurInterval.bind(this);
+    this.startBackgroundInterval = this.startBackgroundInterval.bind(this);
+    this.switchBackground = this.switchBackground.bind(this);
 
     this.state = {
-      currentBackground: 'https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp',
+      currentBackground: Settings.get("images")[Settings.get("selected_image")],
       lastAction: TimeUtils.getSeconds(new Date()),
       blur: false,
       searchbarFocus: false,
-      intervalId: undefined
+      blurIntervalId: undefined,
+      backgroundIntervalId: undefined,
+      addUrlDialog: false,
+      fullSizeImage: null
     };
   }
 
@@ -37,7 +44,7 @@ class App extends React.Component {
 
   startBlurInterval() {
     this.setState({
-      intervalId: setInterval(() => {
+      blurIntervalId: setInterval(() => {
         if (this.state.searchbarFocus === false && TimeUtils.getSeconds(new Date()) - Settings.getUserSetting("auto_hide.time_lapse") > this.state.lastAction) {
           EventHandler.triggerEvent("blurall", { blur: true });
           this.setState({ blur: true });
@@ -51,10 +58,37 @@ class App extends React.Component {
     });
   }
 
+  startBackgroundInterval() {
+    this.setState({
+      backgroundIntervalId: setInterval(() => {
+        if (Settings.getUserSetting("switch_wallpaper.playlist_order") === "Ordered") {
+          this.setState({
+            currentBackground: Settings.get("images")[this.switchBackground()]
+          });
+        }
+      }, 1000*Settings.getUserSetting("switch_wallpaper.when_switch") || 1000)
+    });
+  }
+
+  switchBackground() {
+    if (Settings.getUserSetting("switch_wallpaper.playlist_order") === "Ordered") {
+      let idx = Settings.get("selected_image");
+      idx = (idx + 1) % Settings.get("images").length;
+      Settings.set("selected_image", idx);
+      
+      return idx;
+    } else if (Settings.getUserSetting("switch_wallpaper.playlist_order") === "Shuffled") {
+      let idx = Math.floor(Math.random() * Settings.get("images").length);
+      Settings.set("selected_image", idx);
+
+      return idx;
+    }
+  }
+
   componentDidMount() {
     EventHandler.listenEvent("auto_hide_state", "app", (data) => {
       if (data.checked === false) {
-        clearInterval(this.state.intervalId);
+        clearInterval(this.state.blurIntervalId);
       } else if (data.checked === true) {
         this.startBlurInterval();
       }
@@ -67,17 +101,78 @@ class App extends React.Component {
       });
     });
 
+    EventHandler.listenEvent("url_add_window", "app", (data) => {
+      this.setState({
+        addUrlDialog: data.open
+      });
+    });
+
+    EventHandler.listenEvent("full_screen_image", "app", (data) => {
+      this.setState({
+        fullSizeImage: data.url
+      });
+    })
+
+    EventHandler.listenEvent("switch_wallpaper_state", "app", (data) => {
+      if (data.checked === false) {
+        clearInterval(this.state.backgroundIntervalId);
+      } else if (data.checked === true) {
+        if (Settings.getUserSetting("switch_wallpaper.when_switch") != null) {
+          this.startBackgroundInterval();
+        }
+      }
+    });
+
+    EventHandler.listenEvent("dropdown_switch_wallpaper.when_switch_state", "app", (data) => {
+      if (this.state.backgroundIntervalId != null) {
+        clearInterval(this.state.backgroundIntervalId);
+      }
+
+      if (data.selected != null) {  
+        this.startBackgroundInterval();
+      }
+    })
+
+    EventHandler.listenEvent("skip_image", "app", () => {
+      this.setState({
+        currentBackground: Settings.get("images")[this.switchBackground()]
+      });
+
+      Settings.setUserSetting("switch_wallpaper", true);
+      EventHandler.triggerEvent("switch_wallpaper_state", {checked: true});
+      EventHandler.triggerEvent("switch_wallpaper_state_force", {checked: true});
+    })
+
     if (Settings.getUserSetting("auto_hide") === true) {
       this.startBlurInterval();
+    }
+
+    if (Settings.getUserSetting("switch_wallpaper") === true) {
+      if (Settings.getUserSetting("switch_wallpaper.when_switch") != null) {
+        this.startBackgroundInterval();
+      } else {
+        this.setState({
+          currentBackground: Settings.get("images")[this.switchBackground()]
+        });
+      }
     }
   }
 
   componentWillUnmount() {
-    if (this.intervalId !== undefined) {
-      clearInterval(this.state.intervalId);
+    if (this.blurIntervalId !== undefined) {
+      clearInterval(this.state.blurIntervalId);
+    }
+
+    if (this.backgroundIntervalId !== undefined) {
+      clearInterval(this.state.backgroundIntervalId);
     }
 
     EventHandler.unlistenEvent("auto_hide_state", "app");
+    EventHandler.unlistenEvent("searchbar_inputstate", "app");
+    EventHandler.unlistenEvent("url_add_window", "app");
+    EventHandler.unlistenEvent("full_screen_image", "app");
+    EventHandler.unlistenEvent("switch_wallpaper_state", "app");
+    EventHandler.unlistenEvent("skip_image", "app");
   }
 
   render() {
@@ -95,6 +190,9 @@ class App extends React.Component {
                showing={Settings.getUserSetting("clock")}
                timeFormat={Settings.getUserSetting("clock.time_format")}/>
         <SettingsComponent />
+        
+        {this.state.addUrlDialog ? <URLAddComponent /> : null}
+        {this.state.fullSizeImage ? <FullSizeImage url={this.state.fullSizeImage} /> : null}
       </div>
     );
   }

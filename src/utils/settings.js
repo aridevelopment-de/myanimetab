@@ -20,10 +20,30 @@ let savedOptions = {
         "language.current_language": "en"
     },
     "locked_wallpaper": "https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp",
-    "apiserver": 'http://localhost:9000/'
+    "images": ["https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp"],
+    "selected_image": 0
 };
 
 const Settings = {
+    checkSettings: function () {
+        if (localStorage.getItem("data") === null) {
+            this.saveSettings();
+        }
+
+        let data = JSON.parse(localStorage.getItem("data"));
+
+        for (let key in savedOptions) {
+            if (Object.keys(data).indexOf(key) === -1) {
+                this.saveSettings();
+            }
+        }
+
+        for (let key in savedOptions.user_settings) {
+            if (Object.keys(data["user_settings"]).indexOf(key) === -1) {
+                this.saveSettings();
+            }
+        }
+    },
     loadSettings: function() {
         console.log("[INFO] loaded settings");
         savedOptions = JSON.parse(localStorage.getItem('data'));
