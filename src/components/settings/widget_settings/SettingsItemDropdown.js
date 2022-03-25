@@ -1,4 +1,5 @@
 import React from "react";
+import EventHandler from "../../../utils/eventhandler";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Settings from "../../../utils/settings";
 import settingsdescriptor from "../../../utils/settingsdescriptor";
@@ -71,10 +72,9 @@ class SettingsItemDropdown extends React.Component {
                 selected: this.getSelectedValue(idx)
             }, () => {
                 Settings.setUserSetting(this.props.descriptorId, this.state.selected);                
+                EventHandler.triggerEvent(`dropdown_${this.props.descriptorId}_state`, { selected: this.state.selected });
             });
         });
-
-        // EventHandler.triggerEvent("")
     }
 
     render() {        

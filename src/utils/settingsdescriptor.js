@@ -286,7 +286,7 @@ const VALUE_TO_REPR = {
         "four": "Left lower corner"
     },
     "switch_wallpaper.when_switch": {
-        "Only on Page Visit": "Only on Page Visit",
+        "null": "Only on Page Visit",
         "10": "Every 10 seconds",
         "60": "Every 1 minute",
         "120": "Every 2 minutes",
@@ -340,9 +340,9 @@ const REPR_TO_VALUE = {
         "Left lower corner": "four"
     },
     "switch_wallpaper.when_switch": {
-        "Only on Page Visit": "Only on Page Visit",
+        "Only on Page Visit": null,
         "Every 10 seconds": 10,
-        "Every 1 minute": 60,
+        "Every minute": 60,
         "Every 2 minutes": 120,
         "Every 5 minutes": 300,
         "Every 10 minutes": 600,

@@ -3,7 +3,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import './settingscomponent.css';
 import EventHandler from '../../utils/eventhandler';
 import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
-import GallerySettingsComponent from './gallery_settings/GallerySettingsComponent';
 import PlaylistSettingsComponent from './playlist_settings/PlaylistSettingsComponent';
 
 
@@ -15,14 +14,13 @@ class SettingsComponent extends React.Component {
 
         this.pages = [
             "Widgets",
-            "Gallery",
-            "Playlist"
+            "Playlists",
+            "..."
         ];
 
         this.pageComponents = {
             "Widgets": <WidgetSettingsComponent />,
-            "Gallery": <GallerySettingsComponent />,
-            "Playlist": <PlaylistSettingsComponent />,
+            "Playlists": <PlaylistSettingsComponent />,
             "...": <p style={{opacity: 0.3}}> Seems like something's missing... </p>
         };
 
@@ -32,13 +30,13 @@ class SettingsComponent extends React.Component {
         };
     }
 
-    settingsWindowStateChange(data) {              
+    settingsWindowStateChange(data) {
         this.setState({
             opened: data.opened
         });
     }
 
-    switchPage(label) {
+    switchPage(label) {        
         this.setState({
             activePage: this.pages.indexOf(label)
         });

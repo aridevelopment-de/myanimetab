@@ -7,6 +7,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Settings from "../../utils/settings";
 
 class ControlBar extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class ControlBar extends React.Component {
 
         this.state = {
             collapsed: false,
-            locked: false
+            locked: !Settings.getUserSetting("switch_wallpaper")
         };
     }
 
@@ -36,15 +37,25 @@ class ControlBar extends React.Component {
     lockImage(e) {
         this.setState({
             locked: !this.state.locked
+        }, () => {
+            Settings.setUserSetting("switch_wallpaper", !this.state.locked);
+            EventHandler.triggerEvent("switch_wallpaper_state", {checked: !this.state.locked});
+            EventHandler.triggerEvent("switch_wallpaper_state_force", {checked: !this.state.locked});
         });
     }
 
     componentDidMount() {
         EventHandler.listenEvent("blurall", "controlbar", this.onBlurTrigger.bind(this));
+        EventHandler.listenEvent("switch_wallpaper_state", "controlbar", (data) => {
+            this.setState({
+                locked: !data.checked
+            });
+        });
     }
 
     componentWillUnmount() {
         EventHandler.unlistenEvent("blurall", "controlbar");
+        EventHandler.unlistenEvent("switch_wallpaper_state", "controlbar");
     }
 
     render() {
@@ -62,6 +73,7 @@ class ControlBar extends React.Component {
                     <div className="next_image__wrapper control_menu_item__wrapper">
                         <div className="next_image" onClick={ function() {
                             EventHandler.triggerEvent("skip_image")
+                            EventHandler.triggerEvent("playlist_refresh");
                         }}>
                             <SkipNextIcon />
                         </div>
