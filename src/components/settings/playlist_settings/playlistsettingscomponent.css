@@ -17,6 +17,9 @@
     border-radius: 7%;
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .image.selected {
