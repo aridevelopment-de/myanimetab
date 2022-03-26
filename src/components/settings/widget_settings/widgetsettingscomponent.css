@@ -1,0 +1,25 @@
+#widget_settings__footer {
+    margin-top: 5em;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.widget_settings__footer_urls {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.widget_settings__footer_urls a img {
+    width: 35px;
+    aspect-ratio: 1;
+}
+
+#copyright_infrigement {
+    margin-top: 1em;
+    text-align: center;
+    font-weight: 200;
+}
