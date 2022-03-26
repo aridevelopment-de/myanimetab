@@ -83,3 +83,13 @@ If the Image Playlist needs to be refreshed (e.g. when a new image gets added)
 ```json
 No Data
 ```
+
+# select_image
+
+If a specific image should be selected (e.g. when clicking on an image in the playlist settings view)
+
+```json
+{
+    idx: "the new index of the image being seleceted"
+}
+```

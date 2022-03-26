@@ -143,6 +143,12 @@ class App extends React.Component {
       EventHandler.triggerEvent("switch_wallpaper_state_force", {checked: true});
     })
 
+    EventHandler.listenEvent("select_image", "app", (data) => {
+      this.setState({
+        currentBackground: Settings.get("images")[data.idx]
+      });
+    })
+
     if (Settings.getUserSetting("auto_hide") === true) {
       this.startBlurInterval();
     }
@@ -173,6 +179,7 @@ class App extends React.Component {
     EventHandler.unlistenEvent("full_screen_image", "app");
     EventHandler.unlistenEvent("switch_wallpaper_state", "app");
     EventHandler.unlistenEvent("skip_image", "app");
+    EventHandler.unlistenEvent("select_image", "app");
   }
 
   render() {

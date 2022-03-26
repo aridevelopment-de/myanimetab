@@ -6,8 +6,16 @@ import Settings from '../../../utils/settings';
 import EventHandler from '../../../utils/eventhandler';
 
 function Image(props) {
+    const onImageClick = () => {
+        if (props.idx !== props.selectedIdx) {
+            Settings.set("selected_image", props.idx);
+            EventHandler.triggerEvent("select_image", { idx: props.idx });
+            EventHandler.triggerEvent("playlist_refresh", null);
+        }
+    }
+
     return (
-        <div className={`image ${props.idx === props.selectedIdx ? 'selected' : ''}`}>
+        <div className={`image ${props.idx === props.selectedIdx ? 'selected' : ''}`} onClick={onImageClick}>
             <img src={props.url} alt={props.idx} />
             <div className="image_overlay">
                 <div className="image_overlay__buttons">

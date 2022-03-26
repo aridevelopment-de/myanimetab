@@ -14,7 +14,7 @@ class WidgetSettingsComponent extends React.Component {
                     )
                 }
                 <footer id="widget_settings__footer">
-                    <div class="widget_settings__footer_urls">
+                    <div className="widget_settings__footer_urls">
                         <a href="https://github.com/aridevelopment-de/myanimetab">
                             <img src="/icons/github.svg" alt="GitHub" />
                         </a>
