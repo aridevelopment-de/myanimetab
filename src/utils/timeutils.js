@@ -3,7 +3,6 @@ const TimeUtils = {
         // en-US/de-DE
         let timeData = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: hour_12 }).split(" ");
         let dateData = date.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).split(", ");
-
         let splitted = timeData[0].split(":");
         let part1 = splitted[0];
         let part2 = splitted[1];

@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Settings from './utils/settings';
+import getUserSettings from './utils/settings';
 
-Settings.checkSettings();
-Settings.loadSettings();
+getUserSettings().loadSettings();
+getUserSettings().registerSetting("selected_image", 0);
+getUserSettings().registerSetting("images", ["https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp"]);
 
 ReactDOM.render(
   <React.StrictMode>

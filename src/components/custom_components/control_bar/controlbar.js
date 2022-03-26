@@ -1,5 +1,6 @@
 import React from "react";
-import EventHandler from "../../utils/eventhandler";
+import EventHandler from "../../../utils/eventhandler";
+import CustomComponentRegistry from "../../../utils/customcomponentregistry";
 import "./controlbar.css";
 import SettingsIcon from '@mui/icons-material/Settings';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
@@ -7,7 +8,10 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Settings from "../../utils/settings";
+import getUserSettings from "../../../utils/settings";
+
+
+const positionValues = ["two", "one"];
 
 class ControlBar extends React.Component {
     constructor(props) {
@@ -18,8 +22,32 @@ class ControlBar extends React.Component {
 
         this.state = {
             collapsed: false,
-            locked: !Settings.getUserSetting("switch_wallpaper")
+            position: getUserSettings().get("cc.controlbar.position"),
+            locked: !getUserSettings().get("cc.wallpaper")
         };
+    }
+
+    register() {
+        CustomComponentRegistry.register(
+            "controlbar", 
+            <ControlBar />,
+            {
+                "name": "Control Bar",
+                "id": "controlbar",
+                "option": {
+                    "type": null
+                },
+                "content": [
+                    {
+                        "name": "Positioning",
+                        "id": "position",
+                        "type": "dropdown",
+                        "values": positionValues,
+                        "displayedValues": ["Right upper corner", "Left upper corner"]
+                    }
+                ]
+            }
+        ); 
     }
 
     collapse(e) {
@@ -35,20 +63,29 @@ class ControlBar extends React.Component {
     }
 
     lockImage(e) {
+        let lockedState = this.state.locked;
+
         this.setState({
-            locked: !this.state.locked
+            locked: !lockedState
         }, () => {
-            Settings.setUserSetting("switch_wallpaper", !this.state.locked);
-            EventHandler.triggerEvent("switch_wallpaper_state", {checked: !this.state.locked});
-            EventHandler.triggerEvent("switch_wallpaper_state_force", {checked: !this.state.locked});
+            getUserSettings().set("cc.wallpaper", !this.state.locked, true);
+            EventHandler.triggerEvent("set.cc.wallpaper", {value: !this.state.locked, sender: "controlbar"});
         });
     }
 
     componentDidMount() {
         EventHandler.listenEvent("blurall", "controlbar", this.onBlurTrigger.bind(this));
-        EventHandler.listenEvent("switch_wallpaper_state", "controlbar", (data) => {
+        EventHandler.listenEvent("set.cc.wallpaper", "controlbar", (data) => {
+            console.log(data);
+            if (data.sender !== "controlbar") {
+                this.setState({
+                    locked: !data.value
+                });
+            }
+        });
+        EventHandler.listenEvent("set.cc.controlbar.position", "controlbar", (data) => {
             this.setState({
-                locked: !data.checked
+                position: data.value
             });
         });
     }
@@ -56,11 +93,12 @@ class ControlBar extends React.Component {
     componentWillUnmount() {
         EventHandler.unlistenEvent("blurall", "controlbar");
         EventHandler.unlistenEvent("switch_wallpaper_state", "controlbar");
+        EventHandler.unlistenEvent("set.cc.controlbar.position", "controlbar");
     }
 
     render() {
         return (
-            <div className={`control_menu__wrapper ${this.props.position}`}>
+            <div className={`control_menu__wrapper ${positionValues[this.state.position]}`}>
                 <div className={`control_menu ${this.state.collapsed ? 'collapsed' : ''}`}>
                     <div className="settings__wrapper control_menu_item__wrapper">
                         <div className="settings" onClick={ function() {
@@ -74,6 +112,7 @@ class ControlBar extends React.Component {
                         <div className="next_image" onClick={ function() {
                             EventHandler.triggerEvent("skip_image")
                             EventHandler.triggerEvent("playlist_refresh");
+                            getUserSettings().set("cc.wallpaper", true);
                         }}>
                             <SkipNextIcon />
                         </div>

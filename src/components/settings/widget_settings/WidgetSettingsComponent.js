@@ -1,7 +1,8 @@
 import React from 'react';
 import './widgetsettingscomponent.css';
-import SETTINGS_DESCRIPTOR from '../../../utils/settingsdescriptor';
+import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import SettingsElement from './SettingsElement';
+import IS_DEV from '../../../utils/devutils';
 
 
 class WidgetSettingsComponent extends React.Component {
@@ -9,9 +10,12 @@ class WidgetSettingsComponent extends React.Component {
         return (
             <React.Fragment>
                 {
-                    SETTINGS_DESCRIPTOR.SETTINGS_DESCRIPTOR.map(descriptor => 
-                        <SettingsElement descriptor={ descriptor } descriptorId = { descriptor.id } key={ descriptor.id } />
-                    )
+                    Object.keys(CustomComponentRegistry.getAll()).map(dataKey => {
+                        if (IS_DEV) {
+                            console.log("Settings Page registered: " + dataKey);
+                        }
+                        return <SettingsElement data={CustomComponentRegistry.get(dataKey)} key={CustomComponentRegistry.get(dataKey).name} />
+                    })
                 }
                 <footer id="widget_settings__footer">
                     <div className="widget_settings__footer_urls">

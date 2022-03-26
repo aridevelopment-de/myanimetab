@@ -8,7 +8,7 @@
     background-color: rgba(145, 145, 145, 1);
 }
 
-.App {
+.background {
     background-repeat: no-repeat;
     background-position: center center !important;
     background-attachment: fixed;

@@ -1,7 +1,7 @@
 import React from "react";
 import SettingsItemSwitch from './SettingsItemSwitch';
 import SettingsFormItem from "./SettingsFormItem";
-import Settings from "../../../utils/settings";
+import getUserSettings from "../../../utils/settings";
 import EventHandler from "../../../utils/eventhandler";
 
 class SettingsElement extends React.Component {
@@ -9,46 +9,46 @@ class SettingsElement extends React.Component {
         super(props);
 
         this.state = {
-            disabled: !Settings.getUserSetting(props.descriptorId)
+            disabled: !getUserSettings().get(`cc.${props.data.name}`)
         };
 
         this.getDisabled = this.getDisabled.bind(this);
     }
 
     componentDidMount() {
-        EventHandler.listenEvent(this.props.descriptorId + "_state", this.props.descriptorId, data => {
+        EventHandler.listenEvent(`set.cc.${this.props.data.name}`, "settingselement", data => {
             this.setState({
-                disabled: !data.checked
+                disabled: !data
             });
         });
     }
     
     componentWillUnmount() {
-        EventHandler.unlistenEvent(this.props.descriptorId + "_state", this.props.descriptorId);
+        EventHandler.unlistenEvent(`set.cc.${this.props.data.name}`, "settingselement");
     }
 
     getDisabled() {
-        if (Settings.getUserSetting(this.props.descriptorId) === undefined) {
+        if (getUserSettings().get(`cc.${this.props.data.name}`) === undefined) {
             return '';
         }
 
-        return this.state.disabled === true ? 'disabled' : ''
+        return this.state.disabled === true ? 'disabled' : '';
     }
 
     render() {
         return (
             <div className={`settings_item ${this.getDisabled()}`}>
                 <div className="settings_item__title">
-                    <p className="settings_item__title_text"> { this.props.descriptor.name[Settings.getUserSetting("language.current_language")] } </p>
+                    <p className="settings_item__title_text">{this.props.data.settings.name}</p>
                     <div className="settings_item__title_options">
-                        <SettingsItemSwitch eventKey={this.props.descriptorId} />
+                        <SettingsItemSwitch settingsKey={"cc." + this.props.data.name} />
                     </div>
                 </div>
                 <div className="settings_item__content">
                     {
-                        this.props.descriptor.content.map(formBody => 
-                            <SettingsFormItem type={formBody.type} data={formBody.values} label={formBody.name} descriptorId={this.props.descriptorId + "." + formBody.id} key={this.props.descriptorId + "." + formBody.id}/>
-                        )
+                        this.props.data.settings.content.map(formBody => {
+                            return <SettingsFormItem formBody={formBody} settingsKey={"cc." + this.props.data.name + "." + formBody.id} key={"cc." + this.props.data.name + "." + formBody.id}/>
+                        })
                     }
                 </div>
             </div>

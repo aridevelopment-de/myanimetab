@@ -1,4 +1,4 @@
-import Settings from '../../utils/settings';
+import getUserSettings from '../../utils/settings';
 import React from 'react';
 import EventHandler from '../../utils/eventhandler';
 import './urladdcomponent.css';
@@ -19,9 +19,9 @@ class URLAddComponent extends React.Component {
         EventHandler.triggerEvent("playlist_refresh", {});
 
         if (shouldAdd) {
-            let images = Settings.get("images");
+            let images = getUserSettings().get("images");
             images.push(this.state.url);
-            Settings.set("images", images);
+            getUserSettings().set("images", images);
         }
     }
 
