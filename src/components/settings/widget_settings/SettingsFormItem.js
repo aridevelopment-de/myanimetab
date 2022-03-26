@@ -1,22 +1,18 @@
 import React from "react";
 import SettingsItemDropdown from './SettingsItemDropdown';
-import Settings from "../../../utils/settings";
 
 
 class SettingsFormItem extends React.Component {
     // Props
-    // type: ["dropdown"]
-    // data: ["Apfel", "Birne", "Banane", "Kokossnus"]
-    // descriptorId: <key>
-    // label: <label>
-    // disabled
+    // formBody: name, id, type, values, displayedValues
+    // settingsKey: "cc.name.id"
 
     render() {
         return (
             <div className="settings_item__form_item">
-                <p className="settings_item__form_item_label"> {this.props.label[Settings.getUserSetting("language.current_language")]} </p>
+                <p className="settings_item__form_item_label"> {this.props.formBody.name} </p>
                 <div className="settings_item__form_item_content">
-                    <SettingsItemDropdown disabled={this.props.disabled} data={this.props.data} descriptorId={this.props.descriptorId}/>
+                    <SettingsItemDropdown values={this.props.formBody.values} displayedValues={this.props.formBody.displayedValues} settingsKey={this.props.settingsKey} />
                 </div>
             </div>
         );

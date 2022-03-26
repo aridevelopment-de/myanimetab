@@ -1,4 +1,4 @@
-import Settings from "./settings";
+import getUserSettings from "./settings";
 
 const ENGINES = {
     "Google": "https://google.com/search?q=",
@@ -18,9 +18,9 @@ const SearchEngine = {
         // TODO: Add language
 
         if (query.length > 0) {
-            let url = `${ENGINES[Settings.getUserSetting('search_bar.search_engine')]}${query}`;
+            let url = `${ENGINES[getUserSettings().get('search_bar.search_engine')]}${query}`;
             
-            if (Settings.getUserSetting("search_bar.open_with") === "New Tab") {
+            if (getUserSettings().get("search_bar.open_with") === "New Tab") {
                 window.open(url, "_blank");
             } else {
                 window.location.href = url;

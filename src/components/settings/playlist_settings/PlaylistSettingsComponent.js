@@ -2,13 +2,13 @@ import React from "react";
 import './playlistsettingscomponent.css';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Settings from '../../../utils/settings';
+import getUserSettings from '../../../utils/settings';
 import EventHandler from '../../../utils/eventhandler';
 
 function Image(props) {
     const onImageClick = () => {
         if (props.idx !== props.selectedIdx) {
-            Settings.set("selected_image", props.idx);
+            getUserSettings().set("selected_image", props.idx);
             EventHandler.triggerEvent("select_image", { idx: props.idx });
             EventHandler.triggerEvent("playlist_refresh", null);
         }
@@ -40,16 +40,16 @@ class PlaylistSettingsComponent extends React.Component {
         this.openURLAddWindow = this.openURLAddWindow.bind(this);
 
         this.state = {
-            images: Settings.get("images"),
-            selectedIdx: Settings.get("selected_image")
+            images: getUserSettings().get("images"),
+            selectedIdx: getUserSettings().get("selected_image")
         };
     }
 
     componentDidMount() {
         EventHandler.listenEvent("playlist_refresh", "playlist_settings", () => {
             this.setState({
-                images: Settings.get("images"),
-                selectedIdx: Settings.get("selected_image")
+                images: getUserSettings().get("images"),
+                selectedIdx: getUserSettings().get("selected_image")
             }) 
         });
     }
@@ -63,9 +63,9 @@ class PlaylistSettingsComponent extends React.Component {
     }
 
     onDeleteClick(idx) {
-        let images = Settings.get("images");
+        let images = getUserSettings().get("images");
         images.splice(idx, 1);
-        Settings.set("images", images);
+        getUserSettings().set("images", images);
         
         this.setState({
             images: images

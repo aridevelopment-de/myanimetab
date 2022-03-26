@@ -1,5 +1,5 @@
 import React from "react";
-import SearchEngine from "../../utils/searchengine";
+import SearchEngine from "../../../utils/searchengine";
 import './searchsuggestion.css'
 
 class SearchSuggestions extends React.Component {
