@@ -1,4 +1,4 @@
-[![myanimetab](https://i.imgur.com/lkXFvjW.png)]
+<center><img src="https://i.imgur.com/lkXFvjW.png" width="200" height="200"></center>
 
 # MyAnimeTab
 
