@@ -1,26 +1,24 @@
 import getUserSettings from "./settings";
 
-const ENGINES = {
-    "Google": "https://google.com/search?q=",
-    "Bing": "https://www.bing.com/search?q=",
-    "Yahoo": "https://search.yahoo.com/search?p=",
-    "DuckDuckGo": "https://duckduckgo.com/?ia=web&q=",
-    "Baidu": "https://www.baidu.com/s?wd=",
-    "Ask": "https://www.ask.com/web?q=",
-    "WolframAlpha": "https://www.wolframalpha.com/input/?i=",
-    "Ecosia": "https://www.ecosia.org/search?q="
-};
+const ENGINES = [
+    "https://google.com/search?q=",  // Google
+    "https://www.bing.com/search?q=",  // Bing
+    "https://search.yahoo.com/search?p=",  // Yahoo
+    "https://duckduckgo.com/?ia=web&q=",  // DuckDuckGo
+    "https://www.baidu.com/s?wd=",  // Baidu
+    "https://www.ask.com/web?q=",  // Ask
+    "https://www.wolframalpha.com/input/?i=",  // WolframAlpha
+    "https://www.ecosia.org/search?q="  // Ecosia
+];
 
 const SearchEngine = {
     search: function(query) {
         query = encodeURIComponent(query);
 
-        // TODO: Add language
-
         if (query.length > 0) {
-            let url = `${ENGINES[getUserSettings().get('search_bar.search_engine')]}${query}`;
+            let url = `${ENGINES[getUserSettings().get('cc.searchbar.search_engine')]}${query}`;
             
-            if (getUserSettings().get("search_bar.open_with") === "New Tab") {
+            if (getUserSettings().get("cc.searchbar.open_with") === 1) {
                 window.open(url, "_blank");
             } else {
                 window.location.href = url;

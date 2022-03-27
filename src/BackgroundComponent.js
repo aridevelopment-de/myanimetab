@@ -104,7 +104,7 @@ class Background extends React.Component {
             getUserSettings().set("selected_image", idx);
             
             return idx;
-        } else if (playlistOrderValues[getUserSettings().get("cc.wallpaper.playlist_order")] === "shuffled") {
+        } else if (playlistOrderValues[getUserSettings().get("cc.wallpaper.playlist_order")] === "Shuffled") {
             let idx = Math.floor(Math.random() * getUserSettings().get("images").length);
             getUserSettings().set("selected_image", idx);
             
