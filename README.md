@@ -1,3 +1,5 @@
+[![myanimetab](https://i.imgur.com/lkXFvjW.png)]
+
 # MyAnimeTab
 
 Custom Tab Page, made for weebs and osu! players!  
