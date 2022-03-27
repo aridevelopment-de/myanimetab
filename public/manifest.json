@@ -1,8 +1,7 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "author": "Ari24",
   "description": "A custom startpage for your browser!",
-  "minimum_chrome_version": "29",
   "name": "MyAnimeTab",
   "short_name": "MyAnimeTab",
   "version": "1.0.0",
@@ -12,6 +11,10 @@
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
- },
- "content_security_policy": "script-src 'sha256-eE1k/Cs1U0Li9/ihPPQ7jKIGDvR8fYw65VJw+txfifw=';"
+  },
+  "browser_specific_settings": {
+	"gecko": {
+	  "id": "myanimetab@ari24.com"
+	}
+  }
 }
