@@ -17,6 +17,10 @@ class WidgetSettingsComponent extends React.Component {
                         return <SettingsElement data={CustomComponentRegistry.get(dataKey)} key={CustomComponentRegistry.get(dataKey).name} />
                     })
                 }
+                <div class="widget_settings__import_export">
+                    <button class="widget_settings__import_btn">Import</button>
+                    <button class="widget_settings__export_btn">Export</button>
+                </div>
                 <footer id="widget_settings__footer">
                     <div className="widget_settings__footer_urls">
                         <a href="https://github.com/aridevelopment-de/myanimetab">
