@@ -12,7 +12,7 @@ class ZoomedImage extends React.Component {
     }
 
     onImageClose() {
-        EventHandler.triggerEvent("full_screen_image", { url: null });
+        EventHandler.triggerEvent("full_screen_image_window_state", { url: null });
     }
 
     render() {

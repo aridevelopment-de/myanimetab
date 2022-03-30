@@ -59,7 +59,7 @@ class PlaylistSettingsComponent extends React.Component {
     }
 
     onResizeClick(idx) {
-        EventHandler.triggerEvent("full_screen_image", { url: this.state.images[idx] });
+        EventHandler.triggerEvent("full_screen_image_window_state", { url: this.state.images[idx] });
     }
 
     onDeleteClick(idx) {
@@ -73,7 +73,7 @@ class PlaylistSettingsComponent extends React.Component {
     }
 
     openURLAddWindow() {
-        EventHandler.triggerEvent("url_add_window", {open: true});
+        EventHandler.triggerEvent("url_add_window_state", {opened: true});
     }
 
     render() {
