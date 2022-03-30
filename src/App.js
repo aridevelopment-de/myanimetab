@@ -9,6 +9,7 @@ import Clock from './components/custom_components/clock/clock';
 import ControlBar from "./components/custom_components/control_bar/controlbar";
 import SettingsComponent from "./components/settings/SettingsComponent";
 import EventHandler from './utils/eventhandler';
+import ImportSettingsComponent from './components/import_export_settings/ImportSettingsComponent';
 
 class App extends React.Component {
   constructor(props) {
@@ -33,22 +34,29 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    EventHandler.listenEvent("url_add_window", "app", (data) => {
+    EventHandler.listenEvent("url_add_window_state", "app", (data) => {
       this.setState({
-        addUrlDialog: data.open
+        addUrlDialog: data.opened
       });
     });
 
-    EventHandler.listenEvent("full_screen_image", "app", (data) => {
+    EventHandler.listenEvent("full_screen_image_window_state", "app", (data) => {
       	this.setState({
         	fullSizeImage: data.url
       	});
+    });
+
+    EventHandler.listenEvent("import_window_state", "app", (data) => {
+      this.setState({
+        importSettingsDialog: data.opened
+      })
     })
   }
 
   componentWillUnmount() {
-    EventHandler.unlistenEvent("url_add_window", "app");
-    EventHandler.unlistenEvent("full_screen_image", "app");
+    EventHandler.unlistenEvent("url_add_window_state", "app");
+    EventHandler.unlistenEvent("full_screen_image_window_state", "app");
+    EventHandler.unlistenEvent("import_window_state", "app");
   }
 
   render() {
@@ -62,6 +70,7 @@ class App extends React.Component {
           <SettingsComponent />
           {this.state.addUrlDialog ? <URLAddComponent /> : null}
           {this.state.fullSizeImage ? <FullSizeImage url={this.state.fullSizeImage} /> : null}
+          {this.state.importSettingsDialog ? <ImportSettingsComponent /> : null}
         </Background>
       </div>
     );
