@@ -15,6 +15,10 @@ class UserSettings {
         this.settings = {};
     }
 
+    retrieveWhole() {
+        return this.settings;
+    }
+
     overrideSettings(new_settings) {
         this.settings = new_settings;
         this.saveSettings();
