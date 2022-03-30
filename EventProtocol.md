@@ -45,6 +45,17 @@ Will be send to open/close the import settings window
 ```
 
 
+## `export_window_state`
+
+Wil be send to open/close the import settings window
+
+```json
+{
+    "opened": [true/false]
+}
+```
+
+
 ## ``url_add_window_state``
 
 Is being send when user clicks on "+" (Add Image) (Settings -> Playlists, last element)
