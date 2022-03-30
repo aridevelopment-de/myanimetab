@@ -14,6 +14,15 @@ Will be send if auto_hide activates
 ```
 
 
+## ``skip_image``
+
+Skips the current background image, also unlockes the current lock state
+
+```json
+{ }
+```
+
+
 ## ``settings_window_state``
 
 Will be send to open/close the settings panel
@@ -25,32 +34,46 @@ Will be send to open/close the settings panel
 ```
 
 
-## ``skip_image``
+## `import_window_state`
 
-Skips the current background image, also unlockes the current lock state
+Will be send to open/close the import settings window
 
 ```json
-{ }
+{
+    "opened": [true/false]
+}
 ```
 
-## ``url_add_window``
+
+## `export_window_state`
+
+Wil be send to open/close the import settings window
+
+```json
+{
+    "opened": [true/false]
+}
+```
+
+
+## ``url_add_window_state``
 
 Is being send when user clicks on "+" (Add Image) (Settings -> Playlists, last element)
 
 ```json
 {
-    "open": [true, false]
+    "opened": [true, false]
 }
 ```
 
 
-## ``full_screen_image``
+## ``full_screen_image_window_state``
 
 Is being send when user clicks on the fullscreen icon on any image (Settings -> Playlists)
 
 ```json
 {
-    "url": "the url of the image to display"
+    "url": "none if the window should close else the url of the image to display"
 }
 ```
 

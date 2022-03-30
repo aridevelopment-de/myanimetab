@@ -3,9 +3,18 @@ import './widgetsettingscomponent.css';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import SettingsElement from './SettingsElement';
 import IS_DEV from '../../../utils/devutils';
+import EventHandler from '../../../utils/eventhandler';
 
 
 class WidgetSettingsComponent extends React.Component {
+    onImportClick() {
+        EventHandler.triggerEvent("import_window_state", { opened: true });
+    }
+
+    onExportClick() {
+        EventHandler.triggerEvent("export_window_state", { opened: true });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -17,6 +26,10 @@ class WidgetSettingsComponent extends React.Component {
                         return <SettingsElement data={CustomComponentRegistry.get(dataKey)} key={CustomComponentRegistry.get(dataKey).name} />
                     })
                 }
+                <div class="widget_settings__import_export">
+                    <button class="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
+                    <button class="widget_settings__export_btn" onClick={this.onExportClick}>Export</button>
+                </div>
                 <footer id="widget_settings__footer">
                     <div className="widget_settings__footer_urls">
                         <a href="https://github.com/aridevelopment-de/myanimetab">
