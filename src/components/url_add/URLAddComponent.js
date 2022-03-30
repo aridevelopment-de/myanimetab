@@ -15,7 +15,7 @@ class URLAddComponent extends React.Component {
     }
     
     buttonClick(shouldAdd) {
-        EventHandler.triggerEvent("url_add_window", { open: false });
+        EventHandler.triggerEvent("url_add_window_state", { opened: false });
         EventHandler.triggerEvent("playlist_refresh", {});
 
         if (shouldAdd) {
