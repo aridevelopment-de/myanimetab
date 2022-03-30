@@ -2,7 +2,7 @@
 name: Suggest a new widget
 about: Suggest a new widget for this project
 title: "[Widget Suggestion]"
-labels: enhancement, widget suggestion
+labels: enhancement, new widget suggestion
 assignees: ''
 
 ---
