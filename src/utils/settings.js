@@ -15,6 +15,15 @@ class UserSettings {
         this.settings = {};
     }
 
+    overrideSettings(new_settings) {
+        this.settings = new_settings;
+        this.saveSettings();
+
+        for (let key in this.settings) {
+            EventHandler.triggerEvent(`set.${key}`, {value: this.settings[key]});
+        }
+    }
+
     loadSettings() {
         this.settings = JSON.parse(localStorage.getItem('settings'));
 

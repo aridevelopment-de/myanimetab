@@ -1,5 +1,6 @@
 import React from "react";
 import EventHandler from "../../utils/eventhandler";
+import getUserSettings from "../../utils/settings";
 import './importsettingscomponent.css';
 
 
@@ -23,8 +24,12 @@ class ImportSettingsComponent extends React.Component {
                 alert("The data you entered is not valid JSON");
                 return;
             }
-
+            
+            getUserSettings().overrideSettings(JSON.parse(this.state.settingsData));
             EventHandler.triggerEvent("import_window_state", { opened: false });
+
+            // reload the page
+            window.location.reload();
         } else {
             EventHandler.triggerEvent("import_window_state", { opened: false });
         }
