@@ -2,7 +2,7 @@
 name: Suggest new features for widgets
 about: Suggest new ideas for any widgets (not suggesting new widgets)
 title: "[Widget Idea]"
-labels: enhancement
+labels: enhancement, widget idea
 assignees: ''
 
 ---
