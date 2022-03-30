@@ -100,14 +100,15 @@ class Clock extends React.Component {
         if (!data.value) {
             if (this.state.intervalId !== undefined) {
                 clearInterval(this.state.intervalId);
-
+                
                 this.setState({
                     intervalId: undefined,
-                    showing: false
+                    showing: false,
+                    opacity: 1
                 });
             }
         } else {
-            this.setState({ showing: true });
+            this.setState({ showing: true, opacity: 0 });
             this.startInterval();
         }
     }
