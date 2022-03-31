@@ -29,7 +29,7 @@ class ExportSettingsComponent extends React.Component {
                             <p id="export_settings__hint">The json data below is stored in your localstorage</p>
                             <ReactJson 
                                 src={getUserSettings().retrieveWhole()}
-                                style={{"border": "1px solid rgba(0,0,0,0.2)", "border-radius": "14px", "padding": "10px", "margin-top": "10px"}}
+                                style={{border: "1px solid rgba(0,0,0,0.2)", borderRadius: "14px", padding: "10px", marginTop: "10px"}}
                                 name={false}
                                 collapsed={true}
                                 collapseStringsAfterLength={65}

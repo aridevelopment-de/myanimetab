@@ -1,13 +1,10 @@
-import IS_DEV from './devutils';
 
 const EventHandler = {
     callbacks: {},
 
     triggerEvent: function(eventName, data=null) {
-        if (IS_DEV) {
-            console.log("Event published: " + eventName);
-            console.log(data);
-        }
+        console.debug("[Event] Event published: " + eventName);
+        console.debug(data);
         
         if (this.callbacks[eventName]) {
             Object.keys(this.callbacks[eventName]).forEach((id) => {
