@@ -13,7 +13,7 @@ const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const verticalAlignValues = ["one", "two", "three", "four"];
 
 
-export default class SearchBar extends React.Component {
+class SearchBar extends React.Component {
     constructor(props) {
         super(props);
 
@@ -22,64 +22,19 @@ export default class SearchBar extends React.Component {
         this.onInputFocus = this.onInputFocus.bind(this);
 
         this.state = {
-            showing: getUserSettings().get("cc.searchbar"),
+            showing: getUserSettings().get("cc.searchbar.state"),
             position: getUserSettings().get("cc.searchbar.vertical_align"),
             focused: true,
             content: "",
-            opacity: getUserSettings().get("cc.searchbar") ? 0 : 1,
+            opacity: getUserSettings().get("cc.searchbar.state") ? 0 : 1,
             suggestions: []
         };
-    }
-
-    register() {
-        CustomComponentRegistry.register(
-            "searchbar",
-            <SearchBar />,
-            {
-                "name": "Search Bar",
-                "id": "searchbar",
-                "option": {
-                    "type": "toggle",
-                    "default": true
-                },
-                "content": [
-                    {
-                        "name": "Search Engine",
-                        "id": "search_engine",
-                        "type": "dropdown",
-                        "values": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"],
-                        "displayedValues": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"]
-                    },
-                    {
-                        "name": "Open With",
-                        "id": "open_with",
-                        "type": "dropdown",
-                        "values": ["Current Tab", "New Tab"],
-                        "displayedValues": ["Current Tab", "New Tab"]
-                    },
-                    {
-                        "name": "When Autohiding",
-                        "id": "auto_hide",
-                        "type": "dropdown",
-                        "values": opacityValues,
-                        "displayedValues": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"]
-                    },
-                    {
-                        "name": "Vertical Alignment",
-                        "id": "vertical_align",
-                        "type": "dropdown",
-                        "values": verticalAlignValues,
-                        "displayedValues": ["1/4", "2/4", "3/4", "4/4"]
-                    }
-                ]
-            }
-        )
     }
 
     componentDidMount() {
         EventHandler.listenEvent("blurall", "searchbar", (data) => {
             this.setState({
-                opacity: data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : (getUserSettings().get("cc.searchbar") ? 0 : 1)
+                opacity: data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : (getUserSettings().get("cc.searchbar.state") ? 0 : 1)
             });
         });
         EventHandler.listenEvent("set.cc.searchbar", "searchbar", (data) => {
@@ -141,3 +96,53 @@ export default class SearchBar extends React.Component {
         )
     }
 }
+
+CustomComponentRegistry.register(
+    "searchbar",
+    <SearchBar />,
+    {
+        shouldRegister: true,
+        author: "aridevelopment.de", 
+        description: "Helps you searching through the internet"
+    },
+    {
+        "name": "Search Bar",
+        "id": "searchbar",
+        "option": {
+            "type": "toggle",
+            "default": true
+        },
+        "content": [
+            {
+                "name": "Search Engine",
+                "id": "search_engine",
+                "type": "dropdown",
+                "values": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"],
+                "displayedValues": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"]
+            },
+            {
+                "name": "Open With",
+                "id": "open_with",
+                "type": "dropdown",
+                "values": ["Current Tab", "New Tab"],
+                "displayedValues": ["Current Tab", "New Tab"]
+            },
+            {
+                "name": "When Autohiding",
+                "id": "auto_hide",
+                "type": "dropdown",
+                "values": opacityValues,
+                "displayedValues": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"]
+            },
+            {
+                "name": "Vertical Alignment",
+                "id": "vertical_align",
+                "type": "dropdown",
+                "values": verticalAlignValues,
+                "displayedValues": ["1/4", "2/4", "3/4", "4/4"]
+            }
+        ]
+    }
+)
+
+export default SearchBar;

@@ -17,8 +17,6 @@ class Background extends React.Component {
         this.switchBackground = this.switchBackground.bind(this);
         this.startBlurInterval = this.startBlurInterval.bind(this);
         this.startBackgroundInterval = this.startBackgroundInterval.bind(this);
-        
-        this.registerSettings();
 
         this.state = {
             blur: false,
@@ -28,62 +26,6 @@ class Background extends React.Component {
             searchbarFocus: false,
             currentBackground: getUserSettings().get("images")[getUserSettings().get("selected_image")]
         }
-    }
-
-    registerSettings() {
-        CustomComponentRegistry.registerNonComponent(
-            "wallpaper",
-            {
-                "name": "Switch Wallpaper",
-                "id": "wallpaper",
-                "option": {
-                    "type": "toggle",
-                    "default": true
-                },
-                "content": [
-                    {
-                        "name": "When to switch",
-                        "id": "when_switch",
-                        "type": "dropdown",
-                        "values": switchValues,
-                        "displayedValues": [
-                            "Only on Page Visit",
-                            "Every 10 seconds",
-                            "Every minute", "Every 2 minutes", "Every 5 minutes", "Every 10 minutes", "Every 30 minutes", 
-                            "Every hour"
-                        ]
-                    },
-                    {
-                        "name": "Playlist Order",
-                        "id": "playlist_order",
-                        "type": "dropdown",
-                        "values": playlistOrderValues,
-                        "displayedValues": ["Ordered", "Shuffled"]
-                    }
-                ]
-            }
-        );
-
-        CustomComponentRegistry.registerNonComponent(
-            "auto_hide",
-            {
-                "name": "Auto Hide",
-                "id": "auto_hide",
-                "option": {
-                    "type": "toggle",
-                    "default": true
-                },
-                "content": [
-                    {
-                        "name": "Time Lapse",
-                        "id": "time_lapse",
-                        "type": "dropdown",
-                        "values": blurValues,
-                        "displayedValues": ["5 s", "10 s", "30 s", "1 min", "5 min"]
-                    }
-                ]
-            },
-        );
     }
 
     resetLastAction(e) {
@@ -176,7 +118,7 @@ class Background extends React.Component {
                 clearInterval(this.state.backgroundIntervalId);
             }
 
-            if (getUserSettings().get("cc.wallpaper")) {
+            if (getUserSettings().get("cc.wallpaper.state")) {
                 this.startBackgroundInterval();
             }
         })
@@ -204,7 +146,7 @@ class Background extends React.Component {
             this.startBlurInterval();
         }
   
-        if (getUserSettings().get("cc.wallpaper") === true) {
+        if (getUserSettings().get("cc.wallpaper.state") === true) {
             if (switchValues[getUserSettings().get("cc.wallpaper.when_switch")] != null) {
                 this.startBackgroundInterval();
             } else {
@@ -243,5 +185,59 @@ class Background extends React.Component {
         );
     }
 }
+
+CustomComponentRegistry.registerNonComponent(
+    "wallpaper",
+    {
+        "name": "Switch Wallpaper",
+        "id": "wallpaper",
+        "option": {
+            "type": "toggle",
+            "default": true
+        },
+        "content": [
+            {
+                "name": "When to switch",
+                "id": "when_switch",
+                "type": "dropdown",
+                "values": switchValues,
+                "displayedValues": [
+                    "Only on Page Visit",
+                    "Every 10 seconds",
+                    "Every minute", "Every 2 minutes", "Every 5 minutes", "Every 10 minutes", "Every 30 minutes", 
+                    "Every hour"
+                ]
+            },
+            {
+                "name": "Playlist Order",
+                "id": "playlist_order",
+                "type": "dropdown",
+                "values": playlistOrderValues,
+                "displayedValues": ["Ordered", "Shuffled"]
+            }
+        ]
+    }
+);
+
+CustomComponentRegistry.registerNonComponent(
+    "auto_hide",
+    {
+        "name": "Auto Hide",
+        "id": "auto_hide",
+        "option": {
+            "type": "toggle",
+            "default": true
+        },
+        "content": [
+            {
+                "name": "Time Lapse",
+                "id": "time_lapse",
+                "type": "dropdown",
+                "values": blurValues,
+                "displayedValues": ["5 s", "10 s", "30 s", "1 min", "5 min"]
+            }
+        ]
+    },
+);
 
 export default Background;

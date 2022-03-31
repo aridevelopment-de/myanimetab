@@ -1,18 +1,19 @@
-import IS_DEV from './devutils.js';
 import EventHandler from './eventhandler.js';
 
 let instance = null;
 
 function getUserSettings() {
     if (instance == null) {
+        console.debug("[Instance created] Creating new instance of UserSettings");
         instance = new UserSettings();
     }
+
     return instance;
 }
 
 class UserSettings {
     constructor() {
-        this.settings = {};
+        this.settings = JSON.parse(localStorage.getItem('settings')) || {};
     }
 
     retrieveWhole() {
@@ -28,45 +29,74 @@ class UserSettings {
         }
     }
 
-    loadSettings() {
-        this.settings = JSON.parse(localStorage.getItem('settings'));
-
-        if (this.settings === null) {
-            this.settings = {};
-            this.saveSettings();
-        }
-    }
-
     saveSettings() {
         localStorage.setItem('settings', JSON.stringify(this.settings));
     }
 
     get(key) {
-        if (this.settings[key] === undefined && IS_DEV) {
-            console.log("Settings missing: " + key + "");
+        if (key.startsWith("cc")) {
+            key = key.split(".");
+            let parent = key.shift() + "." + key.shift();
+            let child = key.join(".");
+
+            if (this.settings[parent] !== undefined) {
+                return this.settings[parent][child];
+            } else {    
+                console.debug(`[Missing] Settings are missing for key: ${parent}.${child}`);
+            }
+
+            return;
+        }
+        
+        if (this.settings[key] === undefined) {
+            console.debug("[Missing] Settings missing for key: " + key + "");
         }
         
         return this.settings[key];
     }
 
-    set(key, value, preventEvent) {
-        if (IS_DEV) {
-            console.log("Settings updated: " + key + ": " + value);
+    set(key, value, preventEvent, after) {
+        console.debug("[Updated] Settings updated: " + key + " with value " + value);
+        
+        if (key.startsWith("cc.")) {
+            key = key.split(".");
+            let parent = key.shift() + "." + key.shift();
+            let child = key.join(".");
+
+            if (this.settings[parent] === undefined) {
+                this.settings[parent] = {};
+            }
+
+            this.settings[parent][child] = value;
+        } else {
+            this.settings[key] = value;
         }
-        this.settings[key] = value;
+        
         this.saveSettings();
 
         if (preventEvent !== true) {
             EventHandler.triggerEvent(`set.${key}`, {value});
         }
+
+        if (after !== undefined) {
+            after();
+        }
     }
 
     registerSetting(key, value) {
         if (this.get(key) === undefined && value !== null) {
-            if (IS_DEV) {
-                console.log("Settings registered: " + key + ": " + value);
-            }
             this.set(key, value);
+
+            console.debug("[Register] Settings registered: " + key + ": " + value);
+        }
+    }
+
+    deleteSetting(key) {
+        if (this.get(key) !== undefined) {
+            delete this.settings[key];
+            this.saveSettings();
+
+            console.debug("[Delete] Settings deleted: " + key);
         }
     }
 }

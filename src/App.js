@@ -4,19 +4,16 @@ import CustomComponentRegistry from './utils/customcomponentregistry';
 import Background from './BackgroundComponent';
 import URLAddComponent from './components/url_add/URLAddComponent';
 import FullSizeImage from './components/settings/playlist_settings/FullSizeImageComponent';
-import SearchBar from './components/custom_components/search_bar/searchbar';
-import Clock from './components/custom_components/clock/clock';
-import ControlBar from "./components/custom_components/control_bar/controlbar";
 import SettingsComponent from "./components/settings/SettingsComponent";
 import EventHandler from './utils/eventhandler';
 import ImportSettingsComponent from './components/import_export_settings/ImportSettingsComponent';
 import ExportSettingsComponent from './components/import_export_settings/ExportSettingsComponent';
+import getUserSettings from './utils/settings';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.registerComponents = this.registerComponents.bind(this);
     this.registerComponents();
 
     this.state = {
@@ -28,12 +25,12 @@ class App extends React.Component {
   }
 
   registerComponents() {
-    const components = [Clock, ControlBar, SearchBar];
-	
-    for (let idx in components) {
-      let component = components[idx];
-      component.prototype.register();
-    }
+    /* Order is important here, because importing them means to initialize them with their id */
+    const components = ["clock/clock", "search_bar/searchbar", "control_bar/controlbar"];
+
+    components.forEach(path => {
+		require(`./components/custom_components/${path}`)
+    });
   }
 
   componentDidMount() {
@@ -52,6 +49,32 @@ class App extends React.Component {
     EventHandler.listenEvent("export_window_state", "app", (data) => {
       this.setState({ exportSettingsDialog: data.opened });
     });
+
+	EventHandler.listenEvent("install_widget", "app", (data) => {
+		getUserSettings().set(
+			"installed_components",
+			getUserSettings().get("installed_components").concat(data.id),
+      false,
+      () => {
+        console.debug("Installed widget: " + data.id);
+        this.forceUpdate()
+      }
+		);
+
+	});
+	
+	EventHandler.listenEvent("uninstall_widget", "app", (data) => {
+		getUserSettings().set(
+			"installed_components",
+			getUserSettings().get("installed_components").filter(id => id !== data.id),
+      false,  
+      () => {
+        console.debug("Uninstalled widget: " + data.id);
+        this.forceUpdate();
+      }
+		);
+
+	});
   }
 
   componentWillUnmount() {
@@ -59,23 +82,26 @@ class App extends React.Component {
     EventHandler.unlistenEvent("full_screen_image_window_state", "app");
     EventHandler.unlistenEvent("import_window_state", "app");
     EventHandler.unlistenEvent("export_window_state", "app");
+    EventHandler.unlistenEvent("install_widget", "app");
+    EventHandler.unlistenEvent("uninstall_widget", "app");
   }
 
   render() {
     return (
       <div className="App">
-        <Background>
-          {Object.keys(CustomComponentRegistry.getAll()).map((key) => 
-            CustomComponentRegistry.get(key).component
-          )}
-          
-          <SettingsComponent />
-          {this.state.addUrlDialog ? <URLAddComponent /> : null}
-          {this.state.fullSizeImage ? <FullSizeImage url={this.state.fullSizeImage} /> : null}
-          {this.state.importSettingsDialog ? <ImportSettingsComponent /> : null}
-          {this.state.exportSettingsDialog ? <ExportSettingsComponent /> : null}
-        </Background>
-      </div>
+			<Background>
+
+			{CustomComponentRegistry.getAllAvailable().map(id => {
+				return CustomComponentRegistry.get(id).component;
+			})}
+			
+			<SettingsComponent />
+			{this.state.addUrlDialog ? <URLAddComponent /> : null}
+			{this.state.fullSizeImage ? <FullSizeImage url={this.state.fullSizeImage} /> : null}
+			{this.state.importSettingsDialog ? <ImportSettingsComponent /> : null}
+			{this.state.exportSettingsDialog ? <ExportSettingsComponent /> : null}
+			</Background>
+		</div>
     );
   }
 }

@@ -18,8 +18,8 @@ class Clock extends React.Component {
         this.onBlurTrigger = this.onBlurTrigger.bind(this);
 
         this.state = {
-            showing: getUserSettings().get("cc.clock"),
-            opacity: getUserSettings().get("cc.clock") ? 0 : 1,
+            showing: getUserSettings().get("cc.clock.state"),
+            opacity: getUserSettings().get("cc.clock.state") ? 0 : 1,
             currentTime: new Date(),
             intervalId: 0,
             position: getUserSettings().get("cc.clock.position"),
@@ -27,55 +27,10 @@ class Clock extends React.Component {
         };
     }
 
-    register() {
-        CustomComponentRegistry.register(
-            "clock", 
-            <Clock />, 
-            {
-              "name": "Clock",
-              "id": "clock",
-              "option": {
-                  "type": "toggle",
-                  "default": true
-              },
-              "content": [
-                  {
-                      "name": "Time zone",
-                      "id": "time_zone",
-                      "type": "dropdown",
-                      "values": ["auto", 0, 1, 2, -1, -2],
-                      "displayedValues": ["Auto", "UTC", "UTC+01", "UTC+02", "UTC-01", "UTC-02"]
-                  },
-                  {
-                      "name": "Time Format",
-                      "id": "time_format",
-                      "type": "dropdown",
-                      "values": timeFormatValues,
-                      "displayedValues": ["24h", "12h"]
-                  },
-                  {
-                      "name": "When Autohiding",
-                      "id": "auto_hide",
-                      "type": "dropdown",
-                      "values": opacityValues,
-                      "displayedValues": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"]
-                  },
-                  {
-                      "name": "Positioning",
-                      "id": "position",
-                      "type": "dropdown",
-                      "values": positionValues,
-                      "displayedValues": ["Left lower corner", "Right lower corner", "Right upper corner", "Left upper corner"]
-                  }
-              ]
-            }
-          );
-    }
-
     onBlurTrigger(data) {
         if (this.state.intervalId !== undefined) {
             this.setState({
-                opacity: data.blur ? getUserSettings().get("cc.clock.auto_hide") : (getUserSettings().get("cc.clock") ? 0 : 1)
+                opacity: data.blur ? getUserSettings().get("cc.clock.auto_hide") : (getUserSettings().get("cc.clock.state") ? 0 : 1)
             });
         }
     }
@@ -160,5 +115,53 @@ class Clock extends React.Component {
         )
     }
 }
+
+CustomComponentRegistry.register(
+    "clock", 
+    <Clock />,
+    {
+        shouldRegister: true,
+        author: "aridevelopment.de", 
+        description: "A simple clock displaying the current time"
+    },
+    {
+        "name": "Clock",
+        "id": "clock",
+        "option": {
+            "type": "toggle",
+            "default": true
+        },
+        "content": [
+            {
+                "name": "Time zone",
+                "id": "time_zone",
+                "type": "dropdown",
+                "values": ["auto", 0, 1, 2, -1, -2],
+                "displayedValues": ["Auto", "UTC", "UTC+01", "UTC+02", "UTC-01", "UTC-02"]
+            },
+            {
+                "name": "Time Format",
+                "id": "time_format",
+                "type": "dropdown",
+                "values": timeFormatValues,
+                "displayedValues": ["24h", "12h"]
+            },
+            {
+                "name": "When Autohiding",
+                "id": "auto_hide",
+                "type": "dropdown",
+                "values": opacityValues,
+                "displayedValues": ["Show", "Hide", "Opacity 0.7", "Opacity 0.5", "Opacity 0.3"]
+            },
+            {
+                "name": "Positioning",
+                "id": "position",
+                "type": "dropdown",
+                "values": positionValues,
+                "displayedValues": ["Left lower corner", "Right lower corner", "Right upper corner", "Left upper corner"]
+            }
+        ]
+    }
+);
 
 export default Clock;

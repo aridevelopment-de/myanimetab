@@ -4,6 +4,7 @@ import './settingscomponent.css';
 import EventHandler from '../../utils/eventhandler';
 import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
 import PlaylistSettingsComponent from './playlist_settings/PlaylistSettingsComponent';
+import WidgetInstallationComponent from './widget_installation/WidgetInstallationComponent';
 
 
 class SettingsComponent extends React.Component {
@@ -13,15 +14,15 @@ class SettingsComponent extends React.Component {
         this.switchPage = this.switchPage.bind(this);
 
         this.pages = [
-            "Widgets",
+            "Settings",
             "Playlists",
-            "..."
+            "Widgets"
         ];
 
         this.pageComponents = {
-            "Widgets": <WidgetSettingsComponent />,
+            "Settings": <WidgetSettingsComponent />,
             "Playlists": <PlaylistSettingsComponent />,
-            "...": <p style={{opacity: 0.3}}> Seems like something's missing... </p>
+            "Widgets": <WidgetInstallationComponent />
         };
 
         this.state = {

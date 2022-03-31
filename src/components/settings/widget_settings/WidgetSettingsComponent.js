@@ -2,7 +2,6 @@ import React from 'react';
 import './widgetsettingscomponent.css';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import SettingsElement from './SettingsElement';
-import IS_DEV from '../../../utils/devutils';
 import EventHandler from '../../../utils/eventhandler';
 
 
@@ -18,17 +17,18 @@ class WidgetSettingsComponent extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {
-                    Object.keys(CustomComponentRegistry.getAll()).map(dataKey => {
-                        if (IS_DEV) {
-                            console.log("Settings Page registered: " + dataKey);
-                        }
-                        return <SettingsElement data={CustomComponentRegistry.get(dataKey)} key={CustomComponentRegistry.get(dataKey).name} />
-                    })
-                }
-                <div class="widget_settings__import_export">
-                    <button class="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
-                    <button class="widget_settings__export_btn" onClick={this.onExportClick}>Export</button>
+                {CustomComponentRegistry.getAllSettingsAvailable().map(id => {
+                    const component = CustomComponentRegistry.get(id);
+                    console.debug(`Settings Page registered for element: ${component.name} (id ${id})`);
+                    
+                    return <SettingsElement 
+                        data={component} 
+                        key={id}
+                    />
+                })}
+                <div className="widget_settings__import_export">
+                    <button className="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
+                    <button className="widget_settings__export_btn" onClick={this.onExportClick}>Export</button>
                 </div>
                 <footer id="widget_settings__footer">
                     <div className="widget_settings__footer_urls">

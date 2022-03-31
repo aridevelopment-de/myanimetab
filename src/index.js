@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import getUserSettings from './utils/settings';
 
-getUserSettings().loadSettings();
 getUserSettings().registerSetting("selected_image", 0);
 getUserSettings().registerSetting("images", ["https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp"]);
+getUserSettings().registerSetting("installed_components", []);
 
 ReactDOM.render(
   <React.StrictMode>
