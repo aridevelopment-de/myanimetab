@@ -16,7 +16,11 @@ const CustomComponentRegistry = {
         
         for (let idx in settings.content) {
             // we assume that every content is a dropdown
-            getUserSettings().registerSetting(`cc.${settings.id}.${settings.content[idx].id}`, 0);
+            if (settings.content[idx].type === "dropdown") {
+                getUserSettings().registerSetting(`cc.${settings.id}.${settings.content[idx].id}`, 0);
+            } else if (settings.content[idx].type === "input") {
+                getUserSettings().registerSetting(`cc.${settings.id}.${settings.content[idx].id}`, "");
+            }
         }
     },
     registerNonComponent(name, settings) {

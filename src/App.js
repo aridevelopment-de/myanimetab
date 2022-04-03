@@ -26,7 +26,7 @@ class App extends React.Component {
 
   registerComponents() {
     /* Order is important here, because importing them means to initialize them with their id */
-    const components = ["clock/clock", "search_bar/searchbar", "control_bar/controlbar"];
+    const components = ["clock/clock", "search_bar/searchbar", "control_bar/controlbar", "weather_widget/weatherwidget"];
 
     components.forEach(path => {
 		require(`./components/custom_components/${path}`)
