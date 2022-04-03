@@ -41,7 +41,7 @@ class SettingsElement extends React.Component {
                 <div className="settings_item__title">
                     <p className="settings_item__title_text">{this.props.data.settings.name}</p>
                     <div className="settings_item__title_options">
-                        <SettingsItemSwitch settingsKey={"cc." + this.props.data.name} />
+                        <SettingsItemSwitch settingsKey={"cc." + this.props.data.name + ".state"} />
                     </div>
                 </div>
                 <div className="settings_item__content">

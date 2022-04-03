@@ -55,6 +55,7 @@ class Background extends React.Component {
     }
 
     startBlurInterval() {
+        console.error("Starting Blur Interval");
         this.setState({
             blurIntervalId: setInterval(() => {
                 if (this.state.searchbarFocus === false && TimeUtils.getSeconds(new Date()) - blurValues[getUserSettings().get("cc.auto_hide.time_lapse")] > this.state.lastAction) {
@@ -98,7 +99,7 @@ class Background extends React.Component {
                 clearInterval(this.state.blurIntervalId);
             }
 
-            if (getUserSettings().get("cc.auto_hide")) {
+            if (getUserSettings().get("cc.auto_hid.state")) {
                 this.startBlurInterval();
             }
         })
@@ -142,7 +143,7 @@ class Background extends React.Component {
             });
         });
 
-        if (getUserSettings().get("cc.auto_hide") === true) {
+        if (getUserSettings().get("cc.auto_hide.state") === true) {
             this.startBlurInterval();
         }
   
