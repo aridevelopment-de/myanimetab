@@ -15,3 +15,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.widget {
+  color: rgba(255, 255, 255, 0.816);
+  border-radius: 20px;
+  filter: drop-shadow(-1px 6px 3px rgba(0, 0, 0, 0.5));
+  user-select: none;
+}
