@@ -31,12 +31,10 @@
 }
 
 .clock {
-    font-family: 'PT Sans', sans-serif;
     color: rgba(255, 255, 255, 0.8);
     border-radius: 20px;
-    padding: 1em;
-    box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
-    background-color: rgba(0, 0, 0, 0.5);
+    filter: drop-shadow(-1px 6px 3px rgba(0, 0, 0, 0.5));
+    user-select: none;
 }
 
 #time {
@@ -47,6 +45,7 @@
 #time_full {
     font-size: 3em;
     padding-left: 0;
+    font-weight: 300;
 }
 
 #time__period {
@@ -60,6 +59,7 @@
 #week-day,
 #year-date,
 #year {
+    font-weight: 300;
     padding-left: .2ch;
     padding-right: .2ch;
 }
