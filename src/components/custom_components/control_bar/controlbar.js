@@ -46,13 +46,13 @@ class ControlBar extends React.Component {
             locked: !lockedState
         }, () => {
             getUserSettings().set("cc.wallpaper.state", !this.state.locked, true);
-            EventHandler.triggerEvent("set.cc.wallpaper", {value: !this.state.locked, sender: "controlbar"});
+            EventHandler.triggerEvent("set.cc.wallpaper.state", {value: !this.state.locked, sender: "controlbar"});
         });
     }
 
     componentDidMount() {
         EventHandler.listenEvent("blurall", "controlbar", this.onBlurTrigger.bind(this));
-        EventHandler.listenEvent("set.cc.wallpaper", "controlbar", (data) => {
+        EventHandler.listenEvent("set.cc.wallpaper.state", "controlbar", (data) => {
             if (data.sender !== "controlbar") {
                 this.setState({
                     locked: !data.value

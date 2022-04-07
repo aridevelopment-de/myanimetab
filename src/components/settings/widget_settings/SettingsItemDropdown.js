@@ -40,7 +40,7 @@ class SettingsItemDropdown extends React.Component {
         })
     }
 
-    render() {        
+    render() {
         return (
             <div className={`settings_select ${this.state.isSelected ? 'choosing_item' : ''}`}>
                 <div className="settings_select__current_item" onClick={this.toggleSelected}>

@@ -37,7 +37,7 @@ class SearchBar extends React.Component {
                 opacity: data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : (getUserSettings().get("cc.searchbar.state") ? 0 : 1)
             });
         });
-        EventHandler.listenEvent("set.cc.searchbar", "searchbar", (data) => {
+        EventHandler.listenEvent("set.cc.searchbar.state", "searchbar", (data) => {
             this.setState({ showing: data.value });
         });
         EventHandler.listenEvent("set.cc.searchbar.vertical_align", "searchbar", (data) => {

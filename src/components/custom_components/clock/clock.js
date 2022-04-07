@@ -70,7 +70,7 @@ class Clock extends React.Component {
 
     componentDidMount() {
         EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
-        EventHandler.listenEvent("set.cc.clock", "clock", this.onClockDisable);
+        EventHandler.listenEvent("set.cc.clock.state", "clock", this.onClockDisable);
         EventHandler.listenEvent("set.cc.clock.position", "clock", (value) => {
             this.setState({
                 position: value
@@ -100,7 +100,7 @@ class Clock extends React.Component {
         return (
             <div className={`clock__wrapper ${positionValues[this.state.position]} ${this.state.showing ? 'visible' : 'invisible'}`}
                  style={{opacity: opacityValues[this.state.opacity]}}>
-                <div className="clock">
+                <div className="clock widget">
                     <div className="time__wrapper">
                         <span id={ `time${timeFormatValues[this.state.timeFormat] === '24h' ? '_full' : ''}` }> {currentFmtDate.time} </span>
                         { timeFormatValues[this.state.timeFormat] === '12h' ? <span id="time__period"> {currentFmtDate.timePeriod} </span> : <span />}

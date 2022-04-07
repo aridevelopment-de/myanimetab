@@ -9,26 +9,26 @@ class SettingsElement extends React.Component {
         super(props);
 
         this.state = {
-            disabled: !getUserSettings().get(`cc.${props.data.name}`)
+            disabled: !getUserSettings().get(`cc.${props.data.name}.state`)
         };
 
         this.getDisabled = this.getDisabled.bind(this);
     }
 
     componentDidMount() {
-        EventHandler.listenEvent(`set.cc.${this.props.data.name}`, "settingselement", data => {
+        EventHandler.listenEvent(`set.cc.${this.props.data.name}.state`, "settingselement", data => {
             this.setState({
-                disabled: !data
+                disabled: !data.value
             });
         });
     }
     
     componentWillUnmount() {
-        EventHandler.unlistenEvent(`set.cc.${this.props.data.name}`, "settingselement");
+        EventHandler.unlistenEvent(`set.cc.${this.props.data.name}.state`, "settingselement");
     }
 
     getDisabled() {
-        if (getUserSettings().get(`cc.${this.props.data.name}`) === undefined) {
+        if (getUserSettings().get(`cc.${this.props.data.name}.state`) === undefined) {
             return '';
         }
 
