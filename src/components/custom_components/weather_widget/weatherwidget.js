@@ -67,7 +67,7 @@ class WeatherWidget extends React.Component {
         if (this.state.status === 200) {
             return (
                 <div className="weather_widget__wrapper">
-                    <div className="weather_widget">
+                    <div className="weather_widget widget">
                         <div className="weather_widget__information">
                             <div className="weather_widget__weather_info">
                                 <div className="weather_widget__status_icon">
