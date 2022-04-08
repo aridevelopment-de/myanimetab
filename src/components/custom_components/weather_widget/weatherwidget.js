@@ -8,6 +8,7 @@ import './weatherwidget.css';
 const positionValues = ["four", "three", "two", "one"];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const metricValues = ["metric", "standard", "imperial"];
+const temperatureValueValues = ["C", "K", "F"];
 const refreshRate = 15*60*1000;
 
 class WeatherWidget extends React.Component {
@@ -20,6 +21,7 @@ class WeatherWidget extends React.Component {
             showing: getUserSettings().get("cc.weatherwidget.state"),
             opacity: getUserSettings().get("cc.weatherwidget.state") ? 0 : 1,
             position: getUserSettings().get("cc.weatherwidget.position"),
+            unit: getUserSettings().get("cc.weatherwidget.unit"),
             status: -1,
             fullCityName: "Frankfurt am Main",
             temperature: 2,
@@ -35,7 +37,7 @@ class WeatherWidget extends React.Component {
 
         const API_KEY = getUserSettings().get("cc.weatherwidget.api_key");
         const CITY = getUserSettings().get("cc.weatherwidget.city");
-        const UNIT = metricValues[getUserSettings().get("cc.weatherwidget.unit")];
+        const UNIT = metricValues[this.state.unit];
 
         axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`)
             .then(response => {
@@ -80,6 +82,10 @@ class WeatherWidget extends React.Component {
             this.setState({ position: data.value });
         });
 
+        EventHandler.listenEvent("set.cc.weatherwidget.unit", "weatherwidget", (data) => {
+            this.setState({ unit: data.value }, this.requestData);
+        });
+
         this.requestData();
         
         this.setState({
@@ -91,6 +97,7 @@ class WeatherWidget extends React.Component {
         EventHandler.unlistenEvent("blurall", "weatherwidget");
         EventHandler.unlistenEvent("set.cc.weatherwidget.state", "weatherwidget");
         EventHandler.unlistenEvent("set.cc.weatherwidget.position", "weatherwidget");
+        EventHandler.unlistenEvent("set.cc.weatherwidget.unit", "weatherwidget");
     
         clearInterval(this.state.intervalId);
     }
@@ -113,7 +120,7 @@ class WeatherWidget extends React.Component {
                                     <img src={this.state.icon} alt="weather icon" />
                                 </div>
                                 <div className="weather_widget__temperature">
-                                    <p>{this.state.temperature}°C</p>
+                                    <p>{this.state.temperature}°{temperatureValueValues[this.state.unit]}</p>
                                 </div>
                             </div>
                             <div className="weather_widget__city_info">
@@ -196,7 +203,7 @@ CustomComponentRegistry.register(
                 "hidden": true
             },
             {
-                "name": "Default City",
+                "name": "Default City (refresh page)",
                 "id": "city",
                 "type": "input",
                 "tooltip": "The default location (e.g. Frankfurt)",
