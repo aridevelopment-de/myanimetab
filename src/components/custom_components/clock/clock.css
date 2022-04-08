@@ -30,6 +30,10 @@
     left: 0;
 }
 
+.clock {
+    margin: 1em;
+}
+
 #time {
     font-size: 3em;
     margin-right: -8px;

@@ -42,7 +42,7 @@ class SearchBar extends React.Component {
         });
         EventHandler.listenEvent("set.cc.searchbar.vertical_align", "searchbar", (data) => {
             this.setState({ position: data.value });
-        })
+        });
     }
 
     componentWillUnmount() {

@@ -39,7 +39,7 @@ class WidgetInstallationComponent extends React.Component {
     render() {
         return (
             <div className="widget__container">
-                <div className="widget">
+                <div className="widget__inner">
                     <header>
                         <p>{this.props.name}</p>
                         <button className={this.state.installed ? `installed` : ''} onClick={this.onAction}>

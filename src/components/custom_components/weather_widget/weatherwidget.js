@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios";
 import CustomComponentRegistry from "../../../utils/customcomponentregistry";
 import getUserSettings from "../../../utils/settings";
+import EventHandler from "../../../utils/eventhandler";
 import './weatherwidget.css';
-
 
 const positionValues = ["four", "three", "two", "one"];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
@@ -60,13 +60,40 @@ class WeatherWidget extends React.Component {
     }
 
     componentDidMount() {
+        EventHandler.listenEvent("blurall", "weatherwidget", (data) => {
+            this.setState({
+                opacity: data.blur ? getUserSettings().get("cc.clock.auto_hide") : (getUserSettings().get("cc.clock.state") ? 0 : 1)
+            });
+        });
+
+        EventHandler.listenEvent("set.cc.weatherwidget.state", "weatherwidget", (data) => {
+            this.setState({ showing: data.value });
+        });
+
+        EventHandler.listenEvent("set.cc.weatherwidget.position", "searchbar", (data) => {
+            this.setState({ position: data.value });
+        })
+
         this.requestData();
     }
 
+    componentWillUnmount() {
+        EventHandler.unlistenEvent("blurall", "weatherwidget");
+        EventHandler.unlistenEvent("set.cc.weatherwidget.state", "weatherwidget");
+        EventHandler.unlistenEvent("set.cc.weatherwidget.position", "weatherwidget");
+    }
+
     render() {
+        if (!this.state.showing) {
+            return null;
+        }
+        
         if (this.state.status === 200) {
             return (
-                <div className="weather_widget__wrapper">
+                <div 
+                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    style={{opacity: opacityValues[this.state.opacity]}}
+                >
                     <div className="weather_widget widget">
                         <div className="weather_widget__information">
                             <div className="weather_widget__weather_info">
@@ -86,11 +113,17 @@ class WeatherWidget extends React.Component {
             )
         } else if (this.state.status === 404 || this.state.status === 401) {
             return (
-                <div className="weather_widget__wrapper">
-                    <div className="weather_widget">
+                <div 
+                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    style={{opacity: opacityValues[this.state.opacity]}}
+                >
+                    <div className="weather_widget widget">
                         <div className="weather_widget__inner_container">
                             <div className="weather_widget__status_code">
-                                <p>{this.state.status}</p>
+                                <p style={{
+                                    color: "white",
+                                    fontWeight: "300"
+                                }}>{this.state.status}</p>
                             </div>
                             <div className="weather_widget__wrong_city">
                                 <p>{
@@ -104,13 +137,17 @@ class WeatherWidget extends React.Component {
             )
         } else if (this.state.status === -1) {
             return (
-                <div className="weather_widget__wrapper">
-                    <div className="weather_widget">
+                <div 
+                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    style={{opacity: opacityValues[this.state.opacity]}}
+                >
+                    <div className="weather_widget widget">
                         <div className="weather_widget__inner_container">
                             <p style={{
                                 fontSize: "2em",
                                 padding: "0",
-                                margin: "0.7em"
+                                margin: "0.7em",
+                                color: "white"
                             }}>
                                 Loading...
                             </p>
