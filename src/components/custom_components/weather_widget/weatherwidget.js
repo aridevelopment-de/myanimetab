@@ -8,6 +8,7 @@ import './weatherwidget.css';
 const positionValues = ["four", "three", "two", "one"];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const metricValues = ["metric", "standard", "imperial"];
+const refreshRate = 15*60*1000;
 
 class WeatherWidget extends React.Component {
     constructor(props) {
@@ -23,6 +24,7 @@ class WeatherWidget extends React.Component {
             fullCityName: "Frankfurt am Main",
             temperature: 2,
             icon: "http://openweathermap.org/img/wn/02d@4x.png",
+            intervalId: null
         }
     }
 
@@ -67,20 +69,30 @@ class WeatherWidget extends React.Component {
         });
 
         EventHandler.listenEvent("set.cc.weatherwidget.state", "weatherwidget", (data) => {
-            this.setState({ showing: data.value });
+            clearInterval(this.state.intervalId);
+            this.setState({
+                showing: data.value,
+                intervalId: setInterval(this.requestData, refreshRate)
+            });
         });
 
         EventHandler.listenEvent("set.cc.weatherwidget.position", "searchbar", (data) => {
             this.setState({ position: data.value });
-        })
+        });
 
         this.requestData();
+        
+        this.setState({
+            intervalId: setInterval(this.requestData, refreshRate)
+        });
     }
 
     componentWillUnmount() {
         EventHandler.unlistenEvent("blurall", "weatherwidget");
         EventHandler.unlistenEvent("set.cc.weatherwidget.state", "weatherwidget");
         EventHandler.unlistenEvent("set.cc.weatherwidget.position", "weatherwidget");
+    
+        clearInterval(this.state.intervalId);
     }
 
     render() {
