@@ -10,18 +10,18 @@
 }
 
 .weather_widget__wrapper.three {
-    right: 0;
+    right: -8px;
     bottom: 0;
 }
 
 .weather_widget__wrapper.two {
-    right: 0;
-    top: 0;
+    right: -8px;
+    top: -8px;
 }
 
 .weather_widget__wrapper.one {
-    left: -32px;
-    top: 0;
+    left: -40px;
+    top: -8px;
 }
 
 /* style when the city is wrong */
