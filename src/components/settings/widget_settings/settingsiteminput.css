@@ -8,6 +8,7 @@ input {
     font-size: 16px;
     font-weight: 400;
     color: #4a4a4a;
+    transition: opacity 200ms;
 }
 
 .settings_item.disabled input {
