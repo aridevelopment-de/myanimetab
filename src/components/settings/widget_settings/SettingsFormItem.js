@@ -1,5 +1,6 @@
 import React from "react";
 import SettingsItemDropdown from './SettingsItemDropdown';
+import SettingsItemInput from './SettingsItemInput';
 
 
 class SettingsFormItem extends React.Component {
@@ -8,14 +9,25 @@ class SettingsFormItem extends React.Component {
     // settingsKey: "cc.name.id"
 
     render() {
-        return (
-            <div className="settings_item__form_item">
-                <p className="settings_item__form_item_label"> {this.props.formBody.name} </p>
-                <div className="settings_item__form_item_content">
-                    <SettingsItemDropdown values={this.props.formBody.values} displayedValues={this.props.formBody.displayedValues} settingsKey={this.props.settingsKey} />
+        if (this.props.formBody.type === "dropdown") {
+            return (
+                <div className="settings_item__form_item">
+                    <p className="settings_item__form_item_label"> {this.props.formBody.name} </p>
+                    <div className="settings_item__form_item_content">
+                        <SettingsItemDropdown values={this.props.formBody.values} displayedValues={this.props.formBody.displayedValues} settingsKey={this.props.settingsKey} />
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else if (this.props.formBody.type === "input") {
+            return (
+                <div className="settings_item__form_item">
+                    <p className="settings_item__form_item_label"> {this.props.formBody.name} </p>
+                    <div className="settings_item__form_item_content">
+                        <SettingsItemInput tooltip={this.props.formBody.tooltip} hidden={this.props.formBody.hidden} settingsKey={this.props.settingsKey} />
+                    </div>
+                </div>
+            )
+        }
     }
 }
 

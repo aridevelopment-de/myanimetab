@@ -55,7 +55,6 @@ class Background extends React.Component {
     }
 
     startBlurInterval() {
-        console.error("Starting Blur Interval");
         this.setState({
             blurIntervalId: setInterval(() => {
                 if (this.state.searchbarFocus === false && TimeUtils.getSeconds(new Date()) - blurValues[getUserSettings().get("cc.auto_hide.time_lapse")] > this.state.lastAction) {
@@ -84,7 +83,7 @@ class Background extends React.Component {
     }
 
     componentDidMount() {
-        EventHandler.listenEvent("set.cc.auto_hide", "background", (data) => {
+        EventHandler.listenEvent("set.cc.auto_hide.state", "background", (data) => {
             if (this.state.blurIntervalId != null) {
                 clearInterval(this.state.blurIntervalId);
             }
@@ -104,7 +103,7 @@ class Background extends React.Component {
             }
         })
 
-        EventHandler.listenEvent("set.cc.wallpaper", "background", (data) => {
+        EventHandler.listenEvent("set.cc.wallpaper.state", "background", (data) => {
             if (this.state.backgroundIntervalId != null) {
                 clearInterval(this.state.backgroundIntervalId);
             }
@@ -170,7 +169,7 @@ class Background extends React.Component {
         EventHandler.unlistenEvent("searchbar_inputstate", "background");
         EventHandler.unlistenEvent("skip_image", "background");
         EventHandler.unlistenEvent("select_image", "background");
-        EventHandler.unlistenEvent("set.cc.wallpaper", "background");
+        EventHandler.unlistenEvent("set.cc.wallpaper.state", "background");
         EventHandler.unlistenEvent("set.cc.wallpaper.when_switch", "background");
     }
 
