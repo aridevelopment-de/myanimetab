@@ -65,7 +65,7 @@ class SearchBar extends React.Component {
         if (this.state.content.length > 0) {
             SuggestionCaller.fetchSearchSuggestions(e.target.value, (data) => {            
                 this.setState({
-                    suggestions: data[1].slice(0, 5).map((data) => data[0])
+                    suggestions: data.suggestions.slice(0, 5)
                 });
             });
         }
@@ -94,12 +94,34 @@ class SearchBar extends React.Component {
                 <div className={`search_bar__wrapper ${verticalAlignValues[this.state.position]}`}>
                     <div className="search_bar">
                         <div className="search_bar__engine_container">
-                            <img className="search_bar__engine_icon" src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} alt={searchEngines[this.state.searchEngine]} />
+                            <img 
+                                className="search_bar__engine_icon" 
+                                src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
+                                alt={searchEngines[this.state.searchEngine]} 
+                            />
                         </div>
-                        <input className="search_bar__input" onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} onInput={this.onInputChange} onBlur={this.onInputBlur} onFocus={this.onInputFocus} value={this.state.content} type="text" spellCheck="false" placeholder="Search" tabIndex="0" autoFocus />
-                        <SearchIcon className="search_bar__icon" onClick={() => SearchEngine.search(this.state.content)} />
+                        <input 
+                            className="search_bar__input" 
+                            onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
+                            onInput={this.onInputChange} 
+                            onBlur={this.onInputBlur} 
+                            onFocus={this.onInputFocus} 
+                            value={this.state.content} 
+                            type="text" 
+                            spellCheck="false" 
+                            placeholder="Search" 
+                            tabIndex="0" 
+                            autoFocus 
+                        />
+                        <SearchIcon 
+                            className="search_bar__icon" 
+                            onClick={() => SearchEngine.search(this.state.content)} 
+                        />
                     </div>
-                    <SearchSuggestions suggestions={this.state.suggestions} showing={this.state.focused && this.state.content.length > 1 ? 'visible' : 'invisible'} />
+                    <SearchSuggestions 
+                        suggestions={this.state.suggestions} 
+                        showing={this.state.focused && this.state.suggestions.length > 0 && this.state.content.length > 1 ? 'visible' : 'invisible'} 
+                    />
                 </div>
             </div>
         )
