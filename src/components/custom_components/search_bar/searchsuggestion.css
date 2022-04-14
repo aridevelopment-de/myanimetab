@@ -13,15 +13,14 @@
 
 .search_suggestions {
     background-color: #fefefe;
-    width: 37em;
+    width: 100%;
     border-radius: 15px;
     padding: 10px 0;
-    z-index: 1;    
+    z-index: 1;
 }
 
 .search_suggestions__item__wrapper {
     color: #000;
-    transition: color 200ms;
     cursor: pointer;
     margin: 10px 0;
 }
