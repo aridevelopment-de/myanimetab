@@ -66,7 +66,7 @@ class WeatherWidget extends React.Component {
     componentDidMount() {
         EventHandler.listenEvent("blurall", "weatherwidget", (data) => {
             this.setState({
-                opacity: data.blur ? getUserSettings().get("cc.clock.auto_hide") : (getUserSettings().get("cc.clock.state") ? 0 : 1)
+                opacity: data.blur ? getUserSettings().get("cc.weatherwidget.auto_hide") : (getUserSettings().get("cc.weatherwidget.state") ? 0 : 1)
             });
         });
 

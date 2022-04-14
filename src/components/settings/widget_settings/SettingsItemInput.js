@@ -32,6 +32,7 @@ class SettingsItemInput extends React.Component {
                     value={this.state.input} 
                     type={this.props.hidden ? "password" : "text"}
                     spellCheck="false"
+                    className="settings_item__input"
                 />
     }
 }
