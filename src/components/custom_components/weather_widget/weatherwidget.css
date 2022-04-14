@@ -5,22 +5,22 @@
 }
 
 .weather_widget__wrapper.four {
-    left: -32px;
+    left: -8px;
     bottom: 0;
 }
 
 .weather_widget__wrapper.three {
-    right: -8px;
+    right: 0;
     bottom: 0;
 }
 
 .weather_widget__wrapper.two {
-    right: -8px;
+    right: 0;
     top: -8px;
 }
 
 .weather_widget__wrapper.one {
-    left: -40px;
+    left: -15px;
     top: -8px;
 }
 
@@ -63,19 +63,11 @@
 /* style when data is successfully loaded */
 .weather_widget__information {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0;
     margin: 1em;
 
-}
-
-.weather_widget__weather_info {
-    display: flex;
-    align-items: center;
-    margin: -16px 1em;
-    gap: 1em;
 }
 
 .weather_widget__status_icon {
@@ -89,8 +81,8 @@
 }
 
 .weather_widget__status_icon img {
-    width: 6em;
-    height: 6em;
+    width: 100px;
+    height: 100px;
 }
 
 .weather_widget__temperature {
