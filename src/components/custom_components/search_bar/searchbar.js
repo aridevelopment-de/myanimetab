@@ -89,40 +89,43 @@ class SearchBar extends React.Component {
 
     render() {
         return (
-            <div className={`search__wrapper ${this.state.showing ? 'visible' : 'invisible'}`}
-                 style={{opacity: opacityValues[this.state.opacity]}}>
-                <div className={`search_bar__wrapper ${verticalAlignValues[this.state.position]}`}>
-                    <div className="search_bar">
-                        <div className="search_bar__engine_container">
-                            <img 
-                                className="search_bar__engine_icon" 
-                                src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
-                                alt={searchEngines[this.state.searchEngine]} 
-                            />
-                        </div>
-                        <input 
-                            className="search_bar__input" 
-                            onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
-                            onInput={this.onInputChange} 
-                            onBlur={this.onInputBlur} 
-                            onFocus={this.onInputFocus} 
-                            value={this.state.content} 
-                            type="text" 
-                            spellCheck="false" 
-                            placeholder="Search" 
-                            tabIndex="0" 
-                            autoFocus 
-                        />
-                        <SearchIcon 
-                            className="search_bar__icon" 
-                            onClick={() => SearchEngine.search(this.state.content)} 
+            <div
+                className={`search_bar__wrapper ${verticalAlignValues[this.state.position]}`}
+                style={{
+                    opacity: opacityValues[this.state.opacity],
+                    display: this.state.showing ? 'unset' : 'none'
+                }}    
+            >
+                <div className="search_bar">
+                    <div className="search_bar__engine_container">
+                        <img 
+                            className="search_bar__engine_icon" 
+                            src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
+                            alt={searchEngines[this.state.searchEngine]} 
                         />
                     </div>
-                    <SearchSuggestions 
-                        suggestions={this.state.suggestions} 
-                        showing={this.state.focused && this.state.suggestions.length > 0 && this.state.content.length > 1 ? 'visible' : 'invisible'} 
+                    <input 
+                        className="search_bar__input" 
+                        onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
+                        onInput={this.onInputChange} 
+                        onBlur={this.onInputBlur} 
+                        onFocus={this.onInputFocus} 
+                        value={this.state.content} 
+                        type="text" 
+                        spellCheck="false" 
+                        placeholder="Search" 
+                        tabIndex="0" 
+                        autoFocus 
+                    />
+                    <SearchIcon 
+                        className="search_bar__icon" 
+                        onClick={() => SearchEngine.search(this.state.content)} 
                     />
                 </div>
+                <SearchSuggestions 
+                    suggestions={this.state.suggestions} 
+                    showing={this.state.focused && this.state.suggestions.length > 0 && this.state.content.length > 1 ? 'visible' : 'invisible'} 
+                />
             </div>
         )
     }

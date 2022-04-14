@@ -1,26 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
 
-.search__wrapper {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    transition: opacity 1.3s;
-}
-
-.search__wrapper.invisible {
-    display: none;
-    opacity: 0;
-    width: 0vw;
-    height: 0vw;
-}
-
 .search_bar__wrapper {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     position: absolute;
     left: 50%;
+    z-index: 3;
     transform: translateX(-50%);
-    bottom: 0;
+    transition: opacity 1.3s;
 }
 
 .search_bar__wrapper.one {
@@ -58,13 +45,14 @@
 .search_bar__input {
     font-size: 1.3em;
     color: inherit;
-    border: none;
     outline: none;
+    border: none;
     background-color: rgba(0, 0, 0, 0);
     border-radius: 40px;
     min-height: inherit;
     width: 100%;
-    padding-left: 1em;
+    padding-left: 0em;
+    margin-left: 1em;
 }
 
 .search_bar__engine_container {
