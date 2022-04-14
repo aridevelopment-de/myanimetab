@@ -74,36 +74,39 @@ class ControlBar extends React.Component {
 
     render() {
         return (
-            <div className={`control_menu__wrapper ${positionValues[this.state.position]}`}>
-                <div className={`control_menu ${this.state.collapsed ? 'collapsed' : ''}`}>
-                    <div className="settings__wrapper control_menu_item__wrapper">
-                        <div className="settings" onClick={ function() {
-                            EventHandler.triggerEvent("settings_window_state", {opened: true})
-                        }}>
-                            <SettingsIcon />
-                        </div>
+            <div 
+                className={`control_menu ${positionValues[this.state.position]}`}
+                style={{
+                    transform: this.state.collapsed ? 'translateY(-80%)' : 'translateY(0)'
+                }}
+            >
+                <div className="settings__wrapper control_menu_item__wrapper">
+                    <div className="settings" onClick={ function() {
+                        EventHandler.triggerEvent("settings_window_state", {opened: true})
+                    }}>
+                        <SettingsIcon />
                     </div>
+                </div>
 
-                    <div className="next_image__wrapper control_menu_item__wrapper">
-                        <div className="next_image" onClick={ function() {
-                            EventHandler.triggerEvent("skip_image")
-                            EventHandler.triggerEvent("playlist_refresh");
-                            getUserSettings().set("cc.wallpaper.state", true);
-                        }}>
-                            <SkipNextIcon />
-                        </div>
+                <div className="next_image__wrapper control_menu_item__wrapper">
+                    <div className="next_image" onClick={ function() {
+                        EventHandler.triggerEvent("skip_image")
+                        EventHandler.triggerEvent("playlist_refresh");
+                        getUserSettings().set("cc.wallpaper.state", true);
+                    }}>
+                        <SkipNextIcon />
                     </div>
+                </div>
 
-                    <div className="lock_image__wrapper control_menu_item__wrapper">
-                        <div className="lock_image" onClick={this.lockImage}>
-                            { this.state.locked ? <LockIcon /> : <LockOpenIcon /> }
-                        </div>
+                <div className="lock_image__wrapper control_menu_item__wrapper">
+                    <div className="lock_image" onClick={this.lockImage}>
+                        { this.state.locked ? <LockIcon /> : <LockOpenIcon /> }
                     </div>
+                </div>
 
-                    <div className="expand_less__wrapper control_menu_item__wrapper">
-                        <div className="expand_less" onClick={this.collapse}>
-                            { this.state.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
-                        </div>
+                <div className="expand_less__wrapper control_menu_item__wrapper">
+                    <div className="expand_less" onClick={this.collapse}>
+                        { this.state.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
                     </div>
                 </div>
             </div>
