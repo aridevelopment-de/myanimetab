@@ -115,16 +115,16 @@ class WeatherWidget extends React.Component {
                 >
                     <div className="weather_widget widget">
                         <div className="weather_widget__information">
+                            <div className="weather_widget__status_icon">
+                                <img src={this.state.icon} alt="weather icon" />
+                            </div>
                             <div className="weather_widget__weather_info">
-                                <div className="weather_widget__status_icon">
-                                    <img src={this.state.icon} alt="weather icon" />
-                                </div>
                                 <div className="weather_widget__temperature">
                                     <p>{this.state.temperature}°{temperatureValueValues[this.state.unit]}</p>
                                 </div>
-                            </div>
-                            <div className="weather_widget__city_info">
-                                <p>{this.state.fullCityName}</p>
+                                <div className="weather_widget__city_info">
+                                    <p>{this.state.fullCityName}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
