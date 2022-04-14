@@ -40,16 +40,16 @@ class WidgetInstallationComponent extends React.Component {
         return (
             <div className="widget__container">
                 <div className="widget__inner">
-                    <header>
+                    <header class="widget_header">
                         <p>{this.props.name}</p>
                         <button className={this.state.installed ? `installed` : ''} onClick={this.onAction}>
                             {this.state.installed ? 'Uninstall' : 'Install'}
                         </button>
                     </header>
-                    <main>
+                    <main class="widget_main">
                         <p>{this.props.description}</p>
                     </main>
-                    <footer>
+                    <footer class="widget_footer">
                         <p>by {this.props.author}</p>
                     </footer>
                 </div>
