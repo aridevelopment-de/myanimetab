@@ -54,6 +54,7 @@
 .widget_main p {
     font-weight: 400;
     line-height: 0.9;
+    max-width: 290px;
 }
 
 .widget_footer {
