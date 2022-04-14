@@ -1,0 +1,32 @@
+.search_engine_chooser__container {
+    position: absolute;
+    transform: translateX(-25%);
+    background-color: white;
+    color: #4a4a4a;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 1em 0;
+}
+
+.search_engine_chooser__item {
+    display: flex;
+    gap: 10px;
+    padding: 4px 1em;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.search_engine_chooser__item.active {
+    background-color: hsla(0, 0%, 0%, 0.141);
+}
+
+.search_engine_chooser__item:not(.active):hover {
+    background-color: hsla(0, 0%, 0%, 0.141);
+}
+
+.search_engine_chooser__item__icon img {
+    width: 24px;
+    height: 24px;
+}

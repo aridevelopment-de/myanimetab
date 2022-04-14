@@ -18,10 +18,6 @@
     top: calc(100% / 12 * 2);
 }
 
-.search_bar__wrapper.three {
-    top: calc(100% / 12 * 7);
-}
-
 @media all and (max-width: 680px) {
     .search_bar {
         width: 80vw !important;
@@ -55,7 +51,7 @@
     margin-left: 1em;
 }
 
-.search_bar__engine_container {
+.search_bar__engine_icon__container {
     padding: 5px 5px;
     margin-left: 5px;
     background-color: white;

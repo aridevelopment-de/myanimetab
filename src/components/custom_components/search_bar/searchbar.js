@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchSuggestions from './searchsuggestions';
 import SearchIcon from '@mui/icons-material/Search';
+import SearchEngineChooser from './searchenginechooser';
 import './searchbar.css';
 import SearchEngine from '../../../utils/searchengine';
 import SuggestionCaller from '../../../utils/searchsuggestioncaller';
@@ -10,7 +11,7 @@ import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
-const verticalAlignValues = ["one", "two", "three", "four"];
+const verticalAlignValues = ["one", "two"];
 const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
 
 
@@ -21,6 +22,7 @@ class SearchBar extends React.Component {
         this.onInputChange = this.onInputChange.bind(this);
         this.onInputBlur = this.onInputBlur.bind(this);
         this.onInputFocus = this.onInputFocus.bind(this);
+        this.toggleSearchEngineChooser = this.toggleSearchEngineChooser.bind(this);
 
         this.state = {
             showing: getUserSettings().get("cc.searchbar.state"),
@@ -29,10 +31,11 @@ class SearchBar extends React.Component {
             content: "",
             opacity: getUserSettings().get("cc.searchbar.state") ? 0 : 1,
             suggestions: [],
-            searchEngine: getUserSettings().get("cc.searchbar.search_engine")
+            searchEngine: getUserSettings().get("cc.searchbar.search_engine"),
+            chooseSearchEngine: false
         };
     }
-
+    
     componentDidMount() {
         EventHandler.listenEvent("blurall", "searchbar", (data) => {
             this.setState({
@@ -46,7 +49,10 @@ class SearchBar extends React.Component {
             this.setState({ position: data.value });
         });
         EventHandler.listenEvent("set.cc.searchbar.search_engine", "searchbar", (data) => {
-            this.setState({ searchEngine: data.value });
+            this.setState({
+                searchEngine: data.value,
+                chooseSearchEngine: false
+            });
         });
     }
 
@@ -87,6 +93,12 @@ class SearchBar extends React.Component {
         EventHandler.triggerEvent("searchbar_inputstate", {focus: true});
     }
 
+    toggleSearchEngineChooser() {
+        this.setState({
+            chooseSearchEngine: !this.state.chooseSearchEngine
+        })
+    }
+
     render() {
         return (
             <div
@@ -98,11 +110,17 @@ class SearchBar extends React.Component {
             >
                 <div className="search_bar">
                     <div className="search_bar__engine_container">
-                        <img 
-                            className="search_bar__engine_icon" 
-                            src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
-                            alt={searchEngines[this.state.searchEngine]} 
-                        />
+                        <div 
+                            className="search_bar__engine_icon__container"
+                            onClick={this.toggleSearchEngineChooser}
+                        >
+                            <img 
+                                className="search_bar__engine_icon" 
+                                src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
+                                alt={searchEngines[this.state.searchEngine]} 
+                            />
+                        </div>
+                        {this.state.chooseSearchEngine ? <SearchEngineChooser /> : null}
                     </div>
                     <input 
                         className="search_bar__input" 
@@ -173,7 +191,7 @@ CustomComponentRegistry.register(
                 "id": "vertical_align",
                 "type": "dropdown",
                 "values": verticalAlignValues,
-                "displayedValues": ["1/4", "2/4", "3/4", "4/4"]
+                "displayedValues": ["Screen top", "Upper half"]
             }
         ]
     }
