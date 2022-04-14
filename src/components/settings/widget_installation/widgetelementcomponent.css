@@ -17,19 +17,19 @@
     padding: 1.5em;
 }
 
-header {
+.widget_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-header p {
+.widget_header p {
     font-weight: 500;
     font-size: 1.2em;
     margin: 0;
 }
 
-header button {
+.widget_header button {
     background-color: #2fc36d;
     color: #fff;
     padding: 0.5em;
@@ -38,29 +38,29 @@ header button {
     cursor: pointer;
 }
 
-header button:hover {
+.widget_header button:hover {
     background-color: #26a75c;
 }
 
-header button.installed {
+.widget_header button.installed {
     background-color: #c32f2f;
     color: #fff;
 }
 
-header button.installed:hover {
+.widget_header button.installed:hover {
     background-color: #a12b2b;
 }
 
-main p {
+.widget_main p {
     font-weight: 400;
     line-height: 0.9;
 }
 
-footer {
+.widget_footer {
     margin-top: 1em;
 }
 
-footer p {
+.widget_footer p {
     font-weight: 200;
     font-size: 0.9em;
     margin: 0;
