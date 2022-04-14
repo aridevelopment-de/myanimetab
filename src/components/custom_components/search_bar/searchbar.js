@@ -11,6 +11,7 @@ import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const verticalAlignValues = ["one", "two", "three", "four"];
+const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
 
 
 class SearchBar extends React.Component {
@@ -27,7 +28,8 @@ class SearchBar extends React.Component {
             focused: true,
             content: "",
             opacity: getUserSettings().get("cc.searchbar.state") ? 0 : 1,
-            suggestions: []
+            suggestions: [],
+            searchEngine: getUserSettings().get("cc.searchbar.search_engine")
         };
     }
 
@@ -43,12 +45,16 @@ class SearchBar extends React.Component {
         EventHandler.listenEvent("set.cc.searchbar.vertical_align", "searchbar", (data) => {
             this.setState({ position: data.value });
         });
+        EventHandler.listenEvent("set.cc.searchbar.search_engine", "searchbar", (data) => {
+            this.setState({ searchEngine: data.value });
+        });
     }
 
     componentWillUnmount() {
         EventHandler.unlistenEvent("blurall", "searchbar");
         EventHandler.unlistenEvent("search_bar_state", "searchbar");
         EventHandler.unlistenEvent("set.cc.searchbar.vertical_align", "searchbar");
+        EventHandler.unlistenEvent("set.cc.searchbar.search_engine", "searchbar");
     }
 
     onInputChange(e) {
@@ -87,6 +93,9 @@ class SearchBar extends React.Component {
                  style={{opacity: opacityValues[this.state.opacity]}}>
                 <div className={`search_bar__wrapper ${verticalAlignValues[this.state.position]}`}>
                     <div className="search_bar">
+                        <div className="search_bar__engine_container">
+                            <img className="search_bar__engine_icon" src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} alt={searchEngines[this.state.searchEngine]} />
+                        </div>
                         <input className="search_bar__input" onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} onInput={this.onInputChange} onBlur={this.onInputBlur} onFocus={this.onInputFocus} value={this.state.content} type="text" spellCheck="false" placeholder="Search" tabIndex="0" autoFocus />
                         <SearchIcon className="search_bar__icon" onClick={() => SearchEngine.search(this.state.content)} />
                     </div>
@@ -117,7 +126,7 @@ CustomComponentRegistry.register(
                 "name": "Search Engine",
                 "id": "search_engine",
                 "type": "dropdown",
-                "values": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"],
+                "values": searchEngines,
                 "displayedValues": ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"]
             },
             {
