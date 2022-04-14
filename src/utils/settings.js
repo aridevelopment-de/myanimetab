@@ -59,9 +59,9 @@ class UserSettings {
         console.debug("[Updated] Settings updated: " + key + " with value " + value);
         
         if (key.startsWith("cc.")) {
-            key = key.split(".");
-            let parent = key.shift() + "." + key.shift();
-            let child = key.join(".");
+            let keyCopy = key.split(".");
+            let parent = keyCopy.shift() + "." + keyCopy.shift();
+            let child = keyCopy.join(".");
 
             if (this.settings[parent] === undefined) {
                 this.settings[parent] = {};
