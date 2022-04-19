@@ -29,10 +29,17 @@ class SettingsItemInput extends React.Component {
         return <input 
                     placeholder={this.props.tooltip}
                     onChange={this.handleChange}
+                    onFocus={(e) => {e.target.removeAttribute("readonly")}}
+                    onBlur={(e) => {e.target.setAttribute("readonly", "readonly")}}
                     value={this.state.input} 
-                    type={this.props.hidden ? "password" : "text"}
+                    style={{
+                        fontFamily: this.props.hidden ? "dotsfont" : "inherit",
+                    }}
+                    type="text"
                     spellCheck="false"
+                    autoComplete="off"
                     className="settings_item__input"
+                    readOnly
                 />
     }
 }
