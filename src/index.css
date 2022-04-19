@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+@font-face {
+  font-family: 'dotsfont';
+  src: url('./fonts/dotsfont.eot');
+  src: url('./fonts/dotsfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/dotsfont.woff') format('woff'),
+       url('./fonts/dotsfont.ttf') format('truetype'),
+       url('./fonts/dotsfont.svg#dotsfontregular') format('svg');
+}
+
+[conceal]:not(:active):not(:focus) {
+  font-family: 'dotsfont';
+}
+
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;

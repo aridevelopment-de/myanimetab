@@ -126,13 +126,21 @@ class SearchBar extends React.Component {
                         className="search_bar__input" 
                         onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
                         onInput={this.onInputChange} 
-                        onBlur={this.onInputBlur} 
-                        onFocus={this.onInputFocus} 
+                        onBlur={(e) => {
+                            this.onInputBlur(e);
+                            e.target.setAttribute("readonly", "readonly");
+                        }} 
+                        onFocus={(e) => {
+                            this.onInputFocus(e);
+                            e.target.removeAttribute("readonly");
+                        }}
                         value={this.state.content} 
                         type="text" 
                         spellCheck="false" 
                         placeholder="Search" 
+                        autoComplete="off"
                         tabIndex="0" 
+                        readOnly
                         autoFocus 
                     />
                     <SearchIcon 
