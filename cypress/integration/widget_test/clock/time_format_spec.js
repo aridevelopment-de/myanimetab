@@ -17,11 +17,24 @@ describe("Clock Settings prepare", () => {
     })
 })
 describe("Test the 24h time format", () => {
+    beforeEach(() => {
+        cy
+            .get(".settings_item__title_text")
+            .contains("Clock")
+            .parent()
+            .parent()
+            .children(".settings_item__content")
+            .within(($form) => {
+                cy
+                    .get(".settings_item__form_item_label")
+                    .contains("Time Format")
+                    .parent()
+                    .as("parent")
+            })
+    })
     it("Clicks the dropdown", () => {
         cy
-            .get(".settings_item__form_item_label")
-            .contains("Time Format")
-            .parent()
+            .get("@parent")
             .children(".settings_item__form_item_content")
             .children(".settings_select")
             .children(".settings_select__current_item")
@@ -29,9 +42,7 @@ describe("Test the 24h time format", () => {
     })
     it("Selects the 24h option", () => {
         cy
-            .get(".settings_item__form_item_label")
-            .contains("Time Format")
-            .parent()
+            .get("@parent")
             .children(".settings_item__form_item_content")
             .children(".settings_select")
             .children(".settings_select__options")
@@ -63,14 +74,27 @@ describe("Test the 24h time format", () => {
     })
 })
 describe("Test the 12h time format", () => {
+    beforeEach(() => {
+        cy
+            .get(".settings_item__title_text")
+            .contains("Clock")
+            .parent()
+            .parent()
+            .children(".settings_item__content")
+            .within(($form) => {
+                cy
+                    .get(".settings_item__form_item_label")
+                    .contains("Time Format")
+                    .parent()
+                    .as("parent")
+            })
+    })
     it("Opens the settings page", () => {
         cy.get(".settings").click()
     })
     it("Clicks the dropdown", () => {
         cy
-            .get(".settings_item__form_item_label")
-            .contains("Time Format")
-            .parent()
+            .get("@parent")
             .children(".settings_item__form_item_content")
             .children(".settings_select")
             .children(".settings_select__current_item")
@@ -78,9 +102,7 @@ describe("Test the 12h time format", () => {
     })
     it("Selects the 12h option", () => {
         cy
-            .get(".settings_item__form_item_label")
-            .contains("Time Format")
-            .parent()
+            .get("@parent")
             .children(".settings_item__form_item_content")
             .children(".settings_select")
             .children(".settings_select__options")
