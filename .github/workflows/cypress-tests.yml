@@ -14,10 +14,11 @@ jobs:
   firefox:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
 
       - name: Set up Nodejs
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: '16'
 
@@ -40,7 +41,7 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
 
-      -name: Store cypress videos
+      - name: Store cypress videos
       - uses: actions/upload-artifact@v1
         if: always()
         with:
