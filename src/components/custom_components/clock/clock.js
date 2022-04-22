@@ -133,7 +133,7 @@ CustomComponentRegistry.register(
         },
         "content": [
             {
-                "name": "Time zone",
+                "name": "Time Zone",
                 "id": "time_zone",
                 "type": "dropdown",
                 "values": ["auto", 0, 1, 2, -1, -2],
