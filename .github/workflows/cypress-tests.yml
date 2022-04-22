@@ -29,3 +29,15 @@ jobs:
           wait-on: "http://localhost:3000"
           browser: firefox
           headless: true
+      - name: Store cypress screenshots
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: Store cypress videos
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
