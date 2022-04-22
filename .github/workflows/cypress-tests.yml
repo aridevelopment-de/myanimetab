@@ -18,6 +18,8 @@ jobs:
       options: --user 1001
     steps:
       - uses: actions/checkout@v2
+      - name: Setup dependencies
+        run: apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - name: Setup project
         run: npm install
       - uses: cypress-io/github-action@v2
@@ -25,13 +27,3 @@ jobs:
           browser: firefox
           start: npm start
           wait-on: 'http://localhost:3000'
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-videos
-          path: cypress/videos
