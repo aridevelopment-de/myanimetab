@@ -43,7 +43,8 @@ class WidgetSettingsComponent extends React.Component {
                 </div>
                 {CustomComponentRegistry.getAllSettingsAvailable().map(id => {
                     const component = CustomComponentRegistry.get(id);
-                    console.debug(`Settings Page registered for element: ${component.name} (id ${id})`);
+
+                    console.log(component);
                     
                     return <SettingsElement 
                         data={component} 
