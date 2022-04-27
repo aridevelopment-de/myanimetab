@@ -8,6 +8,9 @@ class SettingsElement extends React.Component {
     constructor(props) {
         super(props);
 
+        // data
+        // searchValue
+
         this.state = {
             disabled: !getUserSettings().get(`cc.${props.data.name}.state`)
         };
@@ -45,11 +48,27 @@ class SettingsElement extends React.Component {
                     </div>
                 </div>
                 <div className="settings_item__content">
-                    {
-                        this.props.data.settings.content.map(formBody => {
-                            return <SettingsFormItem formBody={formBody} settingsKey={"cc." + this.props.data.name + "." + formBody.id} key={"cc." + this.props.data.name + "." + formBody.id}/>
-                        })
-                    }
+                    {this.props.data.settings.content.map(formBody => {
+                        if (this.props.searchValue == null) {
+                            return <SettingsFormItem 
+                                formBody={formBody} 
+                                settingsKey={"cc." + this.props.data.name + "." + formBody.id} 
+                                key={"cc." + this.props.data.name + "." + formBody.id}
+                                searchValue={null}
+                            />
+                        }
+
+                        if (formBody.name.toLowerCase().includes(this.props.searchValue.toLowerCase())) {
+                            return <SettingsFormItem 
+                                formBody={formBody} 
+                                settingsKey={"cc." + this.props.data.name + "." + formBody.id} 
+                                key={"cc." + this.props.data.name + "." + formBody.id}
+                                searchValue={this.props.searchValue}
+                            />
+                        }
+
+                        return null;
+                    })}
                 </div>
             </div>
         )

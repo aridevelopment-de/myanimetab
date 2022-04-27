@@ -28,6 +28,22 @@ class WidgetSettingsComponent extends React.Component {
         this.setState({ searchbarValue: event.target.value });
     }
 
+    containsString(string, settings) {
+        string = string.toLowerCase();
+
+        if (settings.name.toLowerCase().includes(string)) {
+            return true;
+        }
+
+        for (let i = 0; i < settings.content.length; i++) {
+            if (settings.content[i].name.toLowerCase().includes(string)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -43,13 +59,24 @@ class WidgetSettingsComponent extends React.Component {
                 </div>
                 {CustomComponentRegistry.getAllSettingsAvailable().map(id => {
                     const component = CustomComponentRegistry.get(id);
-
-                    console.log(component);
                     
-                    return <SettingsElement 
-                        data={component} 
-                        key={id}
-                    />
+                    if (this.state.searchbarValue.trim() === "") {
+                        return <SettingsElement 
+                            data={component} 
+                            key={id}
+                            searchValue={null}
+                        />
+                    }
+
+                    if (this.containsString(this.state.searchbarValue, component.settings)) {
+                        return <SettingsElement 
+                            data={component} 
+                            key={id}
+                            searchValue={this.state.searchbarValue}
+                        />
+                    }
+
+                    return null;
                 })}
                 <div className="widget_settings__import_export">
                     <button className="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
