@@ -142,7 +142,7 @@ class SearchBar extends React.Component {
                 </div>
                 <SearchSuggestions 
                     suggestions={this.state.suggestions} 
-                    showing={this.state.focused && this.state.suggestions.length > 0 && this.state.content.length > 1 ? 'visible' : 'invisible'} 
+                    showing={this.state.suggestions.length > 0 && this.state.content.length > 1 ? 'visible' : 'invisible'} 
                 />
             </div>
         )
