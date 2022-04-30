@@ -1,0 +1,43 @@
+name: Cypress Tests
+
+on: 
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install && npm ci --ignore-scripts
+      - name: Run cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          start: npm start
+          wait-on: "http://localhost:3000"
+          browser: firefox
+          headless: true
+      - name: Store cypress screenshots
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: Store cypress videos
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos

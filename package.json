@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.5.0",
@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.4",
+    "cypress-commands": "^2.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-json-view": "^1.21.3",
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^9.5.4"
   }
 }

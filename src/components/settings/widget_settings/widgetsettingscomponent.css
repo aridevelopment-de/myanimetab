@@ -1,3 +1,30 @@
+/* searchbar */
+.widget_settings__searchbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.widget_settings__searchbar input {
+    width: 100%;
+    height: 16px;
+    background-color: transparent;
+    border-radius: 3px;
+    box-sizing: border-box;
+    border: 1px solid #4a4a4a;
+    font-size: 16px;
+    font-weight: 400;
+    color: #4a4a4a;
+    padding: 18px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.widget_settings__searchbar input:focus {
+    outline: none;
+}
+
+
 /* import / export buttons */
 
 .widget_settings__import_export {
