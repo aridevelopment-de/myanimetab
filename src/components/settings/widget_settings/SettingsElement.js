@@ -57,7 +57,8 @@ class SettingsElement extends React.Component {
                                 searchValue={null}
                             />
                         }
-
+                        
+                        
                         if (formBody.name.toLowerCase().includes(this.props.searchValue.toLowerCase())) {
                             return <SettingsFormItem 
                                 formBody={formBody} 

@@ -31,10 +31,6 @@ class WidgetSettingsComponent extends React.Component {
     containsString(string, settings) {
         string = string.toLowerCase();
 
-        if (settings.name.toLowerCase().includes(string)) {
-            return true;
-        }
-
         for (let i = 0; i < settings.content.length; i++) {
             if (settings.content[i].name.toLowerCase().includes(string)) {
                 return true;

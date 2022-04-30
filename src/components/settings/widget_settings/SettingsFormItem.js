@@ -9,13 +9,48 @@ function SettingsItemLabel(props) {
             {props.name}
         </p>;
     } else {
-        let highlightedText = props.name.split(" ")
-            .map(word => word.toUpperCase() === props.searchValue.toUpperCase() ? `<span style="background-color: rgba(120, 120, 0, 0.4)">${word}</span>` : word)
-            .join(" ");
+        let recordLength = 0;
+        let recordStart = 0;
+        let start = 0;
+        let count = 0;
 
-        return <p className="settings_item__form_item_label" dangerouslySetInnerHTML={{
-            __html: highlightedText}}
-        />
+        for (let i = 0; i < props.searchValue.length; i++) {
+            if (props.name.toLowerCase().includes(props.searchValue.toLowerCase().substring(0, i+1))) {
+                if (count === 0) {
+                    start = props.name.toLowerCase().indexOf(props.searchValue.toLowerCase().substring(0, i+1));
+                }
+                
+                count++;
+
+                if (count > recordLength) {
+                    recordLength = count;
+                    recordStart = start;
+                }
+            } else {
+                count = 0;
+                start = 0;
+            }
+        }
+
+        if (recordLength > 0) {
+            return <p className="settings_item__form_item_label" style={{fontFamily: "inherit"}}>
+                {props.name.substring(0, recordStart)}
+                <span 
+                    className="settings_item__form_item_label_search_result"
+                    style={{
+                        fontFamily: "inherit",
+                        backgroundColor: "#9AB0303D",
+                    }}
+                >
+                    {props.name.substring(recordStart, recordStart + recordLength)}
+                </span>
+                {props.name.substring(recordStart + recordLength)}
+            </p>;
+        } else {
+            return <p className="settings_item__form_item_label" style={{fontFamily: "inherit"}}>
+                {props.name}
+            </p>;
+        }
     }
 }
 
