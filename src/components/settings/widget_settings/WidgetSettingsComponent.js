@@ -6,6 +6,16 @@ import EventHandler from '../../../utils/eventhandler';
 
 
 class WidgetSettingsComponent extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.onInputChange = this.onInputChange.bind(this);
+
+        this.state = {
+            searchbarValue: ""
+        };
+    }
+
     onImportClick() {
         EventHandler.triggerEvent("import_window_state", { opened: true });
     }
@@ -14,17 +24,55 @@ class WidgetSettingsComponent extends React.Component {
         EventHandler.triggerEvent("export_window_state", { opened: true });
     }
 
+    onInputChange(event) {
+        this.setState({ searchbarValue: event.target.value });
+    }
+
+    containsString(string, settings) {
+        string = string.toLowerCase();
+
+        for (let i = 0; i < settings.content.length; i++) {
+            if (settings.content[i].name.toLowerCase().includes(string)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     render() {
         return (
             <React.Fragment>
+                <div className="widget_settings__searchbar">
+                    <input
+                        onInput={this.onInputChange}
+                        value={this.state.searchbarValue}
+                        type="text"
+                        spellCheck="false"
+                        placeholder="Enter Keywords"
+                        autoComplete="off"
+                    />
+                </div>
                 {CustomComponentRegistry.getAllSettingsAvailable().map(id => {
                     const component = CustomComponentRegistry.get(id);
-                    console.debug(`Settings Page registered for element: ${component.name} (id ${id})`);
                     
-                    return <SettingsElement 
-                        data={component} 
-                        key={id}
-                    />
+                    if (this.state.searchbarValue.trim() === "") {
+                        return <SettingsElement 
+                            data={component} 
+                            key={id}
+                            searchValue={null}
+                        />
+                    }
+
+                    if (this.containsString(this.state.searchbarValue, component.settings)) {
+                        return <SettingsElement 
+                            data={component} 
+                            key={id}
+                            searchValue={this.state.searchbarValue}
+                        />
+                    }
+
+                    return null;
                 })}
                 <div className="widget_settings__import_export">
                     <button className="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
