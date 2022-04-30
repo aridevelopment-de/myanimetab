@@ -33,7 +33,7 @@ class SettingsItemInput extends React.Component {
                     onBlur={(e) => {e.target.setAttribute("readonly", "readonly")}}
                     value={this.state.input} 
                     style={{
-                        fontFamily: this.props.hidden ? "dotsfont" : "inherit",
+                        fontFamily: this.props.hidden && this.state.input !== "" ? "dotsfont" : "inherit",
                     }}
                     type="text"
                     spellCheck="false"
