@@ -22,7 +22,7 @@ function Image(props) {
                     <div className="image_overlay__button" onClick={() => props.resizeClickCallback(props.idx)}>
                         <FullscreenIcon />
                     </div>
-                    <div className={`image_overlay__button ${props.idx === 0 ? 'disabled' : ''}`} onClick={() => {if (props.idx !== 0) { props.deleteClickCallback(props.idx) }}}>
+                    <div className={`image_overlay__button ${props.disabled === true ? 'disabled' : ''}`} onClick={() => {if (props.disabled === false) { props.deleteClickCallback(props.idx) }}}>
                         <DeleteIcon />
                     </div>
                 </div>
@@ -80,7 +80,19 @@ class PlaylistSettingsComponent extends React.Component {
         return (
             <div className="playlist__container">
                 <div className="images">
-                    {this.state.images.map((image, index) => <Image url={image} key={index} idx={index} selectedIdx={this.state.selectedIdx} resizeClickCallback={this.onResizeClick} deleteClickCallback={this.onDeleteClick} />)}
+                    {
+                        this.state.images.map((image, index) => {
+                            return <Image 
+                                url={image} 
+                                key={index} 
+                                idx={index} 
+                                disabled={index === 0 && this.state.images.length === 1}
+                                selectedIdx={this.state.selectedIdx} 
+                                resizeClickCallback={this.onResizeClick} 
+                                deleteClickCallback={this.onDeleteClick} 
+                            />
+                        })
+                    }
                     
                     <div className="dragdrop__container">
                         <div className="dragdrop" onClick={this.openURLAddWindow}>
