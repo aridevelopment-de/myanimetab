@@ -37,6 +37,7 @@
 #time {
     font-size: 3em;
     margin-right: -8px;
+    font-weight: 300;
 }
 
 #time_full {
@@ -47,6 +48,7 @@
 
 #time__period {
     font-size: 1.7em;
+    font-weight: 300;
 }
 
 #date {

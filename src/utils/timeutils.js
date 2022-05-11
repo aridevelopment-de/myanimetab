@@ -19,7 +19,7 @@ const TimeUtils = {
             let hour24data = this.convertTimeToClockFormat(date, false);
 
             return {
-                time: `${hours}:${minutes}`,
+                time: `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`,
                 timePeriod: ampm,
                 weekDay: hour24data.weekDay,
                 yearDate: hour24data.yearDate,
@@ -32,16 +32,8 @@ const TimeUtils = {
         let part1 = splitted[0];
         let part2 = splitted[1];
 
-        if (part1.length === 1) {
-            part1 = "0" + part1;
-        }
-
-        if (part2.length === 1) {
-            part2 = "0" + part2;
-        }
-
         return {
-            time: part1 + ":" + part2,
+            time: part1.padStart(2, "0") + ":" + part2.padStart(2, "0"),
             timePeriod: timeData[1],
             weekDay: dateData[0] + ", ",
             yearDate: dateData[1] + ", ",
