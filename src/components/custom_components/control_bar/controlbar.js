@@ -104,7 +104,7 @@ class ControlBar extends React.Component {
                     </div>
                 </div>
 
-                <div className={[styles.expand_less__wrapper, styles.item__wrapper]}>
+                <div className={`${styles.expand_less__wrapper} ${styles.item__wrapper}`}>
                     <div onClick={this.collapse}>
                         { this.state.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
                     </div>
