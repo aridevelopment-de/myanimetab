@@ -2,16 +2,16 @@ import React from 'react';
 import SearchSuggestions from './searchsuggestions';
 import SearchIcon from '@mui/icons-material/Search';
 import SearchEngineChooser from './searchenginechooser';
-import './searchbar.css';
 import SearchEngine from '../../../utils/searchengine';
 import SuggestionCaller from '../../../utils/searchsuggestioncaller';
 import EventHandler from '../../../utils/eventhandler';
 import getUserSettings from '../../../utils/settings';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
+import styles from './searchbar.module.css';
 
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
-const verticalAlignValues = ["one", "two"];
+const verticalAlignValues = [styles.one, styles.two];
 const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
 
 
@@ -102,20 +102,20 @@ class SearchBar extends React.Component {
     render() {
         return (
             <div
-                className={`search_bar__wrapper ${verticalAlignValues[this.state.position]}`}
+                className={`${styles.wrapper} ${verticalAlignValues[this.state.position]}`}
                 style={{
                     opacity: opacityValues[this.state.opacity],
                     display: this.state.showing ? 'unset' : 'none'
                 }}    
             >
-                <div className="search_bar">
-                    <div className="search_bar__engine_container">
+                <div className={styles.searchbar}>
+                    <div>
                         <div 
-                            className="search_bar__engine_icon__container"
+                            className={styles.engine_icon__container}
                             onClick={this.toggleSearchEngineChooser}
                         >
                             <img 
-                                className="search_bar__engine_icon" 
+                                className={styles.engine_icon} 
                                 src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
                                 alt={searchEngines[this.state.searchEngine]} 
                             />
@@ -123,7 +123,7 @@ class SearchBar extends React.Component {
                         {this.state.chooseSearchEngine ? <SearchEngineChooser /> : null}
                     </div>
                     <input 
-                        className="search_bar__input" 
+                        className={styles.input} 
                         onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
                         onInput={this.onInputChange} 
                         onBlur={(e) => {
@@ -144,7 +144,7 @@ class SearchBar extends React.Component {
                         autoFocus 
                     />
                     <SearchIcon 
-                        className="search_bar__icon" 
+                        className={styles.icon} 
                         onClick={() => SearchEngine.search(this.state.content)} 
                     />
                 </div>

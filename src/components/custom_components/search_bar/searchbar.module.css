@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
 
-.search_bar__wrapper {
+.wrapper {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     position: absolute;
@@ -10,21 +10,21 @@
     transition: opacity 1.3s;
 }
 
-.search_bar__wrapper.one {
+.wrapper.one {
     top: calc(100% / 20);
 }
 
-.search_bar__wrapper.two {
+.wrapper.two {
     top: calc(100% / 12 * 2);
 }
 
 @media all and (max-width: 680px) {
-    .search_bar {
+    .searchbar {
         width: 80vw !important;
     }
 }
 
-.search_bar {
+.searchbar {
     display: flex;
     align-items: center;
     border-radius: 20px;
@@ -38,7 +38,7 @@
     z-index: 1;
 }
 
-.search_bar__input {
+.input {
     font-size: 1.3em;
     color: inherit;
     outline: none;
@@ -51,7 +51,23 @@
     margin-left: 1em;
 }
 
-.search_bar__engine_icon__container {
+.input::placeholder {
+    color: hsl(0, 0%, 93%);
+}
+
+.input:focus {
+    outline: none;
+}
+
+.icon {
+    transform: scale(1.4);
+    margin-left: auto;
+    padding: 5px 1em;
+    cursor: pointer;
+}
+
+/* Engine chooser */
+.engine_icon__container {
     padding: 5px 5px;
     margin-left: 5px;
     background-color: white;
@@ -62,22 +78,7 @@
     justify-content: center;
 }
 
-.search_bar__engine_icon {
+.engine_icon {
     width: 24px;
     height: 24px;
-}
-
-.search_bar__icon {
-    transform: scale(1.4);
-    margin-left: auto;
-    padding: 5px 1em;
-    cursor: pointer;
-}
-
-.search_bar__input::placeholder {
-    color: hsl(0, 0%, 93%);
-}
-
-.search_bar__input:focus {
-    outline: none;
 }
