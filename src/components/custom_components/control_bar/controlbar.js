@@ -1,7 +1,6 @@
 import React from "react";
 import EventHandler from "../../../utils/eventhandler";
 import CustomComponentRegistry from "../../../utils/customcomponentregistry";
-import "./controlbar.css";
 import SettingsIcon from '@mui/icons-material/Settings';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -9,9 +8,10 @@ import LockIcon from '@mui/icons-material/Lock';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import getUserSettings from "../../../utils/settings";
+import styles from "./controlbar.module.css";
 
 
-const positionValues = ["two", "one"];
+const positionValues = [styles.two, styles.one];
 
 class ControlBar extends React.Component {
     constructor(props) {
@@ -75,21 +75,21 @@ class ControlBar extends React.Component {
     render() {
         return (
             <div 
-                className={`control_menu ${positionValues[this.state.position]}`}
+                className={`${styles.control_menu} ${positionValues[this.state.position]}`}
                 style={{
                     transform: this.state.collapsed ? 'translateY(-80%)' : 'translateY(0)'
                 }}
             >
-                <div className="settings__wrapper control_menu_item__wrapper">
-                    <div className="settings" onClick={ function() {
+                <div className={styles.item__wrapper}>
+                    <div onClick={ function() {
                         EventHandler.triggerEvent("settings_window_state", {opened: true})
                     }}>
                         <SettingsIcon />
                     </div>
                 </div>
 
-                <div className="next_image__wrapper control_menu_item__wrapper">
-                    <div className="next_image" onClick={ function() {
+                <div className={styles.item__wrapper}>
+                    <div onClick={ function() {
                         EventHandler.triggerEvent("skip_image")
                         EventHandler.triggerEvent("playlist_refresh");
                         getUserSettings().set("cc.wallpaper.state", true);
@@ -98,14 +98,14 @@ class ControlBar extends React.Component {
                     </div>
                 </div>
 
-                <div className="lock_image__wrapper control_menu_item__wrapper">
-                    <div className="lock_image" onClick={this.lockImage}>
+                <div className={styles.item__wrapper}>
+                    <div onClick={this.lockImage}>
                         { this.state.locked ? <LockIcon /> : <LockOpenIcon /> }
                     </div>
                 </div>
 
-                <div className="expand_less__wrapper control_menu_item__wrapper">
-                    <div className="expand_less" onClick={this.collapse}>
+                <div className={[styles.expand_less__wrapper, styles.item__wrapper]}>
+                    <div onClick={this.collapse}>
                         { this.state.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
                     </div>
                 </div>
