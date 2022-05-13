@@ -1,4 +1,4 @@
-.search_engine_chooser__container {
+.container {
     position: absolute;
     transform: translateX(-25%);
     background-color: white;
@@ -9,7 +9,7 @@
     padding: 1em 0;
 }
 
-.search_engine_chooser__item {
+.item {
     display: flex;
     gap: 10px;
     padding: 4px 1em;
@@ -18,15 +18,15 @@
     cursor: pointer;
 }
 
-.search_engine_chooser__item.active {
+.item.active {
     background-color: hsla(0, 0%, 0%, 0.141);
 }
 
-.search_engine_chooser__item:not(.active):hover {
+.item:not(.active):hover {
     background-color: hsla(0, 0%, 0%, 0.141);
 }
 
-.search_engine_chooser__item__icon img {
+.icon img {
     width: 24px;
     height: 24px;
 }

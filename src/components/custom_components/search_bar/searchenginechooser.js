@@ -1,7 +1,7 @@
 import React from 'react';
 import EventHandler from '../../../utils/eventhandler';
 import getUserSettings from '../../../utils/settings';
-import './searchenginechooser.css';
+import styles from './searchenginechooser.module.css';
 
 
 const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
@@ -33,18 +33,18 @@ class SearchEngineChooser extends React.Component {
 
     render() {
         return (
-            <div className="search_engine_chooser__container">
+            <div className={styles.container}>
                 {searchEngines.map((searchEngine, index) => {
                     return (
                         <div 
-                            className={`search_engine_chooser__item ${index === this.state.selectedSearchEngine ? 'active' : ''}`} 
+                            className={`${styles.item} ${index === this.state.selectedSearchEngine ? styles.active : ''}`} 
                             key={index}
                             onClick={() => this.chooseEngine(index)}    
                         >
-                            <div className="search_engine_chooser__item__icon">
+                            <div className={styles.icon}>
                                 <img src={`/icons/engines/${searchEngine.toLowerCase()}.png`} alt={searchEngine} />
                             </div>
-                            <div className="search_engine_chooser__item__name">{searchEngine}</div>
+                            <div>{searchEngine}</div>
                         </div>
                     );
                 })}
