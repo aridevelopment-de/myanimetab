@@ -1,15 +1,15 @@
 import React from "react";
 import SearchEngine from "../../../utils/searchengine";
-import './searchsuggestion.css'
+import styles from './searchsuggestion.module.css'
 
 class SearchSuggestions extends React.Component {
     render() {
         return (
-            <div className={`search_suggestions__wrapper ${this.props.showing}`}>
-                <div className="search_suggestions">
+            <div className={`${styles.wrapper} ${this.props.showing ? '' : styles.invisible}`}>
+                <div className={styles.suggestions}>
                     {this.props.suggestions.map(element => 
                         <div 
-                            className="search_suggestions__item__wrapper" 
+                            className={styles.item__wrapper}
                             key={element} 
                             onClick={(e) => SearchEngine.search(e.target.innerHTML)} 
                             tabIndex="0"
