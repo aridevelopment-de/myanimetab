@@ -1,0 +1,9 @@
+.background {
+    background-repeat: no-repeat;
+    background-position: center center !important;
+    background-attachment: fixed;
+    background-size: cover;
+    opacity: 1;
+    width: 100vw;
+    height: 100vh;
+}

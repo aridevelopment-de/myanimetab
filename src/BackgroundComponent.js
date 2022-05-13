@@ -1,3 +1,4 @@
+import styles from './App.module.css';
 import React from "react";
 import TimeUtils from "./utils/timeutils";
 import EventHandler from "./utils/eventhandler";
@@ -175,7 +176,7 @@ class Background extends React.Component {
 
     render() {
         return (
-            <div className="background"
+            <div className={styles.background}
                 style={{backgroundImage: `url(${this.state.currentBackground})`}}
                 onMouseMove={this.resetLastAction}
                 onMouseDown={this.resetLastAction}

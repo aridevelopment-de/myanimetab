@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react';
 import CustomComponentRegistry from './utils/customcomponentregistry';
 import Background from './BackgroundComponent';
