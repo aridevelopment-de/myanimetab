@@ -1,7 +1,7 @@
 import React from "react";
 import EventHandler from "../../utils/eventhandler";
 import getUserSettings from "../../utils/settings";
-import './importsettingscomponent.css';
+import styles from './importsettingscomponent.module.css';
 
 
 class ImportSettingsComponent extends React.Component {
@@ -43,19 +43,19 @@ class ImportSettingsComponent extends React.Component {
 
     render() {
         return (
-            <div className="import_settings__container">
-                <div className="import_settings__background">
-                    <div className="import_settings">
+            <div className={styles.container}>
+                <div className={styles.background}>
+                    <div className={styles.import_settings}>
                         <header>
-                            <h2 className="import_settings__heading">Import Settings</h2>
+                            <h2 className={styles.heading}>Import Settings</h2>
                         </header>
-                        <div className="import_settings__content">
-                            <p id="import_settings__hint">We only accept json data</p>
+                        <div className={styles.content}>
+                            <p id={styles.hint}>We only accept json data</p>
                             <input value={this.state.url} onInput={this.onInputChange}></input>
                         </div>
-                        <div className="import_settings__footer">
-                            <button id="import_settings__cancel_btn" onClick={() => this.buttonClick(false)}>Cancel</button>
-                            <button id="import_settings__submit_btn" onClick={() => this.buttonClick(true)}>Import</button>
+                        <div className={styles.footer}>
+                            <button id={styles.cancel_button} onClick={() => this.buttonClick(false)}>Cancel</button>
+                            <button id={styles.submit_button} onClick={() => this.buttonClick(true)}>Import</button>
                         </div>
                     </div>
                 </div>
