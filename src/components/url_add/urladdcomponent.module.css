@@ -1,9 +1,4 @@
-:root {
-    --button-color: rgba(24, 127, 245, 1);
-    --button-alpha-color: rgba(24, 127, 245, 0.7);
-}
-
-.url_add__container {
+.container {
     position: absolute;
     top: 0;
     left: 0;
@@ -12,7 +7,7 @@
     z-index: 9999;
 }
 
-.url_add__background {
+.background {
     position: relative;
     width: 100%;
     height: 100%;
@@ -34,25 +29,25 @@
     box-shadow: 0 0 1em rgba(0, 0, 0, 0.4);
 }
 
-.url_add__heading {
+.heading {
     font-weight: 400;
     margin: 0;
 }
 
-.url_add__content {
+.content {
     flex: 1 1;
     display: flex;
     flex-direction: column;
 }
 
-#url_add__hint {
+#hint {
     font-size: 0.9em;
     color: #999;
     margin-bottom: 0.5em;
     margin-top: -0.3em;
 }
 
-.url_add__content input {
+.content input {
     flex: 1 1;
     padding: 0.5em;
     font-size: 1em;
@@ -60,13 +55,13 @@
     border: 1.5px solid black;
 }
 
-.url_add__footer {
+.footer {
     display: flex;
     justify-content: space-around;
     gap: 1em;
 }
 
-.url_add__footer button {
+.footer button {
     padding: 0.6em;
     font-size: 1.1em;
     border-radius: 4px;
@@ -75,22 +70,22 @@
     cursor: pointer;
 }
 
-#url_add__add_btn {
-    background-color: var(--button-color);
+#add_button {
+    background-color: rgba(24, 127, 245, 1);
     color: white;
 }
 
-#url_add__add_btn:hover {
-    background-color: var(--button-alpha-color);
+#add_button:hover {
+    background-color: rgba(24, 127, 245, 0.7);
 }
 
-#url_add__cancel_btn {
+#cancel_button {
     background-color: transparent;
-    color: var(--button-color);
-    border: 2px solid var(--button-color);
+    color: rgba(24, 127, 245, 1);
+    border: 2px solid rgba(24, 127, 245, 1);
 }
 
-#url_add__cancel_btn:hover {
+#cancel_button:hover {
     filter: brightness(0.9);
-    box-shadow: 0 0 0.7em var(--button-alpha-color);
+    box-shadow: 0 0 0.7em rgba(24, 127, 245, 0.7);
 }

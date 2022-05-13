@@ -1,7 +1,7 @@
 import getUserSettings from '../../utils/settings';
 import React from 'react';
 import EventHandler from '../../utils/eventhandler';
-import './urladdcomponent.css';
+import styles from './urladdcomponent.module.css';
 
 class URLAddComponent extends React.Component {
     constructor(props) {
@@ -33,19 +33,19 @@ class URLAddComponent extends React.Component {
 
     render() {
         return (
-            <div className="url_add__container">
-                <div className="url_add__background">
-                    <div className="url_add">
+            <div className={styles.container}>
+                <div className={styles.background}>
+                    <div className={styles.url_add}>
                         <header>
-                            <h2 className="url_add__heading">Add new Background</h2>
+                            <h2 className={styles.heading}>Add new Background</h2>
                         </header>
-                        <div className="url_add__content">
-                            <p id="url_add__hint">Recommended size: 1920x1080</p>
+                        <div className={styles.content}>
+                            <p id="hint">Recommended size: 1920x1080</p>
                             <input value={this.state.url} onInput={this.onInputChange}></input>
                         </div>
-                        <div className="url_add__footer">
-                            <button id="url_add__cancel_btn" onClick={() => this.buttonClick(false)}>Cancel</button>
-                            <button id="url_add__add_btn" onClick={() => this.buttonClick(true)}>Add</button>
+                        <div className={styles.footer}>
+                            <button id={styles.cancel_button} onClick={() => this.buttonClick(false)}>Cancel</button>
+                            <button id={styles.add_button} onClick={() => this.buttonClick(true)}>Add</button>
                         </div>
                     </div>
                 </div>
