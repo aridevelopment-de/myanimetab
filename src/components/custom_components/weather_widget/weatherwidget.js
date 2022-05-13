@@ -3,9 +3,10 @@ import axios from "axios";
 import CustomComponentRegistry from "../../../utils/customcomponentregistry";
 import getUserSettings from "../../../utils/settings";
 import EventHandler from "../../../utils/eventhandler";
-import './weatherwidget.css';
+import styles from './weatherwidget.module.css';
+import errorstyles from './error.module.css';
 
-const positionValues = ["four", "three", "two", "one"];
+const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const metricValues = ["metric", "standard", "imperial"];
 const temperatureValueValues = ["C", "K", "F"];
@@ -110,19 +111,19 @@ class WeatherWidget extends React.Component {
         if (this.state.status === 200) {
             return (
                 <div 
-                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    className={`${styles.wrapper} ${positionValues[this.state.position]}`}
                     style={{opacity: opacityValues[this.state.opacity]}}
                 >
                     <div className="weather_widget widget">
-                        <div className="weather_widget__information">
-                            <div className="weather_widget__status_icon">
+                        <div className={styles.wrapper}>
+                            <div className={styles.status_icon}>
                                 <img src={this.state.icon} alt="weather icon" />
                             </div>
-                            <div className="weather_widget__weather_info">
-                                <div className="weather_widget__temperature">
+                            <div>
+                                <div className={styles.temperature}>
                                     <p>{this.state.temperature}°{temperatureValueValues[this.state.unit]}</p>
                                 </div>
-                                <div className="weather_widget__city_info">
+                                <div className={styles.city}>
                                     <p>{this.state.fullCityName}</p>
                                 </div>
                             </div>
@@ -133,18 +134,18 @@ class WeatherWidget extends React.Component {
         } else if (this.state.status === 404 || this.state.status === 401) {
             return (
                 <div 
-                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    className={`${styles.wrapper} ${positionValues[this.state.position]}`}
                     style={{opacity: opacityValues[this.state.opacity]}}
                 >
                     <div className="weather_widget widget">
-                        <div className="weather_widget__inner_container">
-                            <div className="weather_widget__status_code">
+                        <div className={errorstyles.container}>
+                            <div className={errorstyles.status_code}>
                                 <p style={{
                                     color: "white",
                                     fontWeight: "300"
                                 }}>{this.state.status}</p>
                             </div>
-                            <div className="weather_widget__wrong_city">
+                            <div className={errorstyles.wrong_city}>
                                 <p>{
                                     this.state.status === 404 ?
                                     "Couldn't find any weather data for the city you provided!" :
@@ -157,11 +158,11 @@ class WeatherWidget extends React.Component {
         } else if (this.state.status === -1) {
             return (
                 <div 
-                    className={`weather_widget__wrapper ${positionValues[this.state.position]}`}
+                    className={`${styles.wrapper} ${positionValues[this.state.position]}`}
                     style={{opacity: opacityValues[this.state.opacity]}}
                 >
                     <div className="weather_widget widget">
-                        <div className="weather_widget__inner_container">
+                        <div className={errorstyles.container}>
                             <p style={{
                                 fontSize: "2em",
                                 padding: "0",
