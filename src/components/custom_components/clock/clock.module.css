@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-.clock__wrapper.invisible {
+.wrapper.invisible {
     display: none;
 }
 
-.clock__wrapper {
+.wrapper {
     position: fixed;
     transition: opacity 2s;
     z-index: 1;
 }
 
-.clock__wrapper.one {
+.wrapper.one {
     top: 0;
     left: 0;
 }
 
-.clock__wrapper.two {
+.wrapper.two {
     top: 0;
     right: 0;
 }
 
-.clock__wrapper.three {
+.wrapper.three {
     bottom: 0;
     right: 0;
 }
 
-.clock__wrapper.four {
+.wrapper.four {
     bottom: 0;
     left: 0;
 }
@@ -40,13 +40,13 @@
     font-weight: 300;
 }
 
-#time_full {
+#time_12hr {
     font-size: 3em;
     padding-left: 0;
     font-weight: 300;
 }
 
-#time__period {
+#period {
     font-size: 1.7em;
     font-weight: 300;
 }
@@ -55,8 +55,8 @@
     font-size: 1.1em;
 }
 
-#week-day,
-#year-date,
+#weekday,
+#yeardate,
 #year {
     font-weight: 300;
     padding-left: .2ch;

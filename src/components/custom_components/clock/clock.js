@@ -3,9 +3,9 @@ import EventHandler from "../../../utils/eventhandler";
 import TimeUtils from "../../../utils/timeutils";
 import CustomComponentRegistry from "../../../utils/customcomponentregistry";
 import getUserSettings from "../../../utils/settings";
-import './clock.css'
+import styles from './clock.module.css'
 
-const positionValues = ["four", "three", "two", "one"];
+const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const timeFormatValues = ["24h", "12h"];
 
@@ -98,17 +98,17 @@ class Clock extends React.Component {
         let currentFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime, timeFormatValues[this.state.timeFormat] === '12h');
 
         return (
-            <div className={`clock__wrapper ${positionValues[this.state.position]} ${this.state.showing ? 'visible' : 'invisible'}`}
+            <div className={`${styles.wrapper} ${positionValues[this.state.position]} ${this.state.showing ? null : styles.invisible}`}
                  style={{opacity: opacityValues[this.state.opacity]}}>
-                <div className="clock widget">
-                    <div className="time__wrapper">
-                        <span id={ `time${timeFormatValues[this.state.timeFormat] === '24h' ? '_full' : ''}` }> {currentFmtDate.time} </span>
-                        { timeFormatValues[this.state.timeFormat] === '12h' ? <span id="time__period"> {currentFmtDate.timePeriod} </span> : <span />}
+                <div className={`${styles.clock} widget`}>
+                    <div>
+                        <span id={timeFormatValues[this.state.timeFormat] === '24h' ? styles.time_12hr : styles.time}> {currentFmtDate.time} </span>
+                        { timeFormatValues[this.state.timeFormat] === '12h' ? <span id={styles.period}> {currentFmtDate.timePeriod} </span> : <span />}
                     </div>
-                    <div className="date__wrapper">
-                        <span id="week-day"> {currentFmtDate.weekDay} </span>
-                        <span id="year-date"> {currentFmtDate.yearDate} </span>
-                        <span id="year"> {currentFmtDate.year} </span>
+                    <div>
+                        <span id={styles.weekday}> {currentFmtDate.weekDay} </span>
+                        <span id={styles.yeardate}> {currentFmtDate.yearDate} </span>
+                        <span id={styles.year}> {currentFmtDate.year} </span>
                     </div>
                 </div>
             </div>
