@@ -1,7 +1,7 @@
 import React from "react"
 import CloseIcon from '@mui/icons-material/Close';
-import './fullsizedimagecomponent.css';
 import EventHandler from "../../../utils/eventhandler";
+import styles from './fullsizedimagecomponent.module.css';
 
 
 class ZoomedImage extends React.Component {
@@ -17,9 +17,9 @@ class ZoomedImage extends React.Component {
 
     render() {
         return (
-            <div className="zoomed_image__container">
-                <div className="zoomed_image">
-                    <div className="zoomed_image__image">
+            <div className={styles.container}>
+                <div className={styles.inner}>
+                    <div className={styles.image}>
                         <img src={this.props.url} alt="" />
                         <footer className="zoomed_image__footer">
                             <button onClick={this.onImageClose}>
