@@ -1,8 +1,8 @@
 import React from 'react';
-import './widgetsettingscomponent.css';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import SettingsElement from './SettingsElement';
 import EventHandler from '../../../utils/eventhandler';
+import './widgetsettingscomponent.css';
 
 
 class WidgetSettingsComponent extends React.Component {
