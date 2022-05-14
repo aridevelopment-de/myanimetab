@@ -1,7 +1,7 @@
 import React from "react";
 import EventHandler from "../../../utils/eventhandler";
 import getUserSettings from "../../../utils/settings";
-import './widgetelementcomponent.css'
+import styles from './widgetelementcomponent.module.css'
 
 
 class WidgetInstallationComponent extends React.Component {
@@ -38,18 +38,18 @@ class WidgetInstallationComponent extends React.Component {
 
     render() {
         return (
-            <div className="widget__container">
-                <div className="widget__inner">
-                    <header class="widget_header">
+            <div className={styles.container}>
+                <div className={styles.inner}>
+                    <header class={styles.header}>
                         <p>{this.props.name}</p>
-                        <button className={this.state.installed ? `installed` : ''} onClick={this.onAction}>
+                        <button className={this.state.installed ? styles.installed : ''} onClick={this.onAction}>
                             {this.state.installed ? 'Uninstall' : 'Install'}
                         </button>
                     </header>
-                    <main class="widget_main">
+                    <main class={styles.main}>
                         <p>{this.props.description}</p>
                     </main>
-                    <footer class="widget_footer">
+                    <footer class={styles.footer}>
                         <p>by {this.props.author}</p>
                     </footer>
                 </div>

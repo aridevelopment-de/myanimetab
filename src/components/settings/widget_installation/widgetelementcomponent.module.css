@@ -1,4 +1,4 @@
-.widget__container {
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,25 +11,25 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.widget__inner {
+.inner {
     display: flex;
     flex-direction: column;
     padding: 1.5em;
 }
 
-.widget_header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.widget_header p {
+.header p {
     font-weight: 500;
     font-size: 1.2em;
     margin: 0;
 }
 
-.widget_header button {
+.header button {
     background-color: #2fc36d;
     color: #fff;
     padding: 0.5em;
@@ -38,30 +38,30 @@
     cursor: pointer;
 }
 
-.widget_header button:hover {
+.header button:hover {
     background-color: #26a75c;
 }
 
-.widget_header button.installed {
-    background-color: #c32f2f;
+.installed {
+    background-color: #c32f2f !important;
     color: #fff;
 }
 
-.widget_header button.installed:hover {
-    background-color: #a12b2b;
+.installed:hover {
+    background-color: #a12b2b !important;
 }
 
-.widget_main p {
+.main p {
     font-weight: 400;
     line-height: 0.9;
     max-width: 290px;
 }
 
-.widget_footer {
+.footer {
     margin-top: 1em;
 }
 
-.widget_footer p {
+.footer p {
     font-weight: 200;
     font-size: 0.9em;
     margin: 0;
