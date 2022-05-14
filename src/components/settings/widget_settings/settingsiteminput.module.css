@@ -1,4 +1,4 @@
-.settings_item__input {
+.input {
     width: 100%;
     padding: 10px 12px;
     border-radius: 6px;
@@ -11,7 +11,7 @@
     transition: opacity 200ms;
 }
 
-.settings_item.disabled input {
+.disabled {
     opacity: 0.5;
     background-color: rgba(0, 0, 0, 0.1);
     pointer-events: none;

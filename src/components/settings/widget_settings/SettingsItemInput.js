@@ -1,6 +1,6 @@
 import React from "react";
 import getUserSettings from "../../../utils/settings";
-import './settingsiteminput.css';
+import styles from './settingsiteminput.module.css';
 
 class SettingsItemInput extends React.Component {
     constructor(props) {
@@ -9,6 +9,7 @@ class SettingsItemInput extends React.Component {
         // settingsKey
         // tooltip
         // hidden
+        // disabled
 
         this.handleChange = this.handleChange.bind(this);
 
@@ -38,7 +39,7 @@ class SettingsItemInput extends React.Component {
                     type="text"
                     spellCheck="false"
                     autoComplete="off"
-                    className="settings_item__input"
+                    className={`${styles.input} ${this.props.disabled ? styles.disabled : ""}`}
                     readOnly
                 />
     }
