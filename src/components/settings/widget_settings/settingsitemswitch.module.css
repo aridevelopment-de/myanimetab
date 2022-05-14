@@ -21,7 +21,7 @@
     transition: transform 200ms;
 }
 
-.settings_switch.checked {
+.checked {
     background-color: #2F54EB;
     border-color: #2F54EB;
 }

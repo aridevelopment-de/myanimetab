@@ -1,7 +1,7 @@
 import React from "react";
 import EventHandler from "../../../utils/eventhandler";
 import getUserSettings from "../../../utils/settings";
-import './settingsitemswitch.css';
+import styles from './settingsitemswitch.module.css';
 
 class SettingsItemSwitch extends React.Component {
     constructor(props) {
@@ -39,7 +39,7 @@ class SettingsItemSwitch extends React.Component {
     render() {
         if (getUserSettings().get(this.props.settingsKey) !== undefined) {
             return (
-                <div className={`settings_switch ${this.state.checked ? 'checked' : ''}`} 
+                <div className={`${styles.settings_switch} ${this.state.checked ? styles.checked : ''}`} 
                     onClick={this.toggleSwitch}/>
             );
         } else {
