@@ -1,9 +1,11 @@
 import React from "react";
-import './playlistsettingscomponent.css';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import DeleteIcon from '@mui/icons-material/Delete';
 import getUserSettings from '../../../utils/settings';
 import EventHandler from '../../../utils/eventhandler';
+import styles from './playlistsettingscomponent.module.css';
+import image_styles from './imagestyles.module.css';
+
 
 function Image(props) {
     const onImageClick = () => {
@@ -15,14 +17,20 @@ function Image(props) {
     }
 
     return (
-        <div className={`image ${props.idx === props.selectedIdx ? 'selected' : ''}`} onClick={onImageClick}>
+        <div className={`${image_styles.image} ${props.idx === props.selectedIdx ? image_styles.selected : ''}`} onClick={onImageClick}>
             <img src={props.url} alt={props.idx} />
-            <div className="image_overlay">
-                <div className="image_overlay__buttons">
-                    <div className="image_overlay__button" onClick={() => props.resizeClickCallback(props.idx)}>
+            <div>
+                <div className={image_styles.overlay_buttons}>
+                    <div 
+                        className={image_styles.overlay__button} 
+                        onClick={() => props.resizeClickCallback(props.idx)}
+                    >
                         <FullscreenIcon />
                     </div>
-                    <div className={`image_overlay__button ${props.disabled === true ? 'disabled' : ''}`} onClick={() => {if (props.disabled === false) { props.deleteClickCallback(props.idx) }}}>
+                    <div 
+                        className={`${image_styles.overlay__button} ${props.disabled === true ? image_styles.disabled : ''}`} 
+                        onClick={() => {if (props.disabled === false) { props.deleteClickCallback(props.idx) }}}
+                    >
                         <DeleteIcon />
                     </div>
                 </div>
@@ -78,8 +86,8 @@ class PlaylistSettingsComponent extends React.Component {
 
     render() {
         return (
-            <div className="playlist__container">
-                <div className="images">
+            <div>
+                <div className={styles.images}>
                     {
                         this.state.images.map((image, index) => {
                             return <Image 
@@ -94,9 +102,12 @@ class PlaylistSettingsComponent extends React.Component {
                         })
                     }
                     
-                    <div className="dragdrop__container">
-                        <div className="dragdrop" onClick={this.openURLAddWindow}>
-                            <div className="dragdrop__text">
+                    <div className={styles.dragdrop__container}>
+                        <div 
+                            className={styles.dragdrop} 
+                            onClick={this.openURLAddWindow}
+                        >
+                            <div className={styles.dragdrop__text}>
                                 <p>+</p>
                             </div>
                         </div>
