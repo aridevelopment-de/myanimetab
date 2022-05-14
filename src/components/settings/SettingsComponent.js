@@ -1,10 +1,10 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import './settingscomponent.css';
 import EventHandler from '../../utils/eventhandler';
 import WidgetSettingsComponent from './widget_settings/WidgetSettingsComponent';
 import PlaylistSettingsComponent from './playlist_settings/PlaylistSettingsComponent';
 import WidgetInstallationComponent from './widget_installation/WidgetInstallationComponent';
+import styles from './settingscomponent.module.css';
 
 
 class SettingsComponent extends React.Component {
@@ -53,28 +53,32 @@ class SettingsComponent extends React.Component {
 
     render() {
         return (
-            <div className={`settings_menu__wrapper ${this.state.opened ? '' : 'closed'}`}>
-                <div className={`settings_menu abs_fit ${this.state.opened ? '' : 'closed'}`}>
-                    <div className="settings_header">
-                        <div className="settings_menu__close_icon__wrapper">
+            <div className={`${styles.wrapper} ${this.state.opened ? '' : styles.closed}`}>
+                <div 
+                    className={`${styles.settings_menu} abs_fit`}
+                    styles={{
+                        transform: this.state.opened ? '' : 'translateX(0%)'
+                    }}
+                >
+                    <div className={styles.settings_header}>
+                        <div className={styles.icon__wrapper}>
                             <CloseIcon onClick={function() {EventHandler.triggerEvent("settings_window_state", {opened: false})} } />
                         </div>
-                        <header className="settings_labels">
+                        <header className={styles.settings_labels}>
                             {
                                 this.pages.map(e =>
                                         <p onClick={() => this.switchPage(e)} className={this.state.activePage === this.pages.indexOf(e) ? 'active' : ''} key={e}> {e} </p>
                                     )
                             }
-                            
                         </header>
-                        <hr id="settings_labels_hr" />
+                        <hr style={{opacity: 0.5}} />
                     </div>
-                    <div className="settings_body">
+                    <div className={styles.settings_body}>
                         <div className="abs_fit">
-                            <div className="settings__scroller_viewport">
-                                <div className="settings__scroller">
-                                    <div className="settings__scroller_content">
-                                        <div className="settings_list">
+                            <div className={styles.scroller_viewport}>
+                                <div className={styles.scroller}>
+                                    <div className={styles.scroller_content}>
+                                        <div className={styles.settings_list}>
                                             {this.pageComponents[this.pages[this.state.activePage]]} 
                                         </div>
                                     </div>
