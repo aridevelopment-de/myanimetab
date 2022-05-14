@@ -59,23 +59,40 @@ class SettingsFormItem extends React.Component {
     // formBody: name, id, type, values, displayedValues
     // settingsKey: "cc.name.id"
     // searchValue: null|string
+    // disabled: boolean
 
     render() {
         if (this.props.formBody.type === "dropdown") {
             return (
                 <div>
-                    <SettingsItemLabel name={this.props.formBody.name} searchValue={this.props.searchValue} />
+                    <SettingsItemLabel 
+                        name={this.props.formBody.name} 
+                        searchValue={this.props.searchValue} 
+                    />
                     <div>
-                        <SettingsItemDropdown values={this.props.formBody.values} displayedValues={this.props.formBody.displayedValues} settingsKey={this.props.settingsKey} />
+                        <SettingsItemDropdown 
+                            values={this.props.formBody.values} 
+                            displayedValues={this.props.formBody.displayedValues} 
+                            settingsKey={this.props.settingsKey} 
+                            disabled={this.props.disabled}
+                        />
                     </div>
                 </div>
             );
         } else if (this.props.formBody.type === "input") {
             return (
                 <div>
-                    <SettingsItemLabel name={this.props.formBody.name} searchValue={this.props.searchValue} />
+                    <SettingsItemLabel 
+                        name={this.props.formBody.name} 
+                        searchValue={this.props.searchValue} 
+                    />
                     <div>
-                        <SettingsItemInput tooltip={this.props.formBody.tooltip} hidden={this.props.formBody.hidden} settingsKey={this.props.settingsKey} />
+                        <SettingsItemInput 
+                            tooltip={this.props.formBody.tooltip} 
+                            hidden={this.props.formBody.hidden} 
+                            settingsKey={this.props.settingsKey} 
+                            disabled={this.props.disabled}
+                        />
                     </div>
                 </div>
             )

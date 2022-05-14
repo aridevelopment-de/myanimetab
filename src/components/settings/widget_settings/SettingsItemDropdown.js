@@ -2,7 +2,7 @@ import React from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import EventHandler from "../../../utils/eventhandler";
 import getUserSettings from "../../../utils/settings";
-import './settingsitemdropdown.css'
+import styles from './settingsitemdropdown.module.css'
 
 class SettingsItemDropdown extends React.Component {
     constructor(props) {
@@ -11,6 +11,7 @@ class SettingsItemDropdown extends React.Component {
         // values: [Apple, Banana]
         // displayedValues: ["Apfel", "Birne"]
         // settingsKey: "clock.food_choice"
+        // disabled: [true, false]
         
         this.state = {
             selectedIdx: getUserSettings().get(props.settingsKey),
@@ -42,15 +43,20 @@ class SettingsItemDropdown extends React.Component {
 
     render() {
         return (
-            <div className={`settings_select ${this.state.isSelected ? 'choosing_item' : ''}`}>
-                <div className="settings_select__current_item" onClick={this.toggleSelected}>
-                    <span className="settings_select__current_item__text"> {this.props.displayedValues[this.state.selectedIdx]} </span>
-                    <ArrowDropDownIcon className="settings_select__current_item__icon" />
+            <div className={`${styles.select} ${this.props.disabled ? styles.disabled : ''} ${this.state.isSelected ? styles.choosing_item : ''}`}>
+                <div className={styles.displayed_item} onClick={this.toggleSelected}>
+                    <span className={styles.displayed_item__text}>{this.props.displayedValues[this.state.selectedIdx]}</span>
+                    <ArrowDropDownIcon className={styles.displayed_item__icon} />
                 </div>
-                <div className={`settings_select__options ${this.state.isSelected ? 'selected' : ''}`} style={{ display: this.state.isSelected ? "unset" : "none" }}>
+                <div 
+                    className={`${this.state.isSelected ? styles.choosable_options__selected : ''}`} 
+                    style={{
+                        display: this.state.isSelected ? "unset" : "none" 
+                    }}
+                >
                     {
                         this.props.displayedValues.map(elem => {
-                            return <div className="settings_select__options_item" onClick={() => this.selectItem(elem)} key={elem}> {elem} </div>
+                            return <div className={styles.choosable_item} onClick={() => this.selectItem(elem)} key={elem}> {elem} </div>
                         })
                     }
                 </div>

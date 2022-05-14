@@ -56,6 +56,7 @@ class SettingsElement extends React.Component {
                                 settingsKey={"cc." + this.props.data.name + "." + formBody.id} 
                                 key={"cc." + this.props.data.name + "." + formBody.id}
                                 searchValue={null}
+                                disabled={this.state.disabled}
                             />
                         }
                         
@@ -66,6 +67,7 @@ class SettingsElement extends React.Component {
                                 settingsKey={"cc." + this.props.data.name + "." + formBody.id} 
                                 key={"cc." + this.props.data.name + "." + formBody.id}
                                 searchValue={this.props.searchValue}
+                                disabled={this.state.disabled}
                             />
                         }
 
