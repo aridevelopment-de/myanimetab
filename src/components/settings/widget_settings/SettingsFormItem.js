@@ -63,18 +63,18 @@ class SettingsFormItem extends React.Component {
     render() {
         if (this.props.formBody.type === "dropdown") {
             return (
-                <div className="settings_item__form_item">
+                <div>
                     <SettingsItemLabel name={this.props.formBody.name} searchValue={this.props.searchValue} />
-                    <div className="settings_item__form_item_content">
+                    <div>
                         <SettingsItemDropdown values={this.props.formBody.values} displayedValues={this.props.formBody.displayedValues} settingsKey={this.props.settingsKey} />
                     </div>
                 </div>
             );
         } else if (this.props.formBody.type === "input") {
             return (
-                <div className="settings_item__form_item">
+                <div>
                     <SettingsItemLabel name={this.props.formBody.name} searchValue={this.props.searchValue} />
-                    <div className="settings_item__form_item_content">
+                    <div>
                         <SettingsItemInput tooltip={this.props.formBody.tooltip} hidden={this.props.formBody.hidden} settingsKey={this.props.settingsKey} />
                     </div>
                 </div>
