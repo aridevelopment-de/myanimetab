@@ -3,6 +3,7 @@ import SettingsItemSwitch from './SettingsItemSwitch';
 import SettingsFormItem from "./SettingsFormItem";
 import getUserSettings from "../../../utils/settings";
 import EventHandler from "../../../utils/eventhandler";
+import styles from './settingselement.module.css';
 
 class SettingsElement extends React.Component {
     constructor(props) {
@@ -40,9 +41,9 @@ class SettingsElement extends React.Component {
 
     render() {
         return (
-            <div className={`settings_item ${this.getDisabled()}`}>
-                <div className="settings_item__title">
-                    <p className="settings_item__title_text">{this.props.data.settings.name}</p>
+            <div className={`${styles.item} ${this.getDisabled()}`}>
+                <div className={styles.title}>
+                    <p className={styles.title_text}>{this.props.data.settings.name}</p>
                     <div className="settings_item__title_options">
                         <SettingsItemSwitch settingsKey={"cc." + this.props.data.name + ".state"} />
                     </div>
