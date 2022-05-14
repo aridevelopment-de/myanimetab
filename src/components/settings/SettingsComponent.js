@@ -67,7 +67,7 @@ class SettingsComponent extends React.Component {
                         <header className={styles.settings_labels}>
                             {
                                 this.pages.map(e =>
-                                        <p onClick={() => this.switchPage(e)} className={this.state.activePage === this.pages.indexOf(e) ? 'active' : ''} key={e}> {e} </p>
+                                        <p onClick={() => this.switchPage(e)} className={this.state.activePage === this.pages.indexOf(e) ? styles.active : ''} key={e}> {e} </p>
                                     )
                             }
                         </header>
