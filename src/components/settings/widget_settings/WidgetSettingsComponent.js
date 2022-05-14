@@ -2,7 +2,7 @@ import React from 'react';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import SettingsElement from './SettingsElement';
 import EventHandler from '../../../utils/eventhandler';
-import './widgetsettingscomponent.css';
+import styles from './widgetsettingscomponent.module.css';
 
 
 class WidgetSettingsComponent extends React.Component {
@@ -43,7 +43,7 @@ class WidgetSettingsComponent extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div className="widget_settings__searchbar">
+                <div className={styles.searchbar}>
                     <input
                         onInput={this.onInputChange}
                         value={this.state.searchbarValue}
@@ -74,12 +74,12 @@ class WidgetSettingsComponent extends React.Component {
 
                     return null;
                 })}
-                <div className="widget_settings__import_export">
-                    <button className="widget_settings__import_btn" onClick={this.onImportClick}>Import</button>
-                    <button className="widget_settings__export_btn" onClick={this.onExportClick}>Export</button>
+                <div className={styles.control_group}>
+                    <button className={styles.import_button} onClick={this.onImportClick}>Import</button>
+                    <button className={styles.export_button} onClick={this.onExportClick}>Export</button>
                 </div>
-                <footer id="widget_settings__footer">
-                    <div className="widget_settings__footer_urls">
+                <footer id={styles.footer}>
+                    <div className={styles.urls}>
                         <a href="https://github.com/aridevelopment-de/myanimetab">
                             <img src="/icons/github.svg" alt="GitHub" />
                         </a>
@@ -96,7 +96,7 @@ class WidgetSettingsComponent extends React.Component {
                             <img src="/icons/email.svg" alt="Mail" />
                         </a>
                     </div>
-                    <p id="copyright_infrigement">Copyright © 2022 aridevelopment.de</p>
+                    <p id={styles.copyright_infrigement}>Copyright © 2022 aridevelopment.de</p>
                 </footer>
             </React.Fragment>
         )

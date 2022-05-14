@@ -1,12 +1,12 @@
 /* searchbar */
-.widget_settings__searchbar {
+.searchbar {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 15px 0;
 }
 
-.widget_settings__searchbar input {
+.searchbar input {
     width: 100%;
     height: 16px;
     background-color: transparent;
@@ -20,14 +20,14 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.widget_settings__searchbar input:focus {
+.searchbar input:focus {
     outline: none;
 }
 
 
 /* import / export buttons */
 
-.widget_settings__import_export {
+.control_group {
     margin-top: 5em;
     display: flex;
     justify-content: space-around;
@@ -35,7 +35,7 @@
     gap: 1em;
 }
 
-.widget_settings__import_export button {
+.control_group button {
     width: 100%;
     height: 2.5em;
     border: none;
@@ -46,25 +46,25 @@
     cursor: pointer;
 }
 
-.widget_settings__import_btn {
+.import_button {
     background-color: #2ec36c;
 }
 
-.widget_settings__export_btn {
+.export_button {
     background-color: #3498db;
 }
 
-.widget_settings__import_btn:hover {
+.import_button:hover {
     background-color: #27a35b;
 }
 
-.widget_settings__export_btn:hover {
+.export_button:hover {
     background-color: #2a7cb3;
 }
 
 /* social media / copyright */
 
-#widget_settings__footer {
+#footer {
     margin-top: 3em;
     padding: 0 1em;
     display: flex;
@@ -72,14 +72,14 @@
     align-items: center;
 }
 
-.widget_settings__footer_urls {
+.urls {
     width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.widget_settings__footer_urls a img {
+.urls a img {
     width: 35px;
     aspect-ratio: 1;
 }
@@ -88,46 +88,4 @@
     margin-top: 1em;
     text-align: center;
     font-weight: 200;
-}
-
-/* MOVE OUT */
-/* Single setting items */
-.settings_item {
-    margin-bottom: 32px;
-}
-
-.settings_item__title {
-    display: flex;
-    align-items: center;
-    margin-bottom: -1em;
-}
-
-.settings_item__title_text {
-    flex: 1 1 0;
-    font-weight: 500;
-    font-size: 20px;
-    color: #2f2f2f;
-}
-
-/* Settings content */
-.settings_item__form_item_label {
-    color: rgba(74, 74, 74, 0.8);
-    font-size: 14px;
-    margin-bottom: 6px;
-    transition: opacity 200ms;
-}
-
-.social_media {
-    margin-top: 1em;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    user-select: none;
-}
-
-.social_media_icon {
-    width: 40px;
-    cursor: pointer;
-    transition: filter 200ms;
-    margin-right: 1em;
 }
