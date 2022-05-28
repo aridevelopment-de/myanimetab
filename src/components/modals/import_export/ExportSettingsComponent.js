@@ -1,7 +1,7 @@
 import React from "react";
-import EventHandler from "../../utils/eventhandler";
 import ReactJson from 'react-json-view'
-import getUserSettings from "../../utils/settings";
+import getUserSettings from "../../../utils/settings"
+import EventHandler from "../../../utils/eventhandler";
 import styles from './exportsettingscomponent.module.css';
 
 
