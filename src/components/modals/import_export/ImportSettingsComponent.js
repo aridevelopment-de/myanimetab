@@ -1,6 +1,6 @@
 import React from "react";
-import EventHandler from "../../utils/eventhandler";
-import getUserSettings from "../../utils/settings";
+import EventHandler from "../../../utils/eventhandler";
+import getUserSettings from "../../../utils/settings";
 import styles from './importsettingscomponent.module.css';
 
 

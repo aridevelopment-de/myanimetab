@@ -28,7 +28,7 @@ class App extends React.Component {
     const components = ["clock/clock", "search_bar/searchbar", "control_bar/controlbar", "weather_widget/weatherwidget"];
 
     components.forEach(path => {
-		require(`./components/custom_components/${path}`)
+		  require(`./components/widgets/${path}`)
     });
   }
 

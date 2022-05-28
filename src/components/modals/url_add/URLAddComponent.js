@@ -1,6 +1,6 @@
-import getUserSettings from '../../utils/settings';
+import getUserSettings from '../../../utils/settings';
 import React from 'react';
-import EventHandler from '../../utils/eventhandler';
+import EventHandler from '../../../utils/eventhandler';
 import styles from './urladdcomponent.module.css';
 
 class URLAddComponent extends React.Component {
