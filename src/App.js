@@ -1,12 +1,12 @@
 import React from 'react';
 import CustomComponentRegistry from './utils/customcomponentregistry';
 import Background from './BackgroundComponent';
-import URLAddComponent from './components/url_add/URLAddComponent';
+import URLAddComponent from './components/modals/url_add/URLAddComponent';
 import FullSizeImage from './components/settings/playlist_settings/FullSizeImageComponent';
 import SettingsComponent from "./components/settings/SettingsComponent";
 import EventHandler from './utils/eventhandler';
-import ImportSettingsComponent from './components/import_export_settings/ImportSettingsComponent';
-import ExportSettingsComponent from './components/import_export_settings/ExportSettingsComponent';
+import ImportSettingsComponent from './components/modals/import_export/ImportSettingsComponent';
+import ExportSettingsComponent from './components/modals/import_export/ExportSettingsComponent';
 import getUserSettings from './utils/settings';
 
 class App extends React.Component {
@@ -25,10 +25,11 @@ class App extends React.Component {
 
   registerComponents() {
     /* Order is important here, because importing them means to initialize them with their id */
-    const components = ["clock/clock", "search_bar/searchbar", "control_bar/controlbar", "weather_widget/weatherwidget"];
+    const components = require("./widgets.json");
 
-    components.forEach(path => {
-		require(`./components/custom_components/${path}`)
+    components.forEach(data => {
+      console.log("Loading widget: " + data.name);
+		  require(`./components/widgets/${data.entryPoint}`);
     });
   }
 
