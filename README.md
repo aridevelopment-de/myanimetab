@@ -1,5 +1,7 @@
 <div align="center"><a href="https://github.com/aridevelopment-de/myanimetab"><img src="https://i.imgur.com/lkXFvjW.png" width="200" height="200"></div></a>
 
+# 👷 We are currently rewriting myanimetab. See dev branch and [this discussion](https://github.com/aridevelopment-de/myanimetab/discussions/63) for more information!
+
 
 # MyAnimeTab
 
