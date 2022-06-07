@@ -1,6 +1,7 @@
 # EventProtocol
 
-This file concludes a list of known events used with the EventHandler
+This file concludes a list of known events used with the EventHandler  
+As of the rewrite, every event has to set their value in the `value` key field. This achieves support for the useEvent hook
 
 
 ## ``blurall``
