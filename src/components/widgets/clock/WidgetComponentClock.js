@@ -1,119 +1,53 @@
-import React from "react";
-import EventHandler from "../../../utils/eventhandler";
+import React, { useState, useEffect } from "react";
 import TimeUtils from "../../../utils/timeutils";
 import CustomComponentRegistry from "../../../utils/customcomponentregistry";
 import getUserSettings from "../../../utils/settings";
 import styles from './clock.module.css'
+import Widget from '../Widget';
 
 const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
-const timeFormatValues = ["24h", "12h"];
+const timeFormatValues = ["24h", "12h"];  // if these values changes,  also change the if conditions
 
-class Clock extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.startInterval = this.startInterval.bind(this);
-        this.onClockDisable = this.onClockDisable.bind(this);
-        this.onBlurTrigger = this.onBlurTrigger.bind(this);
+function Clock(props) {
+    const [ position, _ ] = Widget.useSetting("cc.clock.position", "clock");
+    const [ timeFormat, _1 ] = Widget.useSetting("cc.clock.time_format", "clock");
+    const [ opacity, setOpacity ] = useState(0);
+    const [ currentTime, setCurrentTime ] = useState(TimeUtils.convertTimeToClockFormat(new Date(), timeFormat === 1));
 
-        this.state = {
-            showing: getUserSettings().get("cc.clock.state"),
-            opacity: getUserSettings().get("cc.clock.state") ? 0 : 1,
-            currentTime: new Date(),
-            intervalId: 0,
-            position: getUserSettings().get("cc.clock.position"),
-            timeFormat: getUserSettings().get("cc.clock.time_format")
-        };
-    }
+    Widget.useEvent("blurall", "clock", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.clock.auto_hide") : 0));
+    useEffect(() => {
+        const interval = setInterval(() => {
+            let currentDate = new Date();
+            let currentFmtDate = TimeUtils.convertTimeToClockFormat(currentDate, timeFormat === 1);
+            let lastFmtDate = currentTime;
 
-    onBlurTrigger(data) {
-        if (this.state.intervalId !== undefined) {
-            this.setState({
-                opacity: data.blur ? getUserSettings().get("cc.clock.auto_hide") : (getUserSettings().get("cc.clock.state") ? 0 : 1)
-            });
-        }
-    }
-
-    startInterval() {
-        this.setState({
-            intervalId: setInterval(() => {
-                let currentDate = new Date();
-                let currentFmtDate = TimeUtils.convertTimeToClockFormat(currentDate);
-                let lastFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime);
-
-                if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
-                    this.setState({
-                        currentTime: currentDate
-                    });
-                }
-            }, 1000)
-        });
-    }
-
-    onClockDisable(data) {
-        if (!data.value) {
-            if (this.state.intervalId !== undefined) {
-                clearInterval(this.state.intervalId);
-                
-                this.setState({
-                    intervalId: undefined,
-                    showing: false,
-                    opacity: 1
-                });
+            // Only update if old date and new date are not equal
+            if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
+                setCurrentTime(currentFmtDate);
             }
-        } else {
-            this.setState({ showing: true, opacity: 0 });
-            this.startInterval();
-        }
-    }
+        }, 10000);
 
-    componentDidMount() {
-        EventHandler.listenEvent("blurall", "clock", this.onBlurTrigger);
-        EventHandler.listenEvent("set.cc.clock.state", "clock", this.onClockDisable);
-        EventHandler.listenEvent("set.cc.clock.position", "clock", (value) => {
-            this.setState({
-                position: value
-            });
-        });
-        EventHandler.listenEvent("set.cc.clock.time_format", "clock", (data) => {
-            this.setState({
-                timeFormat: data.value
-            });
-        });
+        return () => clearInterval(interval);
+    }, [currentTime, timeFormat]);
 
-        this.startInterval();
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.intervalId);
-
-        EventHandler.unlistenEvent("blurall", "clock");
-        EventHandler.unlistenEvent("clock_state", "clock");
-        EventHandler.unlistenEvent("set.cc.clock.position", "clock");
-        EventHandler.unlistenEvent("set.cc.clock.time_format", "clock");
-    }
-
-    render() {
-        let currentFmtDate = TimeUtils.convertTimeToClockFormat(this.state.currentTime, timeFormatValues[this.state.timeFormat] === '12h');
-
-        return (
-            <div className={`${styles.wrapper} ${positionValues[this.state.position]} ${this.state.showing ? null : styles.invisible}`}
-                 style={{opacity: opacityValues[this.state.opacity]}}>
-                <div className={`${styles.clock} widget`}>
-                    <div>
-                        <span id={timeFormatValues[this.state.timeFormat] === '24h' ? styles.time_12hr : styles.time}> {currentFmtDate.time} </span>
-                        { timeFormatValues[this.state.timeFormat] === '12h' ? <span id={styles.period}> {currentFmtDate.timePeriod} </span> : <span />}
-                    </div>
-                    <div>
-                        <span id={styles.weekday}> {currentFmtDate.weekDay} </span>
-                        <span id={styles.yeardate}> {currentFmtDate.yearDate} </span>
-                        <span id={styles.year}> {currentFmtDate.year} </span>
-                    </div>
+    return (
+        <div 
+            className={`${styles.wrapper} ${positionValues[position]}`}
+            style={{ opacity: opacityValues[opacity] }}>
+            <div className={`${styles.clock} widget`}>
+                <div>
+                    <span id={timeFormat === 0 ? styles.time_12hr : styles.time}> {currentTime.time} </span>
+                    { timeFormat === 1 ? <span id={styles.period}>{currentTime.timePeriod}</span> : null}
+                </div>
+                <div>
+                    <span id={styles.weekday}>{currentTime.weekDay}</span>
+                    <span id={styles.yeardate}>{currentTime.yearDate}</span>
+                    <span id={styles.year}>{currentTime.year}</span>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 CustomComponentRegistry.register(
