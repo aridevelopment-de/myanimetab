@@ -19,6 +19,7 @@ class SettingsItemSwitch extends React.Component {
         }, () => {
             getUserSettings().set(this.props.settingsKey, this.state.checked, true);
             EventHandler.triggerEvent("set." + this.props.settingsKey, { value: this.state.checked, sender: "settingsitemswitch" });
+            EventHandler.triggerEvent("rerenderAll");
         });
     }
 
