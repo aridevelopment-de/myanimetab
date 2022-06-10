@@ -11,7 +11,7 @@ function useSetting(key, identifier, trigger_function) {
 
     useEffect(() => {
         EventHandler.listenEvent("set." + key, HashCode.value(key + identifier), (data) => {
-            setStatus(data.value);
+            setStatus(data);
             (trigger_function || (() => {}))(data);
         });
         
