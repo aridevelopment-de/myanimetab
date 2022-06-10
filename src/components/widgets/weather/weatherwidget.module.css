@@ -25,7 +25,7 @@
 }
 
 /* style when data is successfully loaded */
-.wrapper {
+.inner_wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
