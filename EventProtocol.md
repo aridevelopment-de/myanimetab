@@ -1,6 +1,6 @@
 # EventProtocol
 
-This file concludes a list of known events used with the EventHandler
+This file concludes a list of known events used with the EventHandler  
 
 
 ## ``blurall``

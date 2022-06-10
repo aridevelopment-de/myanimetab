@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SearchSuggestions from './searchsuggestions';
 import SearchIcon from '@mui/icons-material/Search';
 import SearchEngineChooser from './searchenginechooser';
 import SearchEngine from '../../../utils/searchengine';
 import SuggestionCaller from '../../../utils/searchsuggestioncaller';
-import EventHandler from '../../../utils/eventhandler';
 import getUserSettings from '../../../utils/settings';
 import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import styles from './searchbar.module.css';
+import Widget from '../Widget';
 
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
@@ -15,146 +15,65 @@ const verticalAlignValues = [styles.one, styles.two];
 const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
 
 
-class SearchBar extends React.Component {
-    constructor(props) {
-        super(props);
+function SearchBar(props) {
+    const [ position, _1 ] = Widget.useSetting("cc.searchbar.vertical_align", "searchbar");
+    const [ searchEngine, _2 ] = Widget.useSetting("cc.searchbar.search_engine", "searchbar");
+    const [ modalChooseEngine, setModalChooseEngine ] = useState(false);
+    const [ suggestions, setSuggestions ] = useState([]);
+    const [ opacity, setOpacity ] = useState(0);
+    const [ content, setContent ] = useState("");
 
-        this.onInputChange = this.onInputChange.bind(this);
-        this.onInputBlur = this.onInputBlur.bind(this);
-        this.onInputFocus = this.onInputFocus.bind(this);
-        this.toggleSearchEngineChooser = this.toggleSearchEngineChooser.bind(this);
+    Widget.useEvent("blurall", "searchbar", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : 0));
 
-        this.state = {
-            showing: getUserSettings().get("cc.searchbar.state"),
-            position: getUserSettings().get("cc.searchbar.vertical_align"),
-            focused: true,
-            content: "",
-            opacity: getUserSettings().get("cc.searchbar.state") ? 0 : 1,
-            suggestions: [],
-            searchEngine: getUserSettings().get("cc.searchbar.search_engine"),
-            chooseSearchEngine: false
-        };
-    }
-    
-    componentDidMount() {
-        EventHandler.listenEvent("blurall", "searchbar", (data) => {
-            this.setState({
-                opacity: data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : (getUserSettings().get("cc.searchbar.state") ? 0 : 1)
-            });
-        });
-        EventHandler.listenEvent("set.cc.searchbar.state", "searchbar", (data) => {
-            this.setState({ showing: data.value });
-        });
-        EventHandler.listenEvent("set.cc.searchbar.vertical_align", "searchbar", (data) => {
-            this.setState({ position: data.value });
-        });
-        EventHandler.listenEvent("set.cc.searchbar.search_engine", "searchbar", (data) => {
-            this.setState({
-                searchEngine: data.value,
-                chooseSearchEngine: false
-            });
-        });
-    }
-
-    componentWillUnmount() {
-        EventHandler.unlistenEvent("blurall", "searchbar");
-        EventHandler.unlistenEvent("search_bar_state", "searchbar");
-        EventHandler.unlistenEvent("set.cc.searchbar.vertical_align", "searchbar");
-        EventHandler.unlistenEvent("set.cc.searchbar.search_engine", "searchbar");
-    }
-
-    onInputChange(e) {
-        this.setState({
-            content: e.target.value
-        });
-
-        if (this.state.content.length > 0) {
-            SuggestionCaller.fetchSearchSuggestions(e.target.value, (data) => {            
-                this.setState({
-                    suggestions: data.suggestions.slice(0, 5)
-                });
-            });
-        }
-    }
-
-    onInputBlur(e) {
-        this.setState({
-            focused: false
-        });
-
-        EventHandler.triggerEvent("searchbar_inputstate", {focus: false});
-    }
-    
-    onInputFocus(e) {
-        this.setState({
-            focused: true
-        });
-
-        EventHandler.triggerEvent("searchbar_inputstate", {focus: true});
-    }
-
-    toggleSearchEngineChooser() {
-        this.setState({
-            chooseSearchEngine: !this.state.chooseSearchEngine
-        })
-    }
-
-    render() {
-        return (
-            <div
-                className={`${styles.wrapper} ${verticalAlignValues[this.state.position]}`}
-                style={{
-                    opacity: opacityValues[this.state.opacity],
-                    display: this.state.showing ? 'unset' : 'none'
-                }}    
-            >
-                <div className={styles.searchbar}>
-                    <div>
-                        <div 
-                            className={styles.engine_icon__container}
-                            onClick={this.toggleSearchEngineChooser}
-                        >
-                            <img 
-                                className={styles.engine_icon} 
-                                src={`/icons/engines/${searchEngines[this.state.searchEngine].toLowerCase()}.png`} 
-                                alt={searchEngines[this.state.searchEngine]} 
-                            />
-                        </div>
-                        {this.state.chooseSearchEngine ? <SearchEngineChooser /> : null}
+    return (
+        <div
+            className={`${styles.wrapper} ${verticalAlignValues[position]}`}
+            style={{
+                opacity: opacityValues[opacity]
+            }}>
+            <div className={styles.searchbar}>
+                <div>
+                    <div 
+                        className={styles.engine_icon__container}
+                        onClick={() => setModalChooseEngine(!modalChooseEngine)}>
+                        <img 
+                            className={styles.engine_icon} 
+                            src={`/icons/engines/${searchEngines[searchEngine].toLowerCase()}.png`} 
+                            alt={searchEngines[searchEngine]} />
                     </div>
-                    <input 
-                        className={styles.input} 
-                        onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
-                        onInput={this.onInputChange} 
-                        onBlur={(e) => {
-                            this.onInputBlur(e);
-                            e.target.setAttribute("readonly", "readonly");
-                        }} 
-                        onFocus={(e) => {
-                            this.onInputFocus(e);
-                            e.target.removeAttribute("readonly");
-                        }}
-                        value={this.state.content} 
-                        type="text" 
-                        spellCheck="false" 
-                        placeholder="Search" 
-                        autoComplete="off"
-                        tabIndex="0" 
-                        readOnly
-                        autoFocus 
-                    />
-                    <SearchIcon 
-                        className={styles.icon} 
-                        onClick={() => SearchEngine.search(this.state.content)} 
-                    />
+                    {modalChooseEngine ? <SearchEngineChooser /> : null}
                 </div>
-                <SearchSuggestions 
-                    suggestions={this.state.suggestions} 
-                    showing={this.state.suggestions.length > 0 && this.state.content.length > 1} 
-                />
+                <input 
+                    className={styles.input} 
+                    onKeyUp={(e) => {if (e.keyCode === 13) { SearchEngine.search(e.target.value) }}} 
+                    onInput={(event) => {
+                        setContent(event.target.value)
+
+                        if (event.target.value.length > 1) {
+                            SuggestionCaller.fetchSearchSuggestions(event.target.value, (data) => {
+                                setSuggestions(data.suggestions.slice(0, 5))
+                            });
+                        }
+                    }} 
+                    onBlur={(e) => e.target.setAttribute("readonly", "readonly")} 
+                    onFocus={(e) => e.target.removeAttribute("readonly")}
+                    value={content} 
+                    type="text" 
+                    spellCheck="false" 
+                    placeholder="Search" 
+                    autoComplete="off"
+                    tabIndex="0" 
+                    readOnly
+                    autoFocus />
+                <SearchIcon 
+                    className={styles.icon} 
+                    onClick={() => SearchEngine.search(content)} />
             </div>
-        )
-    }
+            <SearchSuggestions 
+                suggestions={suggestions} 
+                showing={suggestions.length > 0 && content.length > 1} />
+        </div>
+    )
 }
 
 CustomComponentRegistry.register(

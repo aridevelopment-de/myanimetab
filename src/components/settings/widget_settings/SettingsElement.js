@@ -25,6 +25,12 @@ class SettingsElement extends React.Component {
                 disabled: !data.value
             });
         });
+
+        if (getUserSettings().get(`cc.${this.props.data.name}.state`) === undefined) {
+            this.setState({
+                disabled: false
+            });
+        }
     }
     
     componentWillUnmount() {
