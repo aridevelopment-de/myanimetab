@@ -1,18 +1,6 @@
 [
     {
-        "name": "clock",
-        "entryPoint": "clock/WidgetComponentClock"
-    },
-    {
         "name": "controlbar",
         "entryPoint": "controlbar/WidgetComponentControlbar"
-    },
-    {
-        "name": "searchbar",
-        "entryPoint": "searchbar/WidgetComponentSearchbar"
-    },
-    {
-        "name": "weather",
-        "entryPoint": "weather/WidgetComponentWeather"
     }
 ]

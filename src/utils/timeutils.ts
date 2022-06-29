@@ -1,5 +1,5 @@
 const TimeUtils = {
-    formatAMPM: function(date) {
+    formatAMPM(date: Date) {
         let hours = date.getHours();
         let minutes = date.getMinutes();
         let ampm = hours >= 12 ? 'pm' : 'am';
@@ -12,10 +12,11 @@ const TimeUtils = {
             ampm
         };
     },
-    convertTimeToClockFormat: function(date, hour_12) {
+    convertTimeToClockFormat(date: Date, hour_12: boolean): any {
         // en-US/de-DE
         if (hour_12) {
             let { hours, minutes, ampm } = TimeUtils.formatAMPM(date);
+            // @ts-ignore
             let hour24data = this.convertTimeToClockFormat(date, false);
 
             return {
@@ -41,7 +42,7 @@ const TimeUtils = {
         };
     },
 
-    getSeconds(date) {
+    getSeconds(date: Date): number {
         return date.getTime() / 1000;
     }
 };

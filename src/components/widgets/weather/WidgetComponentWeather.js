@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import CustomComponentRegistry from "../../../utils/customcomponentregistry";
+import { useEffect, useState } from "react";
+import { useEvent, useSetting } from '../../../utils/eventhooks';
 import getUserSettings from "../../../utils/settings";
-import styles from './weatherwidget.module.css';
 import errorstyles from './error.module.css';
-import Widget from '../Widget'
 import ErrorComponent from "./ErrorComponent";
 import NormalComponent from "./NormalComponent";
+import styles from './weatherwidget.module.css';
 
 const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
@@ -33,8 +32,8 @@ function LoadingComponent(props) {
 
 
 function WeatherWidget(props) {
-    const [ position, _ ] = Widget.useSetting("cc.weatherwidget.position", "weather");
-    const [ unit, _1 ] = Widget.useSetting("cc.weatherwidget.unit", "weather");
+    const [ position, _ ] = useSetting("cc.weatherwidget.position", "weather");
+    const [ unit, _1 ] = useSetting("cc.weatherwidget.unit", "weather");
     const [ opacity, setOpacity ] = useState(0);
     const [ data, setData ] = useState({
         statusCode: -1,
@@ -43,7 +42,7 @@ function WeatherWidget(props) {
         icon: "http://openweathermap.org/img/wn/02d@4x.png"
     });
 
-    Widget.useEvent("blurall", "weather", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.weather.auto_hide") : 0));
+    useEvent("blurall", "weather", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.weather.auto_hide") : 0));
     
     const retrieveData = () => {
         const API_KEY = getUserSettings().get("cc.weatherwidget.api_key");
@@ -93,7 +92,7 @@ function WeatherWidget(props) {
 }
 
 
-CustomComponentRegistry.register(
+/* CustomComponentRegistry.register(
     "weatherwidget", 
     <WeatherWidget />,
     {
@@ -146,6 +145,6 @@ CustomComponentRegistry.register(
             }
         ]
     }
-);
+); */
 
 export default WeatherWidget;

@@ -1,5 +1,3 @@
-import getUserSettings from "./settings";
-
 const ENGINES = [
     "https://google.com/search?q=",  // Google
     "https://www.bing.com/search?q=",  // Bing
@@ -12,15 +10,18 @@ const ENGINES = [
 ];
 
 const SearchEngine = {
-    search: function(query) {
+    search: function(query: string) {
         query = encodeURIComponent(query);
 
         if (query.length > 0) {
-            let url = `${ENGINES[getUserSettings().get('cc.searchbar.search_engine')]}${query}`;
-            
-            console.error(getUserSettings().get('cc.searchbar.search_engine'), url);
+            const search_engine = 0;
+            const open_with = 1;
 
-            if (getUserSettings().get("cc.searchbar.open_with") === 1) {
+            let url = `${ENGINES[search_engine]}${query}`;
+            
+            console.error(search_engine, url);
+
+            if (open_with === 1) {
                 window.open(url, "_blank");
             } else {
                 window.location.href = url;

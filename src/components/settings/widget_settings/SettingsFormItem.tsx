@@ -1,10 +1,13 @@
-import React from "react";
-import SettingsItemDropdown from './SettingsItemDropdown';
-import SettingsItemInput from './SettingsItemInput';
+import { Setting } from '../../../utils/registry/types';
+import SettingsItemDropdown from './elements/SettingsItemDropdown';
+import SettingsItemInput from './elements/SettingsItemInput';
 
 
-function SettingsItemLabel(props) {
-    if (props.searchValue == null) {
+function SettingsItemLabel(props: {
+	name: string,
+	searchValue?: string
+}) {
+    if (props.searchValue === undefined) {
         return <p className="settings_item__form_item_label">
             {props.name}
         </p>;
@@ -54,50 +57,47 @@ function SettingsItemLabel(props) {
     }
 }
 
-class SettingsFormItem extends React.Component {
-    // Props
-    // formBody: name, id, type, values, displayedValues
-    // settingsKey: "cc.name.id"
-    // searchValue: null|string
-    // disabled: boolean
-
-    render() {
-        if (this.props.formBody.type === "dropdown") {
-            return (
+function SettingsFormItem(props: {
+	componentSetting: Setting,
+	componentId: string,
+	searchValue?: string,
+	disabled: boolean
+}) {
+    if (props.componentSetting.type === "dropdown") {
+        return (
+            <div>
+                <SettingsItemLabel 
+                    name={props.componentSetting.name} 
+                    searchValue={props.searchValue} 
+                />
                 <div>
-                    <SettingsItemLabel 
-                        name={this.props.formBody.name} 
-                        searchValue={this.props.searchValue} 
+                    <SettingsItemDropdown 
+						componentId={props.componentId}
+                        componentSetting={props.componentSetting}
+                        disabled={props.disabled}
                     />
-                    <div>
-                        <SettingsItemDropdown 
-                            values={this.props.formBody.values} 
-                            displayedValues={this.props.formBody.displayedValues} 
-                            settingsKey={this.props.settingsKey} 
-                            disabled={this.props.disabled}
-                        />
-                    </div>
                 </div>
-            );
-        } else if (this.props.formBody.type === "input") {
-            return (
+            </div>
+        );
+    } else if (props.componentSetting.type === "input") {
+        return (
+            <div>
+                <SettingsItemLabel 
+                    name={props.componentSetting.name} 
+                    searchValue={props.searchValue} 
+                />
                 <div>
-                    <SettingsItemLabel 
-                        name={this.props.formBody.name} 
-                        searchValue={this.props.searchValue} 
+                    <SettingsItemInput 
+						componentId={props.componentId}
+                        componentSetting={props.componentSetting}
+                        disabled={props.disabled}
                     />
-                    <div>
-                        <SettingsItemInput 
-                            tooltip={this.props.formBody.tooltip} 
-                            hidden={this.props.formBody.hidden} 
-                            settingsKey={this.props.settingsKey} 
-                            disabled={this.props.disabled}
-                        />
-                    </div>
                 </div>
-            )
-        }
+            </div>
+        )
     }
+
+	return null;
 }
 
 export default SettingsFormItem;

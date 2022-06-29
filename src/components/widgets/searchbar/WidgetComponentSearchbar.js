@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import SearchSuggestions from './searchsuggestions';
 import SearchIcon from '@mui/icons-material/Search';
-import SearchEngineChooser from './searchenginechooser';
+import { useState } from 'react';
+import { useEvent, useSetting } from '../../../utils/eventhooks';
 import SearchEngine from '../../../utils/searchengine';
 import SuggestionCaller from '../../../utils/searchsuggestioncaller';
 import getUserSettings from '../../../utils/settings';
-import CustomComponentRegistry from '../../../utils/customcomponentregistry';
 import styles from './searchbar.module.css';
-import Widget from '../Widget';
+import SearchEngineChooser from './searchenginechooser';
+import SearchSuggestions from './searchsuggestions';
 
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
@@ -16,14 +15,14 @@ const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu
 
 
 function SearchBar(props) {
-    const [ position, _1 ] = Widget.useSetting("cc.searchbar.vertical_align", "searchbar");
-    const [ searchEngine, _2 ] = Widget.useSetting("cc.searchbar.search_engine", "searchbar");
+    const [ position, _1 ] = useSetting("cc.searchbar.vertical_align", "searchbar");
+    const [ searchEngine, _2 ] = useSetting("cc.searchbar.search_engine", "searchbar");
     const [ modalChooseEngine, setModalChooseEngine ] = useState(false);
     const [ suggestions, setSuggestions ] = useState([]);
     const [ opacity, setOpacity ] = useState(0);
     const [ content, setContent ] = useState("");
 
-    Widget.useEvent("blurall", "searchbar", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : 0));
+    useEvent("blurall", "searchbar", 1, (data) => setOpacity(data.blur ? getUserSettings().get("cc.searchbar.auto_hide") : 0));
 
     return (
         <div
@@ -38,7 +37,7 @@ function SearchBar(props) {
                         onClick={() => setModalChooseEngine(!modalChooseEngine)}>
                         <img 
                             className={styles.engine_icon} 
-                            src={`/icons/engines/${searchEngines[searchEngine].toLowerCase()}.png`} 
+                            src={`/icons/engines/${searchEngines[searchEngine]?.toLowerCase()}.png`} 
                             alt={searchEngines[searchEngine]} />
                     </div>
                     {modalChooseEngine ? <SearchEngineChooser /> : null}
@@ -76,7 +75,7 @@ function SearchBar(props) {
     )
 }
 
-CustomComponentRegistry.register(
+/* CustomComponentRegistry.register(
     "searchbar",
     <SearchBar />,
     {
@@ -122,6 +121,6 @@ CustomComponentRegistry.register(
             }
         ]
     }
-)
+) */
 
 export default SearchBar;

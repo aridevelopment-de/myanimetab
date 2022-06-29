@@ -1,8 +1,10 @@
+// @ts-nocheck
 import axios from "axios";
 
 const SuggestionCaller = {
-    makeJsonpRequest: function(url, callback) {
+    makeJsonpRequest: function(url: string, callback: Function) {
         var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        
         window[callbackName] = function(data) {
             delete window[callbackName];
             document.body.removeChild(script);
@@ -14,7 +16,7 @@ const SuggestionCaller = {
         script.setAttribute("crossorigin", "anonymous");
         document.body.appendChild(script);
     },
-    fetchSearchSuggestions: function(query, callback) {        
+    fetchSearchSuggestions: function(query: string, callback: string) {        
         query = encodeURIComponent(query);
         axios.get(`https://ac.ecosia.org/?q=${query}`)
             .then((response) => {

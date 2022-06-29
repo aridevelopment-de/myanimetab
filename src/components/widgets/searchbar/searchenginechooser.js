@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './searchenginechooser.module.css';
-import Widget from '../Widget';
+import { useSetting } from '../../../utils/eventhooks';
 
 const searchEngines = ["Google", "Bing", "Ecosia", "Yahoo", "DuckDuckGo", "Baidu", "Ask", "WolframAlpha"];
 
 function SearchEngineChooser(props) {
-    const [ selectedSearchEngine, setSelectedSearchEngine ] = Widget.useSetting("cc.searchbar.search_engine", "search_engine_chooser");
+    const [ selectedSearchEngine, setSelectedSearchEngine ] = useSetting("cc.searchbar.search_engine", "search_engine_chooser");
 
     return (
         <div className={styles.container}>
@@ -16,7 +16,7 @@ function SearchEngineChooser(props) {
                         key={index}
                         onClick={() => setSelectedSearchEngine(index)}>
                         <div className={styles.icon}>
-                            <img src={`/icons/engines/${searchEngine.toLowerCase()}.png`} alt={searchEngine} />
+                            <img src={`/icons/engines/${searchEngine?.toLowerCase()}.png`} alt={searchEngine} />
                         </div>
                         <div>{searchEngine}</div>
                     </div>
