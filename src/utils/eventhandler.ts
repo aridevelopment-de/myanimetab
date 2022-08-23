@@ -19,9 +19,6 @@ const EventHandler = {
     },
 
     emits: (eventNames: Array<string>, datas: Array<any>=[]) => {
-        console.debug("[Event] Events published: " + eventNames);
-        console.debug(datas);
-        
         eventNames.forEach((eventName, index) => {
             if (datas === null) {
                 EventHandler.emit(eventName);

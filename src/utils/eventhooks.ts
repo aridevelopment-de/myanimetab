@@ -1,3 +1,4 @@
+import { useLiveQuery } from "dexie-react-hooks";
 import md5 from "md5";
 import { useEffect, useState } from "react";
 import { widgetsDb } from "./db";
@@ -5,26 +6,37 @@ import EventHandler from "./eventhandler";
 
 
 export const useSetting = (id: string, key: string, trigger_function?: Function): [any, Function] => {
-    const [status, setStatus] = useState(null);
-    useEffect(() => { widgetsDb.getSetting(id, key).then(result => setStatus(result)) }, [id, key]);
+    /* const [state, setState] = useState();
+    const changeStatus = (value: any) => widgetsDb.setSetting(id, key, value);
 
-    const changeStatus = (value: any) => {
-        widgetsDb.setSetting(id, key, value);
-        setStatus(value);
+    useEvent(`widget.${id}.${key}`, HashCode.value(id + key + String(trigger_function)), null, (data: any) => {
+        const value = (trigger_function || (() => {}))(data) || data;        
+        setState(value);
+    })
+
+    useEffect(() => {
+        widgetsDb.getSetting(id, key).then((data: any) => {
+            const value = (trigger_function || (() => {}))(data) || data;
+            setState(value);
+        })
+    }, [id, key, trigger_function])
+    
+    return [state, changeStatus]; */
+    
+    const [state, setState] = useState();
+    const data = useLiveQuery(() => widgetsDb.widgets.where("id").equals(id).toArray())
+    
+    const changeData = (newValue: any) => {
+        widgetsDb.setSetting(id, key, newValue);
     }
 
     useEffect(() => {
-        EventHandler.on(`widget.${id}.${key}`, HashCode.value(id + key), (data: any) => {            
-            setStatus(data);
-            (trigger_function || (() => {}))(data);
-        });
-        
-        return () => {
-            EventHandler.off(`widget.${id}.${key}`, HashCode.value(id + key));
+        if (data !== undefined) {
+            setState(data[0].settings[key]);
         }
-    }, [id, key, trigger_function]);
+    }, [data, key])
 
-    return [status, changeStatus];
+    return [state, changeData];
 }
 
 export const useEvent = (event_name: string, identifier: string, default_value?: any, trigger_function?: Function): [any, Function] => {
