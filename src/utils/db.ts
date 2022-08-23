@@ -122,8 +122,8 @@ class MetaDatabase extends Dexie {
     }
 }
 
-export const useMeta = (key: string, mapFunction?: Function) => {
-    const [status, setStatus] = useState(null);
+export const useMeta = (key: string, mapFunction?: Function): any => {
+    const [status, setStatus] = useState();
     useEffect(() => { 
         metaDb.getMeta(key).then(result => {
             const newData = (mapFunction || ((d: any) => d))(result) || result;

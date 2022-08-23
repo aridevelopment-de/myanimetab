@@ -1,7 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import { useLiveQuery } from "dexie-react-hooks";
-import { metaDb } from "../../../utils/db";
+import { metaDb, useMeta } from '../../../utils/db';
 import EventHandler from '../../../utils/eventhandler';
 import image_styles from './imagestyles.module.css';
 import styles from './playlistsettingscomponent.module.css';
@@ -47,8 +46,8 @@ function Image(props: {
 }
 
 function PlaylistSettingsComponent(props: {}) {
-    const images = useLiveQuery(() => metaDb.meta.get("images").then(m => m?.value));
-    const selectedIdx = useLiveQuery(() => metaDb.meta.get("selected_image").then(m => m?.value));
+    const images = useMeta("images");
+    const selectedIdx = useMeta("selected_image");
 
     return (
         <div>
