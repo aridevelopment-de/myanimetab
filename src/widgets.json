@@ -6,5 +6,9 @@
     {
         "name": "clock",
         "entryPoint": "clock/WidgetComponentClock"
+    },
+    {
+        "name": "searchbar",
+        "entryPoint": "searchbar/WidgetComponentSearchbar"
     }
 ]
