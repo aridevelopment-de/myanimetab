@@ -2,5 +2,9 @@
     {
         "name": "controlbar",
         "entryPoint": "controlbar/WidgetComponentControlbar"
+    },
+    {
+        "name": "clock",
+        "entryPoint": "clock/WidgetComponentClock"
     }
 ]
