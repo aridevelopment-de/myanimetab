@@ -62,13 +62,17 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 						});
 					} else if (
 						response.status === 404 ||
-						response.status === 401
+						response.status === 401 ||
+						response.status === 429 // too many requests
 					) {
 						setData({
 							...data,
 							statusCode: response.status,
 						});
 					}
+				})
+				.catch((error) => {
+					console.error(error);
 				});
 		};
 
