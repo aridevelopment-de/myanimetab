@@ -10,5 +10,9 @@
     {
         "name": "searchbar",
         "entryPoint": "searchbar/WidgetComponentSearchbar"
+    },
+    {
+        "name": "weather", 
+        "entryPoint": "weather/WidgetComponentWeather"
     }
 ]
