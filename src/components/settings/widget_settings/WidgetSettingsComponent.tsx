@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import SettingsElement from "./SettingsElement";
-import EventHandler from "../../../utils/eventhandler";
-import styles from "./widgetsettingscomponent.module.css";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component } from "../../../utils/registry/types";
+import SettingsElement from "./SettingsElement";
+import styles from "./widgetsettingscomponent.module.css";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
