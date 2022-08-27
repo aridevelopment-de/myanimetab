@@ -1,0 +1,6 @@
+.item_label {
+	color: rgba(74, 74, 74, 0.8);
+	font-size: 14px;
+	margin-bottom: 6px;
+	transition: opacity 0.2s;
+}
