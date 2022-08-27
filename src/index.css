@@ -1,59 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 @font-face {
-  font-family: 'dotsfont';
-  src: url('./fonts/dotsfont.eot');
-  src: url('./fonts/dotsfont.eot?#iefix') format('embedded-opentype'),
-       url('./fonts/dotsfont.woff') format('woff'),
-       url('./fonts/dotsfont.ttf') format('truetype'),
-       url('./fonts/dotsfont.svg#dotsfontregular') format('svg');
+	font-family: "dotsfont";
+	src: url("./fonts/dotsfont.eot");
+	src: url("./fonts/dotsfont.eot?#iefix") format("embedded-opentype"),
+		url("./fonts/dotsfont.woff") format("woff"),
+		url("./fonts/dotsfont.ttf") format("truetype"),
+		url("./fonts/dotsfont.svg#dotsfontregular") format("svg");
 }
 
 [conceal]:not(:active):not(:focus) {
-  font-family: 'dotsfont';
+	font-family: "dotsfont";
+}
+
+:root {
+	--fadeInAnimation: fadeComponentIn 50ms ease-in-out;
 }
 
 body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 100;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
-  font-size: 100% !important;
-  background-color: black;
+	margin: 0;
+	font-family: "Roboto", sans-serif;
+	font-weight: 100;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow: hidden;
+	font-size: 100% !important;
+	background-color: black;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
 }
 
 .widget {
-  color: rgba(255, 255, 255, 0.816);
-  border-radius: 20px;
-  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
-  user-select: none;
+	color: rgba(255, 255, 255, 0.816);
+	border-radius: 20px;
+	filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
+	user-select: none;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
-  margin: 5px;
+	width: 4px;
+	margin: 5px;
 }
 
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:hover {
-  border-radius: 1.5px;
-  background-color: rgba(145, 145, 145, 1);
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+	border-radius: 1.5px;
+	background-color: rgba(145, 145, 145, 1);
 }
 
 .abs_fit {
-  position: absolute;
-  inset: 0;
+	position: absolute;
+	inset: 0;
 }
 
 .material-icons {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@keyframes fadeComponentIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
