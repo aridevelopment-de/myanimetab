@@ -1,31 +1,32 @@
 /* Custom on/off switcher */
 .settings_switch {
-    display: inline-block;
-    padding: 2px;
-    border-radius: 12px;
-    width: 32px;
-    cursor: pointer;
-    user-select: none;
-    background-color: #CECECE;
-    border-color: #CECECE;
-    transition: background-color 200ms, border-color 200ms;
+	display: inline-block;
+	padding: 2px;
+	border-radius: 12px;
+	width: 32px;
+	cursor: pointer;
+	user-select: none;
+	background-color: #cecece;
+	border-color: #cecece;
+	transition: background-color 200ms, border-color 200ms;
 }
 
 .settings_switch:after {
-    display: block;
-    content: "";
-    background-color: white;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    transition: transform 200ms;
+	display: block;
+	content: "";
+	background-color: white;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	transition: transform 200ms;
 }
 
 .checked {
-    background-color: #2F54EB;
-    border-color: #2F54EB;
+	background-color: #2f54eb;
+	border-color: #2f54eb;
 }
 
 .settings_switch.checked:after {
-    transform: translateX(100%);
+	/* 4px because .settings_switch has 2px padding */
+	transform: translateX(calc(100% - 4px));
 }
