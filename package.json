@@ -4,8 +4,11 @@
   "version": "2.5.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.5.0",
+    "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.3.0",
+    "@mantine/core": "^5.2.3",
+    "@mantine/hooks": "^5.2.3",
+    "@mantine/modals": "^5.2.3",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
     "@testing-library/jest-dom": "^5.14.1",
