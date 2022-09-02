@@ -1,6 +1,6 @@
+import { NativeSelect, PasswordInput, TextInput } from "@mantine/core";
+import { useSetting } from "../../../utils/eventhooks";
 import { Setting } from "../../../utils/registry/types";
-import SettingsItemDropdown from "./elements/SettingsItemDropdown";
-import SettingsItemInput from "./elements/SettingsItemInput";
 import styles from "./settingsformitem.module.css";
 
 function SettingsItemLabel(props: { name: string; searchValue?: string }) {
@@ -80,6 +80,11 @@ function SettingsFormItem(props: {
 	searchValue?: string;
 	disabled: boolean;
 }) {
+	const [data, setData] = useSetting(
+		props.componentId,
+		props.componentSetting.key
+	);
+
 	if (props.componentSetting.type === "dropdown") {
 		return (
 			<div>
@@ -88,9 +93,17 @@ function SettingsFormItem(props: {
 					searchValue={props.searchValue}
 				/>
 				<div>
-					<SettingsItemDropdown
-						componentId={props.componentId}
-						componentSetting={props.componentSetting}
+					<NativeSelect
+						data={props.componentSetting.displayedValues}
+						value={props.componentSetting.displayedValues[data]}
+						onChange={(e) => {
+							setData(
+								props.componentSetting.displayedValues.indexOf(
+									e.currentTarget.value
+								)
+							);
+						}}
+						variant="filled"
 						disabled={props.disabled}
 					/>
 				</div>
@@ -104,11 +117,23 @@ function SettingsFormItem(props: {
 					searchValue={props.searchValue}
 				/>
 				<div>
-					<SettingsItemInput
-						componentId={props.componentId}
-						componentSetting={props.componentSetting}
-						disabled={props.disabled}
-					/>
+					{props.componentSetting.hidden ? (
+						<PasswordInput
+							placeholder={props.componentSetting.tooltip}
+							onChange={(e) => setData(e.currentTarget.value)}
+							value={data}
+							variant="filled"
+							disabled={props.disabled}
+						/>
+					) : (
+						<TextInput
+							placeholder={props.componentSetting.tooltip}
+							onChange={(e) => setData(e.currentTarget.value)}
+							value={data}
+							variant="filled"
+							disabled={props.disabled}
+						/>
+					)}
 				</div>
 			</div>
 		);
