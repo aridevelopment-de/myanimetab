@@ -15,10 +15,14 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 					{props.data.headerSettings.name}
 				</p>
 				<div>
-					<Switch
-						checked={checked}
-						onChange={(e) => setChecked(e.currentTarget.checked)}
-					/>
+					{checked !== undefined ? (
+						<Switch
+							checked={checked}
+							onChange={(e) =>
+								setChecked(e.currentTarget.checked)
+							}
+						/>
+					) : null}
 				</div>
 			</div>
 			<div>

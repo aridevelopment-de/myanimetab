@@ -104,7 +104,7 @@ const WidgetSettingsComponent = (props: {}) => {
 					</a>
 				</div>
 				<p id={styles.copyright_infrigement}>
-					Copyright © 2022 aridevelopment.de
+					MyAnimeTab © 2022 aridevelopment.de
 				</p>
 			</footer>
 		</React.Fragment>
