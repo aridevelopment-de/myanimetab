@@ -7,6 +7,7 @@ import EventHandler from "./utils/eventhandler";
 import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { NotificationsProvider } from "@mantine/notifications";
 
 function App(props) {
 	const [installedComponents, setInstalledComponents] = React.useState([]);
@@ -47,28 +48,30 @@ function App(props) {
 	return (
 		<div className="App">
 			<MantineProvider withGlobalStyles withNormalizeCSS>
-				<ModalsProvider>
-					<Background>
-						{(blur) => {
-							return installedComponents.map(
-								(component: Component) => {
-									if (component.element === null) {
-										return null;
-									}
+				<NotificationsProvider>
+					<ModalsProvider>
+						<Background>
+							{(blur) => {
+								return installedComponents.map(
+									(component: Component) => {
+										if (component.element === null) {
+											return null;
+										}
 
-									return (
-										<component.element
-											id={component.fullId}
-											key={component.fullId}
-											blur={blur}
-										/>
-									);
-								}
-							);
-						}}
-					</Background>
-					<SettingsComponent />
-				</ModalsProvider>
+										return (
+											<component.element
+												id={component.fullId}
+												key={component.fullId}
+												blur={blur}
+											/>
+										);
+									}
+								);
+							}}
+						</Background>
+						<SettingsComponent />
+					</ModalsProvider>
+				</NotificationsProvider>
 			</MantineProvider>
 		</div>
 	);

@@ -18,6 +18,16 @@ class WidgetDatabase extends Dexie {
 		});
 	}
 
+	async toJson(): Promise<Array<Widget>> {
+		return await this.widgets.toArray();
+	}
+
+	async fromJSON(data: Array<Widget>) {
+		// TODO: Add data validation
+		await this.widgets.clear();
+		await this.widgets.bulkAdd(data);
+	}
+
 	registerWidget(type: string, settings?: { [key: string]: any }) {
 		this.widgets.get(`${type}-0`).then((widget) => {
 			if (widget === undefined) {
