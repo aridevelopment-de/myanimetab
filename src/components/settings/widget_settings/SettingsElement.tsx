@@ -1,12 +1,12 @@
+import { Switch } from "@mantine/core";
 import { useSetting } from "../../../utils/eventhooks";
 import { Component } from "../../../utils/registry/types";
 import styles from "./settingselement.module.css";
 import SettingsFormItem from "./SettingsFormItem";
-import SettingsItemSwitch from "./SettingsItemSwitch";
 
 function SettingsElement(props: { data: Component; searchValue: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [checked, _] = useSetting(props.data.fullId, "state");
+	const [checked, setChecked] = useSetting(props.data.fullId, "state");
 
 	return (
 		<div className={`${styles.item} ${!checked ? "disabled" : ""}`}>
@@ -15,7 +15,10 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 					{props.data.headerSettings.name}
 				</p>
 				<div>
-					<SettingsItemSwitch componentId={props.data.fullId} />
+					<Switch
+						checked={checked}
+						onChange={(e) => setChecked(e.currentTarget.checked)}
+					/>
 				</div>
 			</div>
 			<div>
