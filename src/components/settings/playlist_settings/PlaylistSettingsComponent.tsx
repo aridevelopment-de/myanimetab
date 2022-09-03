@@ -1,79 +1,64 @@
-import {
-	Button,
-	Group,
-	Image,
-	Modal,
-	Space,
-	Stack,
-	Textarea,
-} from "@mantine/core";
+import { Button, Group, Menu, Modal, Stack, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import { useState } from "react";
-import { metaDb, useMeta } from "../../../utils/db";
-import EventHandler from "../../../utils/eventhandler";
-import image_styles from "./imagestyles.module.css";
+import { useEffect, useState, useRef } from "react";
+import { IImage, metaDb } from "../../../utils/db";
+import Background from "./filetypes/background";
+import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
+import TimeLine from "./timeline";
+import FolderIcon from "@mui/icons-material/Folder";
+import ImageIcon from "@mui/icons-material/Image";
 
-function DisplayedImage(props: {
-	url: string;
-	idx: number;
-	selectedIdx: number;
-	resizeClickCallback: Function;
-	deleteClickCallback: Function;
-	disabled: boolean;
-}) {
-	const onImageClick = () => {
-		if (props.idx !== props.selectedIdx) {
-			metaDb.setMeta("selected_image", props.idx);
-			EventHandler.emit("select_image", { idx: props.idx });
-			EventHandler.emit("playlist_refresh", null);
-		}
-	};
-
-	return (
-		<div
-			className={`${image_styles.image} ${
-				props.idx === props.selectedIdx ? image_styles.selected : ""
-			}`}
-		>
-			<img src={props.url} alt={`${props.idx}`} onClick={onImageClick} />
-			<div>
-				<div className={image_styles.overlay_buttons}>
-					<div
-						className={image_styles.overlay__button}
-						onClick={() => props.resizeClickCallback(props.idx)}
-					>
-						<FullscreenIcon />
-					</div>
-					<div
-						className={`${image_styles.overlay__button} ${
-							props.disabled === true ? image_styles.disabled : ""
-						}`}
-						onClick={() => {
-							if (props.disabled === false) {
-								props.deleteClickCallback(props.idx);
-							}
-						}}
-					>
-						<DeleteIcon />
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-}
-
-function PlaylistSettingsComponent(props: {}) {
-	const images = useMeta("images");
+function PlaylistSettingsComponent(props: { bodyRef: any }) {
 	const [addImageModalState, setAddImageModalState] =
 		useState<boolean>(false);
-	const selectedIdx = useMeta("selected_image");
 
-	const [fullScreenModalState, setFullScreenModalState] =
-		useState<boolean>(false);
-	const [fullScreenIdx, setFullScreenIdx] = useState<number>();
+	const [path, setPath] = useState<string>("/");
+	const [images, setImages] = useState<IImage[]>([]);
+	const [subFolders, setSubFolders] = useState<string[]>([]);
+	const [draggedElement, setDraggedElement] = useState<IImage>();
+	const menuRef = useRef<HTMLDivElement>();
+	const [menuOpened, setMenuOpened] = useState<boolean>(false);
+
+	useEffect(() => {
+		metaDb.getImages(path).then(setImages);
+		metaDb.getSubFolders(path).then(setSubFolders);
+	}, [path]);
+
+	useEffect(() => {
+		const onContextMenu = (e: MouseEvent) => {
+			e.preventDefault();
+
+			if (menuRef.current !== undefined) {
+				// set top and left of menuRef relative to bodyRef
+				menuRef.current.style.top =
+					e.clientY -
+					props.bodyRef.current.getBoundingClientRect().top +
+					"px";
+				menuRef.current.style.left =
+					e.clientX -
+					100 -
+					props.bodyRef.current.getBoundingClientRect().left +
+					"px";
+				setMenuOpened(true);
+			}
+		};
+
+		props.bodyRef.current.addEventListener("contextmenu", onContextMenu);
+		document.addEventListener("mouseup", (e: any) => {
+			// check if target element contains data tag data-menu-aabc and is left click
+			if (e.target.dataset.menuAabc === undefined && e.button === 0) {
+				setMenuOpened(false);
+			}
+		});
+
+		return () => {
+			props.bodyRef.current.removeEventListener(
+				"contextmenu",
+				onContextMenu
+			);
+		};
+	}, [props]);
 
 	const addImageForm = useForm({
 		initialValues: {
@@ -102,7 +87,7 @@ function PlaylistSettingsComponent(props: {}) {
 			.split(",")
 			.map((url: string) => url.trim());
 
-		metaDb.setMeta("images", [...images, ...imagesToAdd]);
+		metaDb.addBulkImages(imagesToAdd);
 		setAddImageModalState(false);
 	};
 
@@ -141,70 +126,99 @@ function PlaylistSettingsComponent(props: {}) {
 				</form>
 			</Modal>
 
-			{/* Fullscreen image modal */}
-			<Modal
-				opened={fullScreenModalState}
-				onClose={() => {
-					setFullScreenModalState(false);
-					setFullScreenIdx(undefined);
-				}}
-				centered
-				size="max-content"
+			<div
+				/* @ts-ignore */
+				ref={menuRef}
+				style={{ position: "absolute", width: "200px" }}
+				data-menu-aabc={true}
 			>
-				{fullScreenIdx !== undefined ? (
-					<>
-						<Image
-							radius="md"
-							src={images[fullScreenIdx]}
-							alt="Image in Fullscreen"
-							caption={
-								<a href={images[fullScreenIdx]}>
-									{images[fullScreenIdx]}
-								</a>
-							}
-							width={window.innerWidth * 0.5}
-							height={window.innerHeight * 0.5}
-						/>
-						<Space h="xl" />
-					</>
-				) : null}
-			</Modal>
+				<Menu width={200} opened={menuOpened} onChange={setMenuOpened}>
+					<Menu.Dropdown>
+						<Menu.Item
+							icon={<ImageIcon />}
+							onClick={() => setAddImageModalState(true)}
+						>
+							Add new Image
+						</Menu.Item>
+						<Menu.Item
+							icon={<FolderIcon />}
+							onClick={() => {
+								metaDb.addFolder(path).then(() => {
+									metaDb
+										.getSubFolders(path)
+										.then(setSubFolders);
+								});
+							}}
+						>
+							Create new Folder
+						</Menu.Item>
+					</Menu.Dropdown>
+				</Menu>
+			</div>
 
 			{/* Image list */}
-			<div className={styles.images}>
-				{(images || []).map((image: string, index: number) => {
-					return (
-						<DisplayedImage
-							url={image}
-							key={index}
-							idx={index}
-							disabled={index === 0 && images.length === 1}
-							selectedIdx={selectedIdx}
-							resizeClickCallback={(idx: number) => {
-								setFullScreenIdx(idx);
-								setFullScreenModalState(true);
-							}}
-							deleteClickCallback={(idx: number) => {
-								images.splice(idx, 1);
-								metaDb.setMeta("images", images);
-								metaDb.setMeta(
-									"selected_image",
-									Math.max(0, idx - 1)
+			<div className={styles.container}>
+				<div
+					className={`${styles.toolbar_hidden} ${
+						path === "/" ? "" : styles.toolbar
+					}`}
+				>
+					<TimeLine
+						fullPath={path}
+						onClick={setPath}
+						draggedElement={draggedElement}
+						onDroppedImage={(path: string) => {
+							setDraggedElement(undefined);
+							setPath(path);
+
+							setTimeout(
+								() => metaDb.getImages(path).then(setImages),
+								50
+							);
+						}}
+					/>
+				</div>
+				<div className={styles.images}>
+					{subFolders.map((path: string) => (
+						<Folder
+							path={path}
+							onClick={() => setPath(path)}
+							draggedElement={draggedElement}
+							onDroppedImage={() => {
+								setDraggedElement(undefined);
+								setPath(path);
+
+								setTimeout(
+									() =>
+										metaDb.getImages(path).then(setImages),
+									50
 								);
 							}}
+							key={path}
 						/>
-					);
-				})}
+					))}
 
-				<div className={styles.dragdrop__container}>
-					<div
-						className={styles.dragdrop}
-						onClick={() => setAddImageModalState(true)}
-					>
-						<div className={styles.dragdrop__text}>
-							<p>+</p>
+					{images.map((image: IImage, index: number) => {
+						return (
+							<Background
+								image={image}
+								index={index}
+								setDraggedElement={setDraggedElement}
+								key={index}
+							/>
+						);
+					})}
+
+					{/* <div className={styles.dragdrop__container}>
+						<div
+							className={styles.dragdrop}
+							onClick={() => setAddImageModalState(true)}
+						>
+							<div className={styles.dragdrop__text}>
+								<p>+</p>
+							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</>

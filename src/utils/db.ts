@@ -110,8 +110,22 @@ interface Meta {
 	value: any;
 }
 
+export interface IImage {
+	id: number;
+	folder: string;
+	url: string;
+	name: string;
+}
+
+export interface Folder {
+	id: number;
+	path: string;
+}
+
 class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
+	images!: Table<IImage>;
+	folders!: Table<Folder>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -119,6 +133,18 @@ class MetaDatabase extends Dexie {
 
 		this.version(1).stores({
 			meta: "name, value",
+		});
+
+		// Folders always have to start with a slash and cannot end with a slash
+		this.version(2).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+		});
+
+		this.version(3).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, path",
 		});
 	}
 
@@ -153,6 +179,110 @@ class MetaDatabase extends Dexie {
 				this.meta.put({ name: name, value: value });
 			}
 		});
+	}
+
+	async anyImagesOrInsert(defaultUrl: string, defaultName: string) {
+		const images = await this.images.toArray();
+
+		if (images.length === 0) {
+			// @ts-ignore
+			this.images.put({
+				folder: "/",
+				url: defaultUrl,
+				name: defaultName,
+			});
+		}
+	}
+
+	async getImages(folder: string): Promise<Array<IImage>> {
+		return this.images.where("folder").equals(folder).toArray();
+	}
+
+	async getSubFolders(parentDirectory: string): Promise<Array<string>> {
+		return (await this.folders.toArray())
+			.map((folder) => folder.path)
+			.filter((path) => path.startsWith(parentDirectory))
+			.filter((path) => path !== parentDirectory)
+			.filter((path) => {
+				let afterParent = path.substring(parentDirectory.length);
+
+				if (afterParent.startsWith("/")) {
+					afterParent = afterParent.substring(1);
+				}
+
+				console.log(afterParent);
+
+				return afterParent.indexOf("/") === -1 && afterParent !== "";
+			});
+	}
+
+	async getImage(id: number): Promise<IImage | undefined> {
+		return this.images.get(id);
+	}
+
+	addBulkImages(urls: string[]) {
+		return this.images.bulkPut(
+			// @ts-ignore
+			urls.map((url: string) => {
+				return {
+					folder: "/",
+					url: url,
+					name: `Image #${Math.floor(Math.random() * 1000000)}`,
+				};
+			})
+		);
+	}
+
+	async addImage(folder: string, url: string, name: string) {
+		if (!(await this.checkFolderExists(folder)) && folder !== "/") {
+			await this.addFolder(folder);
+		}
+
+		// @ts-ignore
+		return this.images.put({ folder, url, name });
+	}
+
+	async relocateImage(id: number, newPath: string) {
+		if (!(await this.checkFolderExists(newPath)) && newPath !== "/") {
+			await this.addFolder(newPath);
+		}
+
+		return this.images.update(id, { folder: newPath });
+	}
+
+	async removeImage(id: number) {
+		return this.images.delete(id);
+	}
+
+	async checkFolderExists(path: string): Promise<boolean> {
+		return (
+			(await this.folders.where("path").equals(path).toArray()).length > 0
+		);
+	}
+
+	async addFolder(path: string, folderName?: string) {
+		if (folderName === undefined) {
+			// create new folder name with template "New Folder #1, 2, ..."
+			const folders = await this.getSubFolders(path);
+			let folderNumber = 1;
+			while (folders.includes(`New Folder #${folderNumber}`)) {
+				folderNumber++;
+			}
+
+			folderName = `New Folder #${folderNumber}`;
+		}
+
+		if (path === "/") {
+			// prevent mis-formmatting in final folder name
+			path = "";
+		}
+
+		// @ts-ignore
+		return this.folders.put({ path: path + "/" + folderName });
+	}
+
+	async removeFolder(path: string) {
+		return this.folders.where("path").equals(path).delete();
 	}
 }
 

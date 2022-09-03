@@ -1,9 +1,15 @@
+.container {
+	height: 100%;
+}
+
 .images {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: 20px;
+	grid-auto-rows: 120px;
+	gap: 5px;
 	user-select: none;
 	animation: var(--fadeInAnimation);
+	padding-top: 5px;
 }
 
 .images * {
@@ -35,4 +41,26 @@
 .dragdrop__text p {
 	font-size: 50px;
 	color: rgba(0, 0, 0, 0.5);
+}
+
+.element_container {
+	border-radius: 4px;
+	grid-column: span 1;
+	grid-row: span 1;
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+	overflow: hidden;
+}
+
+.element_container:hover {
+	outline: 1px solid var(--mantine-color-blue-5);
+}
+
+.toolbar_hidden {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 1s;
+}
+
+.toolbar {
+	max-height: 200px !important;
 }

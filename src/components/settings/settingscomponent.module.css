@@ -1,114 +1,114 @@
 /* Settings menu */
 .wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 400px;
-    background-color: white;
-    transition: right 400ms;
-    z-index: 3;
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 400px;
+	background-color: white;
+	transition: right 400ms;
+	z-index: 3;
 }
 
 .closed {
-    right: -400px;
+	right: -400px;
 }
 
 @media screen and (max-width: 500px) {
-    .wrapper {
-        width: 100%;
-    }
+	.wrapper {
+		width: 100%;
+	}
 
-    .closed {
-        right: -100vw;
-    }
+	.closed {
+		right: -100vw;
+	}
 }
 
 .settings_menu {
-    font-family: 'Urbanist', sans-serif;
-    display: flex;
-    flex-direction: column;
+	font-family: "Urbanist", sans-serif;
+	display: flex;
+	flex-direction: column;
 }
 
 .settings_header {
-    position: relative;
-    padding-left: 36px;
-    padding-right: 36px;
-    font-size: 100%;
+	position: relative;
+	padding-left: 36px;
+	padding-right: 36px;
+	font-size: 100%;
 }
 
 /* Multiple labels */
 .settings_labels {
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+	padding: 0;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
 
 .settings_labels p {
-    padding-top: 1em;
-    font-size: 26px;
-    font-weight: 500;
-    color: #2f2f2f;
-    opacity: 0.5;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 13px !important;
-    transition: opacity 200ms;
+	padding-top: 1em;
+	font-size: 26px;
+	font-weight: 500;
+	color: #2f2f2f;
+	opacity: 0.5;
+	cursor: pointer;
+	user-select: none;
+	margin-bottom: 13px !important;
+	transition: opacity 200ms;
 }
 
 .settings_labels p.active {
-    opacity: 1.0;
-    cursor: not-allowed;
+	opacity: 1;
+	cursor: not-allowed;
 }
 
 .settings_labels p:not(.active):hover {
-    opacity: 0.67;
+	opacity: 0.67;
 }
 
 /* Icon */
 .icon__wrapper {
-    display: flex;
-    justify-content: flex-end;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .icon__wrapper svg {
-    position: absolute;
-    cursor: pointer;
-    right: 0.6em;
-    top: 0.6em;
-    color: rgba(0, 0, 0, 0.4);
-    transition: color 300ms;
+	position: absolute;
+	cursor: pointer;
+	right: 0.6em;
+	top: 0.6em;
+	color: rgba(0, 0, 0, 0.4);
+	transition: color 300ms;
 }
 
 .icon__wrapper svg:hover {
-    color: rgba(0, 0, 0, 0.8);
+	color: rgba(0, 0, 0, 0.8);
 }
 
 /* Settings Body */
 .settings_body {
-    flex: 1 1 0;
-    position: relative;
+	flex: 1 1 0;
+	position: relative;
 }
 
 /* Body scrolling */
 .scroller_viewport {
-    padding-right: 0px;
-    height: 100%;
+	padding-right: 0px;
+	height: 100%;
 }
 
 .scroller {
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
 }
 
 .scroller_content {
-    padding-left: 6px;
-    padding-right: 0px;
+	padding-left: 6px;
+	padding-right: 0px;
 }
 
 /* Settings list */
 .settings_list {
-    padding: 0 2em 3em;
+	padding: 0 2em 3em;
 }

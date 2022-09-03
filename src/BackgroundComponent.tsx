@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import AutoHideScheduler from "./components/AutoHideScheduler";
-import { metaDb, useMeta, widgetsDb } from "./utils/db";
+import { IImage, metaDb, useMeta, widgetsDb } from "./utils/db";
 import EventHandler from "./utils/eventhandler";
 import { useSetting } from "./utils/eventhooks";
 
@@ -13,10 +13,12 @@ const playlistOrderValues = ["Ordered", "Shuffled"];
 function Background(props: any) {
 	const [blur, setBlur] = useState(false);
 	const [currentBackgroundUrl, setCurrentBackgroundUrl] = useState("");
-	const currentBackgroundIdx = useMeta("selected_image", (idx: number) => {
+	const currentBackgroundIdx = useMeta("selected_image", (id: number) => {
 		metaDb
-			.getMeta("images")
-			.then((images: string[]) => setCurrentBackgroundUrl(images[idx]));
+			.getImage(id)
+			.then((image: IImage | undefined) =>
+				setCurrentBackgroundUrl(image ? image.url : "")
+			);
 	});
 	const [whenWallpaperSwitch, _1] = useSetting("wallpaper-0", "when_switch");
 	const [shouldWallpaperSwitch, _2] = useSetting("wallpaper-0", "state");
@@ -27,7 +29,7 @@ function Background(props: any) {
 			.then((value: number) => {
 				const playlistOrder: string = playlistOrderValues[value];
 
-				metaDb.getMeta("images").then((images: string[]) => {
+				/* metaDb.getMeta("images").then((images: string[]) => {
 					if (images.length >= 1) {
 						if (playlistOrder === "Ordered") {
 							let idx = currentBackgroundIdx || 0;
@@ -40,7 +42,7 @@ function Background(props: any) {
 							metaDb.setMeta("selected_image", idx);
 						}
 					}
-				});
+				}); */
 			});
 	};
 

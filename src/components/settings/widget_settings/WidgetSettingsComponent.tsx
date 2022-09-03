@@ -42,7 +42,7 @@ const containsString = (string: string, component: Component) => {
 	return false;
 };
 
-const WidgetSettingsComponent = (props: {}) => {
+const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 	const [searchbarValue, setSearchbarValue] = useState("");
 	const [exportModalState, setExportModalState] = useState(false);
 	const [importModalState, setImportModalState] = useState(false);

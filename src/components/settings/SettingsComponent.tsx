@@ -1,14 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useEvent } from "../../utils/eventhooks";
 import PlaylistSettingsComponent from "./playlist_settings/PlaylistSettingsComponent";
 import styles from "./settingscomponent.module.css";
 import WidgetSettingsComponent from "./widget_settings/WidgetSettingsComponent";
 
 const pages = {
-	Settings: <WidgetSettingsComponent />,
-	Playlists: <PlaylistSettingsComponent />,
-	"???": <p>It's still a mystery of what comes next...</p>,
+	Settings: (bodyRef: any) => <WidgetSettingsComponent bodyRef={bodyRef} />,
+	Playlists: (bodyRef: any) => (
+		<PlaylistSettingsComponent bodyRef={bodyRef} />
+	),
+	"???": (bodyRef: any) => <p>It's still a mystery of what comes next...</p>,
 };
 
 function SettingsComponent(_props: any) {
@@ -19,6 +21,7 @@ function SettingsComponent(_props: any) {
 		(data: { opened: boolean }) => data.opened
 	);
 	const [page, setPage] = useState("Settings");
+	const bodyRef: any | undefined = useRef<HTMLDivElement>();
 
 	return (
 		<div className={`${styles.wrapper} ${opened ? "" : styles.closed}`}>
@@ -45,14 +48,16 @@ function SettingsComponent(_props: any) {
 					</header>
 					<hr style={{ opacity: 0.5 }} />
 				</div>
-				<div className={styles.settings_body}>
+				<div className={styles.settings_body} ref={bodyRef}>
 					<div className="abs_fit">
 						<div className={styles.scroller_viewport}>
 							<div className={styles.scroller}>
 								<div className={styles.scroller_content}>
 									<div className={styles.settings_list}>
 										{opened
-											? pages[page as keyof typeof pages]
+											? pages[page as keyof typeof pages](
+													bodyRef
+											  )
 											: null}
 									</div>
 								</div>
