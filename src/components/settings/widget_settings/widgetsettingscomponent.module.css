@@ -1,91 +1,82 @@
 /* searchbar */
-.searchbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px 0;
+.toolbar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1em;
+	margin: 15px 0;
+	animation: var(--fadeInAnimation);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background-color: #fff;
 }
 
-.searchbar input {
-    width: 100%;
-    height: 16px;
-    background-color: transparent;
-    border-radius: 3px;
-    box-sizing: border-box;
-    border: 1px solid #4a4a4a;
-    font-size: 16px;
-    font-weight: 400;
-    color: #4a4a4a;
-    padding: 18px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+.toolbar input {
+	width: 100%;
+	height: 16px;
+	background-color: transparent;
+	border-radius: 3px;
+	box-sizing: border-box;
+	border: 1px solid #4a4a4a;
+	font-size: 16px;
+	font-weight: 400;
+	color: #4a4a4a;
+	padding: 18px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.searchbar input:focus {
-    outline: none;
+.toolbar input:focus {
+	outline: none;
 }
-
 
 /* import / export buttons */
 
 .control_group {
-    margin-top: 5em;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 1em;
+	margin-top: 5em;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	gap: 1em;
+	animation: var(--fadeInAnimation);
 }
 
 .control_group button {
-    width: 100%;
-    height: 2.5em;
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.import_button {
-    background-color: #2ec36c;
-}
-
-.export_button {
-    background-color: #3498db;
-}
-
-.import_button:hover {
-    background-color: #27a35b;
-}
-
-.export_button:hover {
-    background-color: #2a7cb3;
+	width: 100%;
+	height: 2.5em;
+	border: none;
+	border-radius: 6px;
+	color: #fff;
+	font-size: 1.1em;
+	font-weight: 600;
+	cursor: pointer;
 }
 
 /* social media / copyright */
 
 #footer {
-    margin-top: 3em;
-    padding: 0 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	margin-top: 3em;
+	padding: 0 1em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	animation: var(--fadeInAnimation);
 }
 
 .urls {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
 
 .urls a img {
-    width: 35px;
-    aspect-ratio: 1;
+	width: 35px;
+	aspect-ratio: 1;
 }
 
 #copyright_infrigement {
-    margin-top: 1em;
-    text-align: center;
-    font-weight: 200;
+	margin-top: 1em;
+	text-align: center;
+	font-weight: 200;
 }
