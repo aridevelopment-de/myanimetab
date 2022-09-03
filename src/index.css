@@ -38,6 +38,7 @@ code {
 	border-radius: 20px;
 	filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
 	user-select: none;
+	transition: opacity 0.5s ease-in-out;
 }
 
 ::-webkit-scrollbar {

@@ -3,6 +3,7 @@ import { useSetting } from "../../../utils/eventhooks";
 import { Component } from "../../../utils/registry/types";
 import styles from "./settingselement.module.css";
 import SettingsFormItem from "./SettingsFormItem";
+import EventHandler from "../../../utils/eventhandler";
 
 function SettingsElement(props: { data: Component; searchValue: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,9 +19,10 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 					{checked !== undefined ? (
 						<Switch
 							checked={checked}
-							onChange={(e) =>
-								setChecked(e.currentTarget.checked)
-							}
+							onChange={(e) => {
+								setChecked(e.currentTarget.checked);
+								EventHandler.emit("rerenderAll");
+							}}
 						/>
 					) : null}
 				</div>

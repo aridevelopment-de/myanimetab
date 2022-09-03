@@ -1,8 +1,13 @@
 import errorstyles from "./error.module.css";
 
-function ErrorComponent(props: { status: number }) {
+function ErrorComponent(props: { status: number; opacity: number }) {
 	return (
-		<div className="weather_widget widget">
+		<div
+			className="weather_widget widget"
+			style={{
+				opacity: props.opacity,
+			}}
+		>
 			<div className={errorstyles.container}>
 				<div className={errorstyles.status_code}>
 					<p
