@@ -70,6 +70,16 @@ class CustomComponentRegistry {
 		);
 	}
 
+	installComponent(knownComponent: KnownComponent) {
+		if (knownComponent.metadata.installableComponent === true) {
+			// add the component to the database
+			widgetsDb.addWidget(
+				knownComponent.type,
+				this._prepareSettings(knownComponent)
+			);
+		}
+	}
+
 	loadInstalledComponents(callback) {
 		this.installedComponents = [];
 
@@ -90,10 +100,7 @@ class CustomComponentRegistry {
 					type: component.type,
 					id: identifier.number,
 					fullId: `${component.type}-${identifier.number}`,
-					metadata: {
-						name: "dummy",
-						author: "Dummy 2 author",
-					},
+					metadata: component.metadata,
 					headerSettings: component.headerSettings,
 					contentSettings: component.contentSettings,
 				};
