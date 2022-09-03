@@ -1,6 +1,7 @@
 export interface Metadata {
 	name: string;
 	author: string;
+	installableComponent: boolean;
 	defaultComponent?: boolean;
 	removeableComponent?: boolean;
 }

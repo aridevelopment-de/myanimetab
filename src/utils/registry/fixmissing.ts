@@ -9,6 +9,7 @@ export const addMissing = () => {
 		metadata: {
 			name: "Wallpaper",
 			author: "aridevelopment.de",
+			installableComponent: false,
 		},
 		headerSettings: {
 			name: "Switch Wallpaper",
@@ -51,6 +52,7 @@ export const addMissing = () => {
 		metadata: {
 			name: "Auto Hide",
 			author: "aridevelopment.de",
+			installableComponent: false,
 		},
 		headerSettings: {
 			name: "Auto Hide (Not Implemented)",

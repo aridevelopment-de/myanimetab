@@ -55,11 +55,12 @@ class CustomComponentRegistry {
 			this.knownComponents,
 			async (component: KnownComponent) => {
 				if (component.metadata.defaultComponent === true) {
-					const widget = await widgetsDb.getWidget(
-						`${component.type}-${0}`
-					);
+					const identifiers = await widgetsDb.getIdentifiers();
+					let amt = identifiers.filter(
+						(identifier) => identifier.id === component.type
+					).length;
 
-					if (widget === undefined) {
+					if (amt === 0) {
 						await widgetsDb.addWidget(
 							component.type,
 							this._prepareSettings(component)
@@ -68,6 +69,23 @@ class CustomComponentRegistry {
 				}
 			}
 		);
+	}
+
+	installComponent(knownComponent: KnownComponent) {
+		if (knownComponent.metadata.installableComponent === true) {
+			// add the component to the database
+			widgetsDb.addWidget(
+				knownComponent.type,
+				this._prepareSettings(knownComponent)
+			);
+		}
+	}
+
+	uninstallComponent(component: Component) {
+		if (component.metadata.removeableComponent === true) {
+			// remove the component from the database
+			widgetsDb.removeWidget(component.fullId);
+		}
 	}
 
 	loadInstalledComponents(callback) {
@@ -90,10 +108,7 @@ class CustomComponentRegistry {
 					type: component.type,
 					id: identifier.number,
 					fullId: `${component.type}-${identifier.number}`,
-					metadata: {
-						name: "dummy",
-						author: "Dummy 2 author",
-					},
+					metadata: component.metadata,
 					headerSettings: component.headerSettings,
 					contentSettings: component.contentSettings,
 				};

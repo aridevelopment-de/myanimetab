@@ -77,6 +77,7 @@ export default {
 		author: "Aridevelopment.de",
 		defaultComponent: true,
 		removeableComponent: false,
+		installableComponent: false,
 	},
 	headerSettings: {
 		name: "Control Bar",

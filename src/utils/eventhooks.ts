@@ -38,7 +38,9 @@ export const useSetting = (
 
 	useEffect(() => {
 		if (data !== undefined) {
-			setState(data[0].settings[key]);
+			if (data[0] !== undefined) {
+				setState(data[0].settings[key]);
+			}
 		}
 	}, [data, key]);
 
