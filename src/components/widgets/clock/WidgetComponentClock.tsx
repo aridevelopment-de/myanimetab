@@ -75,6 +75,7 @@ export default {
 		author: "Aridevelopment.de",
 		defaultComponent: true,
 		removeableComponent: true,
+		installableComponent: true,
 	},
 	headerSettings: {
 		name: "Clock",
