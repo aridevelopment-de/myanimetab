@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
+import AutoHideScheduler from "./components/AutoHideScheduler";
 import { metaDb, useMeta, widgetsDb } from "./utils/db";
 import EventHandler from "./utils/eventhandler";
 import { useSetting } from "./utils/eventhooks";
@@ -19,8 +20,6 @@ function Background(props: any) {
 	});
 	const [whenWallpaperSwitch, _1] = useSetting("wallpaper-0", "when_switch");
 	const [shouldWallpaperSwitch, _2] = useSetting("wallpaper-0", "state");
-	const [autoHideTimeLapse, _3] = useSetting("autohide-0", "time_lapse");
-	const [shouldAutoHide, _4] = useSetting("autohide-0", "state");
 
 	const nextImage = () => {
 		widgetsDb
@@ -74,6 +73,13 @@ function Background(props: any) {
 			className={styles.background}
 			style={{ backgroundImage: `url(${currentBackgroundUrl})` }}
 		>
+			<AutoHideScheduler
+				setBlur={(blur: boolean) => {
+					console.log("Setting blur to " + blur);
+					setBlur(blur);
+				}}
+				blur={blur}
+			/>
 			{props.children(blur)}
 		</div>
 	);
