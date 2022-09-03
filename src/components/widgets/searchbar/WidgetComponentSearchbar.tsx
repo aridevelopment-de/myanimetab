@@ -29,13 +29,21 @@ function SearchBar(props: { blur: boolean; id: string }) {
 		"search_engine"
 	);
 	const [openWith, _2] = useSetting(props.id, "open_with");
+	const [autoHideValue, _3] = useSetting(props.id, "auto_hide");
 	const [modalChooseEngine, setModalChooseEngine] = useState<boolean>(false);
 	const [suggestions, setSuggestions] = useState<Array<string>>([]);
 	const [content, setContent] = useState<string>("");
 
+	if (position === undefined) return <></>;
+
 	return (
 		<div className={`${styles.wrapper} ${verticalAlignValues[position]}`}>
-			<div className={styles.searchbar}>
+			<div
+				className={`${styles.searchbar} widget`}
+				style={{
+					opacity: props.blur ? opacityValues[autoHideValue] : 1,
+				}}
+			>
 				<div>
 					<div
 						className={styles.engine_icon__container}

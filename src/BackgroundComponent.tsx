@@ -73,13 +73,7 @@ function Background(props: any) {
 			className={styles.background}
 			style={{ backgroundImage: `url(${currentBackgroundUrl})` }}
 		>
-			<AutoHideScheduler
-				setBlur={(blur: boolean) => {
-					console.log("Setting blur to " + blur);
-					setBlur(blur);
-				}}
-				blur={blur}
-			/>
+			<AutoHideScheduler setBlur={setBlur} blur={blur} />
 			{props.children(blur)}
 		</div>
 	);

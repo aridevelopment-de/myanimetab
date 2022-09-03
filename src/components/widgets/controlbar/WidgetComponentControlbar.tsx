@@ -15,12 +15,12 @@ const positionValues = [styles.two, styles.one];
 
 function ControlBar(props: { blur: boolean; id: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [position, setPosition] = useSetting(props.id, "position");
+	const [position, _] = useSetting(props.id, "position");
 	const [unlocked, setUnlocked] = useState(true); // useSetting(props.id, "state");
 	const [collapsed, setCollapsed] = useState(false);
 	useEffect(() => setCollapsed(props.blur), [props.blur]);
 
-	console.log(props);
+	if (position === undefined) return <></>;
 
 	return (
 		<div

@@ -11,6 +11,7 @@ const timeFormatValues = ["24h", "12h"]; // if these values changes,  also chang
 function Clock(props: { blur: boolean; id: string }) {
 	const [position, _] = useSetting(props.id, "position");
 	const [timeFormat, _1] = useSetting(props.id, "time_format");
+	const [autoHideValue, _2] = useSetting(props.id, "auto_hide");
 	const [currentTime, setCurrentTime] = useState(
 		TimeUtils.convertTimeToClockFormat(new Date(), timeFormat === 1)
 	);
@@ -35,9 +36,16 @@ function Clock(props: { blur: boolean; id: string }) {
 		return () => clearInterval(interval);
 	}, [currentTime, timeFormat]);
 
+	if (position === undefined) return <></>;
+
 	return (
 		<div className={`${styles.wrapper} ${positionValues[position]}`}>
-			<div className={`${styles.clock} widget`}>
+			<div
+				className={`${styles.clock} widget`}
+				style={{
+					opacity: props.blur ? opacityValues[autoHideValue] : 1,
+				}}
+			>
 				<div>
 					<span
 						id={timeFormat === 0 ? styles.time_12hr : styles.time}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { widgetsDb } from "../../../utils/db";
 import { useSetting } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
@@ -13,9 +13,14 @@ const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const metricValues = ["metric", "standard", "imperial"];
 const refreshRate = 15 * 60 * 1000;
 
-function LoadingComponent(props: {}) {
+function LoadingComponent(props: { opacity: number }) {
 	return (
-		<div className="weather_widget widget">
+		<div
+			className="weather_widget widget"
+			style={{
+				opacity: props.opacity,
+			}}
+		>
 			<div className={errorstyles.container}>
 				<p
 					style={{
@@ -35,6 +40,7 @@ function LoadingComponent(props: {}) {
 function WeatherWidget(props: { blur: boolean; id: string }) {
 	const [position, _] = useSetting(props.id, "position");
 	const [unit, _1] = useSetting(props.id, "unit");
+	const [autoHideValue, _2] = useSetting(props.id, "auto_hide");
 	const [data, setData] = useState({
 		statusCode: -1,
 		fullCityName: "Frankfurt am Main",
@@ -81,14 +87,25 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 		return () => clearInterval(interval);
 	}, [unit]);
 
+	if (position === undefined) return <></>;
+
 	return (
 		<div className={`${styles.wrapper} ${positionValues[position]}`}>
 			{data.statusCode === 200 ? (
-				<NormalComponent data={data} unit={unit} />
+				<NormalComponent
+					data={data}
+					unit={unit}
+					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+				/>
 			) : data.statusCode !== -1 ? (
-				<ErrorComponent status={data.statusCode} />
+				<ErrorComponent
+					status={data.statusCode}
+					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+				/>
 			) : (
-				<LoadingComponent />
+				<LoadingComponent
+					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+				/>
 			)}
 		</div>
 	);
