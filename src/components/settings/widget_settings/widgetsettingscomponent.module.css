@@ -52,22 +52,6 @@
 	cursor: pointer;
 }
 
-.import_button {
-	background-color: #2ec36c;
-}
-
-.export_button {
-	background-color: #3498db;
-}
-
-.import_button:hover {
-	background-color: #27a35b;
-}
-
-.export_button:hover {
-	background-color: #2a7cb3;
-}
-
 /* social media / copyright */
 
 #footer {

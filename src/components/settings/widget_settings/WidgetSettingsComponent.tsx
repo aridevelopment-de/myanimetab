@@ -189,7 +189,11 @@ const WidgetSettingsComponent = (props: {}) => {
 							})}
 						/>
 						<Group position="right">
-							<Button variant="outline" color="gray">
+							<Button
+								variant="outline"
+								color="gray"
+								onClick={() => setImportModalState(false)}
+							>
 								Close
 							</Button>
 							<Button type="submit">Submit</Button>
@@ -267,18 +271,12 @@ const WidgetSettingsComponent = (props: {}) => {
 				return null;
 			})}
 			<div className={styles.control_group}>
-				<button
-					className={styles.import_button}
-					onClick={() => setImportModalState(true)}
-				>
+				<Button onClick={() => setImportModalState(true)} color="green">
 					Import
-				</button>
-				<button
-					className={styles.export_button}
-					onClick={() => setExportModalState(true)}
-				>
+				</Button>
+				<Button onClick={() => setExportModalState(true)} color="blue">
 					Export
-				</button>
+				</Button>
 			</div>
 			<footer id={styles.footer}>
 				<div className={styles.urls}>
