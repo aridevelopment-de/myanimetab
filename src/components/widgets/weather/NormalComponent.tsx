@@ -5,9 +5,15 @@ const temperatureValueValues = ["C", "K", "F"];
 function NormalComponent(props: {
 	data: { icon: string; temperature: number; fullCityName: string };
 	unit: number;
+	opacity: number;
 }) {
 	return (
-		<div className="weather_widget widget">
+		<div
+			className="weather_widget widget"
+			style={{
+				opacity: props.opacity,
+			}}
+		>
 			<div className={styles.inner_wrapper}>
 				<div className={styles.status_icon}>
 					<img src={props.data.icon} alt="weather icon" />
