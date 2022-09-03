@@ -36,13 +36,32 @@ class WidgetDatabase extends Dexie {
 		});
 	}
 
+	removeWidget(fullId: string) {
+		this.widgets.delete(fullId);
+	}
+
 	addWidget(type: string, settings?: { [key: string]: any }) {
 		this.getIdentifiers().then((identifiers) => {
-			let amt = identifiers.filter(
+			const filteredIdentifiers = identifiers.filter(
 				(identifier) => identifier.id === type
-			).length;
+			);
 
-			const id = `${type}-${amt}`;
+			let firstMissingIdentifier = Infinity;
+
+			for (let i = 0; i < filteredIdentifiers.length; i++) {
+				if (filteredIdentifiers[i].id === type) {
+					if (parseInt(filteredIdentifiers[i].number) !== i) {
+						firstMissingIdentifier = i;
+						break;
+					}
+				}
+			}
+
+			if (firstMissingIdentifier === Infinity) {
+				firstMissingIdentifier = filteredIdentifiers.length;
+			}
+
+			const id = `${type}-${firstMissingIdentifier}`;
 
 			const widget: Widget = {
 				id,

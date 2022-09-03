@@ -55,11 +55,12 @@ class CustomComponentRegistry {
 			this.knownComponents,
 			async (component: KnownComponent) => {
 				if (component.metadata.defaultComponent === true) {
-					const widget = await widgetsDb.getWidget(
-						`${component.type}-${0}`
-					);
+					const identifiers = await widgetsDb.getIdentifiers();
+					let amt = identifiers.filter(
+						(identifier) => identifier.id === component.type
+					).length;
 
-					if (widget === undefined) {
+					if (amt === 0) {
 						await widgetsDb.addWidget(
 							component.type,
 							this._prepareSettings(component)
@@ -77,6 +78,13 @@ class CustomComponentRegistry {
 				knownComponent.type,
 				this._prepareSettings(knownComponent)
 			);
+		}
+	}
+
+	uninstallComponent(component: Component) {
+		if (component.metadata.removeableComponent === true) {
+			// remove the component from the database
+			widgetsDb.removeWidget(component.fullId);
 		}
 	}
 
