@@ -37,22 +37,20 @@ class WidgetDatabase extends Dexie {
 	}
 
 	addWidget(type: string, settings?: { [key: string]: any }) {
-		let amt = 0;
-		this.getIdentifiers().then(
-			(identifiers) =>
-				(amt = identifiers.filter(
-					(identifier) => identifier.id === type
-				).length)
-		);
+		this.getIdentifiers().then((identifiers) => {
+			let amt = identifiers.filter(
+				(identifier) => identifier.id === type
+			).length;
 
-		const id = `${type}-${amt}`;
+			const id = `${type}-${amt}`;
 
-		const widget: Widget = {
-			id,
-			settings: settings || {},
-		};
+			const widget: Widget = {
+				id,
+				settings: settings || {},
+			};
 
-		return this.widgets.add(widget);
+			return this.widgets.add(widget);
+		});
 	}
 
 	getWidget(id: string): Promise<Widget | undefined> {
