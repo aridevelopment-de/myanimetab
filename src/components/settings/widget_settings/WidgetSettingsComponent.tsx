@@ -71,33 +71,6 @@ const WidgetSettingsComponent = (props: {}) => {
 			},
 		},
 	});
-	const [exportModalState, setExportModalState] = useState(false);
-	const [importModalState, setImportModalState] = useState(false);
-	const [jsonData, setJsonData] = useState({});
-
-	useEffect(() => {
-		if (exportModalState === true) {
-			(async () => {
-				setJsonData(await widgetsDb.toJson());
-			})();
-		}
-	}, [exportModalState]);
-
-	const importSettingsForm = useForm({
-		initialValues: {
-			json: "",
-		},
-		validate: {
-			json: (value) => {
-				try {
-					JSON.parse(value);
-				} catch (e) {
-					return "Invalid JSON";
-				}
-				return null;
-			},
-		},
-	});
 
 	return (
 		<React.Fragment>
