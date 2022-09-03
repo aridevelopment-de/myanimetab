@@ -9,72 +9,87 @@ import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 
-function App(props) {
-	const [installedComponents, setInstalledComponents] = React.useState([]);
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-	const filterEnabledComponents = (components: Array<Component>) => {
-		(async () => {
-			let enabledComponents = [];
+		this.state = {
+			installedComponents: [],
+		};
+	}
 
-			for (let component of registry.installedComponents) {
-				const state = await widgetsDb.getSetting(
-					component.fullId,
-					"state"
-				);
+	componentDidMount(): void {
+		const filterEnabledComponents = (components: Array<Component>) => {
+			(async () => {
+				let enabledComponents = [];
 
-				if (state === undefined || state === true) {
-					enabledComponents.push(component);
+				for (let component of registry.installedComponents) {
+					const state = await widgetsDb.getSetting(
+						component.fullId,
+						"state"
+					);
+
+					if (state === undefined || state === true) {
+						enabledComponents.push(component);
+					}
 				}
-			}
 
-			setInstalledComponents(enabledComponents);
-		})();
-	};
+				this.setState({ installedComponents: enabledComponents });
+				this.forceUpdate();
+			})();
+		};
 
-	React.useEffect(() => {
 		registry.setupDefaultComponents().then(() => {
 			registry.loadInstalledComponents(() => {
 				filterEnabledComponents(registry.installedComponents);
 			});
 		});
-	}, []);
 
-	EventHandler.on("rerenderAll", "app", () => {
-		registry.loadInstalledComponents(() =>
-			filterEnabledComponents(registry.installedComponents)
-		);
-	});
+		EventHandler.on("rerenderAll", "app", () => {
+			setTimeout(() => {
+				registry.loadInstalledComponents(() =>
+					filterEnabledComponents(registry.installedComponents)
+				);
+			}, 50);
+		});
+	}
 
-	return (
-		<div className="App">
-			<MantineProvider withGlobalStyles withNormalizeCSS>
-				<NotificationsProvider>
-					<ModalsProvider>
-						<Background>
-							{(blur) => {
-								return installedComponents.map(
-									(component: Component) => {
-										if (component.element === null) {
-											return null;
+	componentWillUnmount(): void {
+		EventHandler.off("rerenderAll", "app");
+	}
+
+	render() {
+		return (
+			<div className="App">
+				<MantineProvider withGlobalStyles withNormalizeCSS>
+					<NotificationsProvider>
+						<ModalsProvider>
+							<Background>
+								{(blur) => {
+									return this.state.installedComponents.map(
+										(component: Component) => {
+											if (component.element === null) {
+												return null;
+											}
+
+											return (
+												<component.element
+													id={component.fullId}
+													key={component.fullId}
+													blur={blur}
+												/>
+											);
 										}
-
-										return (
-											<component.element
-												id={component.fullId}
-												key={component.fullId}
-												blur={blur}
-											/>
-										);
-									}
-								);
-							}}
-						</Background>
-						<SettingsComponent />
-					</ModalsProvider>
-				</NotificationsProvider>
-			</MantineProvider>
-		</div>
-	);
+									);
+								}}
+							</Background>
+							<SettingsComponent />
+						</ModalsProvider>
+					</NotificationsProvider>
+				</MantineProvider>
+			</div>
+		);
+	}
 }
 
 export default App;
