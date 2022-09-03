@@ -1,9 +1,12 @@
-import { Switch } from "@mantine/core";
+import { Menu, Switch } from "@mantine/core";
 import { useSetting } from "../../../utils/eventhooks";
 import { Component } from "../../../utils/registry/types";
 import styles from "./settingselement.module.css";
 import SettingsFormItem from "./SettingsFormItem";
 import EventHandler from "../../../utils/eventhandler";
+import SettingsIcon from "@mui/icons-material/Settings";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { registry } from "../../../utils/registry/customcomponentregistry";
 
 function SettingsElement(props: { data: Component; searchValue: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,7 +18,12 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 				<p className={styles.title_text}>
 					{props.data.headerSettings.name}
 				</p>
-				<div>
+				<div
+					style={{
+						display: "flex",
+						gap: "7px",
+					}}
+				>
 					{checked !== undefined ? (
 						<Switch
 							checked={checked}
@@ -24,6 +32,46 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 								EventHandler.emit("rerenderAll");
 							}}
 						/>
+					) : null}
+					{props.data.metadata.removeableComponent ? (
+						<Menu shadow="md" width={200} position="left-start">
+							<Menu.Target>
+								<SettingsIcon
+									style={{
+										opacity: 0.5,
+									}}
+								/>
+							</Menu.Target>
+							<Menu.Dropdown>
+								<Menu.Label>Actions</Menu.Label>
+								<Menu.Item
+									color="red"
+									icon={
+										<DeleteIcon sx={{ fontSize: "23px" }} />
+									}
+									onClick={() => {
+										EventHandler.emit(
+											"settings_window_state",
+											{
+												opened: false,
+											}
+										);
+
+										registry.uninstallComponent(props.data);
+
+										setTimeout(
+											() =>
+												EventHandler.emit(
+													"rerenderAll"
+												),
+											50
+										);
+									}}
+								>
+									Delete Widget
+								</Menu.Item>
+							</Menu.Dropdown>
+						</Menu>
 					) : null}
 				</div>
 			</div>
