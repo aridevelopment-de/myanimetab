@@ -1,14 +1,24 @@
 // @ts-nocheck
-import { Button, Group, Modal, Stack, Text, Textarea } from "@mantine/core";
+import {
+	Button,
+	Group,
+	Menu,
+	Modal,
+	Select,
+	Stack,
+	Text,
+	Textarea,
+} from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { widgetsDb } from "../../../utils/db";
 import { registry } from "../../../utils/registry/customcomponentregistry";
-import { Component } from "../../../utils/registry/types";
+import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
 import { showNotification } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
+import EventHandler from "../../../utils/eventhandler";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
@@ -189,7 +199,7 @@ const WidgetSettingsComponent = (props: {}) => {
 			</Modal>
 
 			{/* Widget Settings */}
-			<div className={styles.searchbar}>
+			<div className={styles.toolbar}>
 				<input
 					onInput={(e) => setSearchbarValue(e.target.value)}
 					value={searchbarValue}
@@ -198,6 +208,40 @@ const WidgetSettingsComponent = (props: {}) => {
 					placeholder="Enter Keywords"
 					autoComplete="off"
 				/>
+				<Menu shadow="md" width={200}>
+					<Menu.Target>
+						<Button variant="outline" color="gray">
+							+
+						</Button>
+					</Menu.Target>
+					<Menu.Dropdown>
+						<Menu.Label>Widget Type</Menu.Label>
+						{registry.knownComponents.map(
+							(knownComponent: KnownComponent) => {
+								if (
+									knownComponent.metadata.installableComponent
+								) {
+									return (
+										<Menu.Item
+											onClick={() => {
+												registry.installComponent(
+													knownComponent
+												);
+												EventHandler.emit(
+													"rerenderAll"
+												);
+											}}
+										>
+											{knownComponent.metadata.name}
+										</Menu.Item>
+									);
+								}
+
+								return null;
+							}
+						)}
+					</Menu.Dropdown>
+				</Menu>
 			</div>
 			{registry.installedComponents.map((component: Component) => {
 				if (searchbarValue.trim() === "") {
