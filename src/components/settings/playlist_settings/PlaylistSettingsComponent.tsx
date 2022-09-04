@@ -1,7 +1,7 @@
 import { Button, Group, Menu, Modal, Stack, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect, useState, useRef } from "react";
-import { IImage, metaDb } from "../../../utils/db";
+import { IImage, Folder as IFolder, metaDb } from "../../../utils/db";
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
@@ -19,7 +19,9 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 	const [draggedElement, setDraggedElement] = useState<IImage>();
 	const menuRef = useRef<HTMLDivElement>();
 	const [menuOpened, setMenuOpened] = useState<boolean>(false);
-
+	const [menuType, setMenuType] = useState<string>("");
+	const [file, setFile] = useState<IImage | IFolder | undefined>();
+	
 	useEffect(() => {
 		metaDb.getImages(path).then(setImages);
 		metaDb.getSubFolders(path).then(setSubFolders);
@@ -30,6 +32,25 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			e.preventDefault();
 
 			if (menuRef.current !== undefined) {
+				setMenuType("desktop")
+				
+				if (e.target !== undefined) {
+					// @ts-ignore
+					if (e.target.dataset !== undefined) {	
+						// @ts-ignore
+						if (e.target.dataset.contextFiletype !== undefined) {
+							// @ts-ignore
+							setMenuType(e.target.dataset.contextFiletype)
+
+							// @ts-ignore
+							if (e.target.dataset.contextFiletype === 'image') {
+								// @ts-ignore
+								metaDb.getImage(parseInt(e.target.dataset.id)).then(setFile);
+							}
+						}
+					}
+				}
+
 				// set top and left of menuRef relative to bodyRef
 				menuRef.current.style.top =
 					e.clientY -
@@ -89,6 +110,8 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 
 		metaDb.addBulkImages(imagesToAdd);
 		setAddImageModalState(false);
+	
+		setTimeout(() => metaDb.getImages(path).then(setImages), 50);
 	};
 
 	return (
@@ -119,7 +142,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								Cancel
 							</Button>
 							<Button color="green" type="submit">
-								Add Images
+								Add Image(s)
 							</Button>
 						</Group>
 					</Stack>
@@ -134,6 +157,24 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			>
 				<Menu width={200} opened={menuOpened} onChange={setMenuOpened}>
 					<Menu.Dropdown>
+						{(menuType === 'image' && file !== undefined) ? (
+							<>
+								<Menu.Label>{(file as IImage).name}</Menu.Label>
+								<Menu.Item>Rename</Menu.Item>
+								<Menu.Item>View</Menu.Item>
+								<Menu.Item>Move into</Menu.Item>
+								<Menu.Item color="red" onClick={() => {
+										metaDb.removeImage(file.id);
+										metaDb.getImages(path).then(setImages);
+								}}>Delete</Menu.Item>
+							</>
+						) : menuType === 'folder' ? (
+							<>
+								<Menu.Item>Rename</Menu.Item>
+								<Menu.Item color="red">Delete</Menu.Item>
+							</>
+						) : (
+						<>
 						<Menu.Item
 							icon={<ImageIcon />}
 							onClick={() => setAddImageModalState(true)}
@@ -152,6 +193,8 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 						>
 							Create new Folder
 						</Menu.Item>
+							</>
+						)}
 					</Menu.Dropdown>
 				</Menu>
 			</div>

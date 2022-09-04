@@ -37,6 +37,7 @@ function Folder(props: {
 			<div className={styles.overlay}>
 				<span>{displayedPath}</span>
 			</div>
+			<div className={styles.click_overlay} data-context-filetype="folder" data-id={props.path} />
 		</div>
 	);
 }

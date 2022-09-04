@@ -9,6 +9,12 @@
 	height: 100%;
 }
 
+.click_overlay {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0);
+}
+
 .overlay {
 	position: absolute;
 	bottom: 0;
