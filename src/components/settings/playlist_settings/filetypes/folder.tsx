@@ -3,16 +3,15 @@ import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { useState } from "react";
 import styles from "./folder.module.css";
 import globalstyles from "../playlistsettingscomponent.module.css";
-import { IImage, metaDb } from "../../../../utils/db";
+import { IFolder, IImage, metaDb } from "../../../../utils/db";
 
 function Folder(props: {
-	path: string;
+	folder: IFolder;
 	onClick?: Function;
 	draggedElement: IImage | undefined;
 	onDroppedImage: Function;
 }) {
 	const [hovered, setHovered] = useState<boolean>(false);
-	const displayedPath = props.path.split("/").pop() || "";
 
 	return (
 		<div
@@ -26,18 +25,22 @@ function Folder(props: {
 			onDrop={(e) => {
 				if (props.draggedElement) {
 					metaDb
-						.relocateImage(props.draggedElement.id, props.path)
+						.relocateImage(props.draggedElement.id, props.folder.id)
 						.then(() => {
-							props.onDroppedImage();
+							props.onDroppedImage(props.folder);
 						});
 				}
 			}}
 		>
 			{hovered ? <FolderOpenIcon /> : <FolderIcon />}
 			<div className={styles.overlay}>
-				<span>{displayedPath}</span>
+				<span>{props.folder.name}</span>
 			</div>
-			<div className={styles.click_overlay} data-context-filetype="folder" data-id={props.path} />
+			<div
+				className={styles.click_overlay}
+				data-context-filetype="folder"
+				data-id={props.folder.id}
+			/>
 		</div>
 	);
 }

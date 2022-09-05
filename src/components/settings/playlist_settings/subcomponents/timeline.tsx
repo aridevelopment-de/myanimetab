@@ -1,53 +1,53 @@
-import React from "react";
-import { IImage, metaDb } from "../../../utils/db";
+import React, { useEffect, useState } from "react";
+import { IFolder, IImage, metaDb, ROOT_FOLDER } from "../../../../utils/db";
 import styles from "./timeline.module.css";
 
 const TimeLine = (props: {
-	fullPath: string;
+	folder: IFolder;
 	onClick?: Function;
 	draggedElement: IImage | undefined;
 	onDroppedImage: Function;
 }) => {
 	// Path might look something like this: /folder1/folder2/folder3
 	// should be shown as the following: Top > folder1 > folder2 > folder3
+	const [folderHirachy, setFolderHirachy] = useState<IFolder[]>();
+
+	useEffect(() => {
+		metaDb.getFolderHirachy(props.folder).then(setFolderHirachy);
+	}, [props]);
 
 	return (
 		<>
 			<span
 				className={styles.folder}
-				onClick={() => props.onClick?.("/")}
+				onClick={() => props.onClick?.(ROOT_FOLDER)}
 				onDragOver={(e) => e.preventDefault()}
 				onDrop={(e) => {
 					if (props.draggedElement) {
 						metaDb
-							.relocateImage(props.draggedElement.id, "/")
+							.relocateImage(
+								props.draggedElement.id,
+								ROOT_FOLDER.id
+							)
 							.then(() => {
-								props.onDroppedImage("/");
+								props.onDroppedImage(ROOT_FOLDER);
 							});
 					}
 				}}
 			>
 				Top
 			</span>
-			{props.fullPath
-				.substring(1)
-				.split("/")
-				.filter((path) => path.length > 0)
-				.map((folder, index, self) => {
+			{folderHirachy !== undefined &&
+				folderHirachy.map((folder: IFolder) => {
 					return (
-						<React.Fragment key={index}>
+						<React.Fragment key={folder.id}>
 							<span>{" > "}</span>
 							<span
 								className={styles.folder}
-								key={index}
 								onDragOver={(e) => e.preventDefault()}
-								onClick={() => {
-									props.onClick?.(
-										"/" + self.slice(0, index + 1).join("/")
-									);
-								}}
+								onClick={() => props.onClick?.(folder)}
 							>
-								{folder}
+								{folder.name}
 							</span>
 						</React.Fragment>
 					);

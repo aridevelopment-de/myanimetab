@@ -112,20 +112,29 @@ interface Meta {
 
 export interface IImage {
 	id: number;
-	folder: string;
+	folder: number;
 	url: string;
 	name: string;
 }
 
-export interface Folder {
+export interface IFolder {
 	id: number;
-	path: string;
+	parent: number | null;
+	name: string;
+	color: string;
 }
+
+export const ROOT_FOLDER = {
+	id: 0,
+	parent: null,
+	name: "root",
+	color: "#000000",
+} as IFolder;
 
 class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
 	images!: Table<IImage>;
-	folders!: Table<Folder>;
+	folders!: Table<IFolder>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -145,6 +154,12 @@ class MetaDatabase extends Dexie {
 			meta: "&name, value",
 			images: "++id, folder, url, name",
 			folders: "++id, path",
+		});
+
+		this.version(4).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
 		});
 	}
 
@@ -187,33 +202,15 @@ class MetaDatabase extends Dexie {
 		if (images.length === 0) {
 			// @ts-ignore
 			this.images.put({
-				folder: "/",
+				folder: ROOT_FOLDER.id,
 				url: defaultUrl,
 				name: defaultName,
 			});
 		}
 	}
 
-	async getImages(folder: string): Promise<Array<IImage>> {
+	async getImages(folder: number): Promise<Array<IImage>> {
 		return this.images.where("folder").equals(folder).toArray();
-	}
-
-	async getSubFolders(parentDirectory: string): Promise<Array<string>> {
-		return (await this.folders.toArray())
-			.map((folder) => folder.path)
-			.filter((path) => path.startsWith(parentDirectory))
-			.filter((path) => path !== parentDirectory)
-			.filter((path) => {
-				let afterParent = path.substring(parentDirectory.length);
-
-				if (afterParent.startsWith("/")) {
-					afterParent = afterParent.substring(1);
-				}
-
-				console.log(afterParent);
-
-				return afterParent.indexOf("/") === -1 && afterParent !== "";
-			});
 	}
 
 	async getImage(id: number): Promise<IImage | undefined> {
@@ -222,67 +219,113 @@ class MetaDatabase extends Dexie {
 
 	addBulkImages(urls: string[]) {
 		return this.images.bulkPut(
-			// @ts-ignore
 			urls.map((url: string) => {
 				return {
-					folder: "/",
+					folder: ROOT_FOLDER.id,
 					url: url,
 					name: `Image #${Math.floor(Math.random() * 1000000)}`,
-				};
+				} as IImage;
 			})
 		);
 	}
 
-	async addImage(folder: string, url: string, name: string) {
-		if (!(await this.checkFolderExists(folder)) && folder !== "/") {
-			await this.addFolder(folder);
+	async addImage(folder: number, url: string, name: string) {
+		if (!(await this.checkFolderExists(folder))) {
+			return false;
 		}
 
 		// @ts-ignore
 		return this.images.put({ folder, url, name });
 	}
 
-	async relocateImage(id: number, newPath: string) {
-		if (!(await this.checkFolderExists(newPath)) && newPath !== "/") {
-			await this.addFolder(newPath);
+	async editImage(id: number, values: Omit<Partial<IImage>, "id">) {
+		return this.images.update(id, values);
+	}
+
+	async relocateImage(id: number, newFolder: number) {
+		if (!(await this.checkFolderExists(newFolder))) {
+			return false;
 		}
 
-		return this.images.update(id, { folder: newPath });
+		return this.images.update(id, { folder: newFolder });
 	}
 
 	async removeImage(id: number) {
 		return this.images.delete(id);
 	}
 
-	async checkFolderExists(path: string): Promise<boolean> {
-		return (
-			(await this.folders.where("path").equals(path).toArray()).length > 0
-		);
+	// Todo: Remove folder paths and only work with id's and names so relocating and renaming folders is a lot easier
+	async getSubFolders(parent: number): Promise<Array<IFolder>> {
+		return this.folders.where("parent").equals(parent).toArray();
 	}
 
-	async addFolder(path: string, folderName?: string) {
-		if (folderName === undefined) {
-			// create new folder name with template "New Folder #1, 2, ..."
-			const folders = await this.getSubFolders(path);
-			let folderNumber = 1;
-			while (folders.includes(`New Folder #${folderNumber}`)) {
-				folderNumber++;
+	async checkFolderExists(id: number): Promise<boolean> {
+		if (id === ROOT_FOLDER.id) {
+			return true;
+		}
+
+		return (await this.folders.get(id)) !== undefined;
+	}
+
+	async addFolder(settings: Omit<Partial<IFolder>, "id">) {
+		const defaultProperties = {
+			parent: ROOT_FOLDER.id,
+			name: "New Folder",
+			color: "#000000",
+		} as Omit<Partial<IFolder>, "id">;
+
+		// @ts-ignore: Id is not required
+		return this.folders.put({ ...defaultProperties, ...settings });
+	}
+
+	async removeFolder(id: number) {
+		if (id === ROOT_FOLDER.id) {
+			return false;
+		}
+
+		return this.folders.delete(id);
+	}
+
+	async editFolder(id: number, values: Omit<Partial<IFolder>, "id">) {
+		if (id === ROOT_FOLDER.id) {
+			return false;
+		}
+
+		return this.folders.update(id, values);
+	}
+
+	async getFolder(id: number): Promise<IFolder | undefined> {
+		if (id === ROOT_FOLDER.id) {
+			return ROOT_FOLDER;
+		}
+
+		return this.folders.get(id);
+	}
+
+	async getFolderHirachy(childFolder: IFolder): Promise<IFolder[]> {
+		if (childFolder.id === ROOT_FOLDER.id) {
+			return [];
+		}
+
+		const folders = [childFolder];
+
+		let currentFolder = childFolder;
+
+		while (
+			currentFolder.parent !== ROOT_FOLDER.id &&
+			currentFolder.parent !== null
+		) {
+			// @ts-ignore
+			currentFolder = await this.getFolder(currentFolder.parent.id);
+
+			if (currentFolder === undefined) {
+				break;
 			}
 
-			folderName = `New Folder #${folderNumber}`;
+			folders.push(currentFolder);
 		}
 
-		if (path === "/") {
-			// prevent mis-formmatting in final folder name
-			path = "";
-		}
-
-		// @ts-ignore
-		return this.folders.put({ path: path + "/" + folderName });
-	}
-
-	async removeFolder(path: string) {
-		return this.folders.where("path").equals(path).delete();
+		return folders.reverse();
 	}
 }
 
