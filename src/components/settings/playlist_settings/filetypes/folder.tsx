@@ -4,13 +4,16 @@ import { useState } from "react";
 import styles from "./folder.module.css";
 import globalstyles from "../playlistsettingscomponent.module.css";
 import { IFolder, IImage, metaDb } from "../../../../utils/db";
+import { useMantineTheme } from "@mantine/core";
 
 function Folder(props: {
 	folder: IFolder;
 	onClick?: Function;
 	draggedElement: IImage | undefined;
 	onDroppedImage: Function;
+	style?: any;
 }) {
+	const theme = useMantineTheme();
 	const [hovered, setHovered] = useState<boolean>(false);
 
 	return (
@@ -31,8 +34,17 @@ function Folder(props: {
 						});
 				}
 			}}
+			style={props.style}
 		>
-			{hovered ? <FolderOpenIcon /> : <FolderIcon />}
+			{hovered ? (
+				<FolderOpenIcon
+					style={{ fill: props.folder.color || theme.colors.blue[5] }}
+				/>
+			) : (
+				<FolderIcon
+					style={{ fill: props.folder.color || theme.colors.blue[5] }}
+				/>
+			)}
 			<div className={styles.overlay}>
 				<span>{props.folder.name}</span>
 			</div>
