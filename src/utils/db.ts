@@ -121,14 +121,14 @@ export interface IFolder {
 	id: number;
 	parent: number | null;
 	name: string;
-	color: string;
+	color: string | null;
 }
 
 export const ROOT_FOLDER = {
 	id: 0,
 	parent: null,
 	name: "root",
-	color: "#000000",
+	color: null,
 } as IFolder;
 
 class MetaDatabase extends Dexie {
@@ -271,7 +271,7 @@ class MetaDatabase extends Dexie {
 		const defaultProperties = {
 			parent: ROOT_FOLDER.id,
 			name: "New Folder",
-			color: "#000000",
+			color: null,
 		} as Omit<Partial<IFolder>, "id">;
 
 		// @ts-ignore: Id is not required
