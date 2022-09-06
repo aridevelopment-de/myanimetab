@@ -5,12 +5,19 @@ import { IImage } from "../../../../utils/db";
 const Background = (props: {
 	image: IImage;
 	index: number;
+	selected: boolean;
 	setDraggedElement: Function;
 }) => {
 	return (
 		<div
 			className={`${globalstyles.element_container} ${styles.image_container}`}
 			data-context-filetype="image"
+			style={{
+				border: props.selected
+					? "3px solid var(--mantine-color-blue-5)"
+					: undefined,
+				outline: props.selected ? "none" : undefined,
+			}}
 		>
 			<div className={styles.image_wrapper}>
 				<img

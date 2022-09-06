@@ -11,7 +11,13 @@ import { useForm } from "@mantine/form";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
 import { useEffect, useRef, useState } from "react";
-import { IFolder, IImage, metaDb, ROOT_FOLDER } from "../../../utils/db";
+import {
+	IFolder,
+	IImage,
+	metaDb,
+	ROOT_FOLDER,
+	useMeta,
+} from "../../../utils/db";
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
@@ -23,8 +29,10 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 	const [addImageModalState, setAddImageModalState] =
 		useState<boolean>(false);
 
-	const [currentFolder, setCurrentFolder] = useState<IFolder>(ROOT_FOLDER);
 	const [images, setImages] = useState<IImage[]>([]);
+
+	const currentImageId = useMeta("selected_image");
+	const [currentFolder, setCurrentFolder] = useState<IFolder>(ROOT_FOLDER);
 	const [subFolders, setSubFolders] = useState<IFolder[]>([]);
 
 	const [draggedElement, setDraggedElement] = useState<IImage>();
@@ -289,11 +297,12 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 						draggedElement={draggedElement}
 						onDroppedImage={(folder: IFolder) => {
 							setDraggedElement(undefined);
-							setCurrentFolder(folder);
 
 							setTimeout(
 								() =>
-									metaDb.getImages(folder.id).then(setImages),
+									metaDb
+										.getImages(currentFolder.id)
+										.then(setImages),
 								50
 							);
 						}}
@@ -307,12 +316,12 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 							draggedElement={draggedElement}
 							onDroppedImage={() => {
 								setDraggedElement(undefined);
-								setCurrentFolder(folder);
+								setCurrentFolder(currentFolder);
 
 								setTimeout(
 									() =>
 										metaDb
-											.getImages(folder.id)
+											.getImages(currentFolder.id)
 											.then(setImages),
 									50
 								);
@@ -324,6 +333,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 					{images.map((image: IImage, index: number) => {
 						return (
 							<Background
+								selected={currentImageId === image.id}
 								image={image}
 								index={index}
 								setDraggedElement={setDraggedElement}
