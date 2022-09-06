@@ -46,6 +46,18 @@ const TimeLine = (props: {
 								className={styles.folder}
 								onDragOver={(e) => e.preventDefault()}
 								onClick={() => props.onClick?.(folder)}
+								onDrop={(e) => {
+									if (props.draggedElement) {
+										metaDb
+											.relocateImage(
+												props.draggedElement.id,
+												folder.id
+											)
+											.then(() => {
+												props.onDroppedImage(folder);
+											});
+									}
+								}}
 							>
 								{folder.name}
 							</span>
