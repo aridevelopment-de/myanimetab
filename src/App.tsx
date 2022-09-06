@@ -66,7 +66,7 @@ class App extends React.Component {
 					withNormalizeCSS
 					withCSSVariables
 					theme={{
-						fontFamily: "Roboto, sans-serif",
+						fontFamily: '"Urbanist", sans-serif',
 						colorScheme: "light",
 					}}
 				>
