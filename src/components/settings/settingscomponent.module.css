@@ -25,7 +25,6 @@
 }
 
 .settings_menu {
-	font-family: "Urbanist", sans-serif;
 	display: flex;
 	flex-direction: column;
 }
