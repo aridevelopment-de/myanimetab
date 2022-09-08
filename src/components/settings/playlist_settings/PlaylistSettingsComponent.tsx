@@ -21,6 +21,7 @@ import {
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
+import Queue from "./queue/Queue";
 import EditFolderDialog from "./subcomponents/editfolder";
 import EditImageDialog from "./subcomponents/editimage";
 import TimeLine from "./subcomponents/timeline";
@@ -140,7 +141,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			.split(",")
 			.map((url: string) => url.trim());
 
-		metaDb.addBulkImages(imagesToAdd);
+		metaDb.addBulkImages(imagesToAdd, currentFolder);
 		setAddImageModalState(false);
 
 		setTimeout(
@@ -229,10 +230,11 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								<Menu.Item
 									color="red"
 									onClick={() => {
-										metaDb.removeImage(file.id);
-										metaDb
-											.getImages(currentFolder.id)
-											.then(setImages);
+										metaDb.removeImage(file.id).then(() => {
+											metaDb
+												.getImages(currentFolder.id)
+												.then(setImages);
+										});
 									}}
 								>
 									Delete
@@ -348,6 +350,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 						right-clicking on the menu
 					</Text>
 				) : null}
+				<Queue />
 			</div>
 		</>
 	);

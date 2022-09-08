@@ -124,6 +124,12 @@ export interface IFolder {
 	color: string | null;
 }
 
+export interface IQueue {
+	id: number;
+	name: string;
+	images: Array<number>;
+}
+
 export const ROOT_FOLDER = {
 	id: 0,
 	parent: null,
@@ -135,6 +141,7 @@ class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
 	images!: Table<IImage>;
 	folders!: Table<IFolder>;
+	queues!: Table<IQueue>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -161,8 +168,16 @@ class MetaDatabase extends Dexie {
 			images: "++id, folder, url, name",
 			folders: "++id, parent, name, color",
 		});
+
+		this.version(5).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+		});
 	}
 
+	/* Meta table */
 	onMetaChange(name: string, callback: (value: any) => void) {
 		if (this.changes[name] === undefined) {
 			this.changes[name] = [];
@@ -196,6 +211,7 @@ class MetaDatabase extends Dexie {
 		});
 	}
 
+	/* Image table */
 	async anyImagesOrInsert(defaultUrl: string, defaultName: string) {
 		const images = await this.images.toArray();
 
@@ -217,11 +233,11 @@ class MetaDatabase extends Dexie {
 		return this.images.get(id);
 	}
 
-	addBulkImages(urls: string[]) {
+	addBulkImages(urls: string[], folder: IFolder) {
 		return this.images.bulkPut(
 			urls.map((url: string) => {
 				return {
-					folder: ROOT_FOLDER.id,
+					folder: folder.id || ROOT_FOLDER.id,
 					url: url,
 					name: `Image #${Math.floor(Math.random() * 1000000)}`,
 				} as IImage;
@@ -251,10 +267,19 @@ class MetaDatabase extends Dexie {
 	}
 
 	async removeImage(id: number) {
+		// Unlink from any queues using filter
+		const queues = await this.queues.toArray();
+
+		for (const queue of queues) {
+			await this.queues.update(queue.id, {
+				images: queue.images.filter((imageId) => imageId !== id),
+			});
+		}
+
 		return this.images.delete(id);
 	}
 
-	// Todo: Remove folder paths and only work with id's and names so relocating and renaming folders is a lot easier
+	/* Folder table */
 	async getSubFolders(parent: number): Promise<Array<IFolder>> {
 		return this.folders.where("parent").equals(parent).toArray();
 	}
@@ -326,6 +351,98 @@ class MetaDatabase extends Dexie {
 		}
 
 		return folders.reverse();
+	}
+
+	/* Queue table */
+	async getQueue(qid: number | null): Promise<IQueue | undefined> {
+		// TOOD: Let this function call getImage
+		// TOOD: Implement cache on function getImage
+
+		if (qid === null || qid === undefined) {
+			return undefined;
+		}
+
+		return this.queues.get(qid);
+	}
+
+	async addQueue(): Promise<boolean> {
+		// generate random queue name
+		const name = `Queue #${Math.floor(Math.random() * 1000)}`;
+		const queue = {
+			name,
+			images: [],
+		} as unknown as IQueue;
+
+		// @ts-ignore Id is not required
+		this.queues.put(queue);
+		return true;
+	}
+
+	async deleteQueue(qid: number) {
+		return this.queues.delete(qid);
+	}
+
+	async insertImageToQueue(qid: number, image: IImage): Promise<boolean> {
+		// images in queue are stored via id
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		if (queue.images.includes(image.id)) {
+			return false;
+		}
+
+		queue.images.push(image.id);
+
+		try {
+			this.queues.update(qid, { images: queue.images });
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
+
+		return true;
+	}
+
+	async removeImageFromQueue(qid: number, image: IImage): Promise<boolean> {
+		// use the modify method of dexie
+
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		if (!queue.images.includes(image.id)) {
+			return false;
+		}
+
+		queue.images = queue.images.filter((id) => id !== image.id);
+
+		try {
+			this.queues.update(qid, { images: queue.images });
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
+
+		return true;
+	}
+
+	async queueContainsImage(qid: number, image: IImage) {
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		return queue.images.includes(image.id);
+	}
+
+	async editQueue(qid: number, values: Omit<Partial<IQueue>, "id">) {
+		return this.queues.update(qid, values);
 	}
 }
 
