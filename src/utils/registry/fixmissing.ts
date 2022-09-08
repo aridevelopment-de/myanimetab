@@ -55,7 +55,7 @@ export const addMissing = () => {
 			installableComponent: false,
 		},
 		headerSettings: {
-			name: "Auto Hide (Not Implemented)",
+			name: "Auto Hide",
 			type: "autohide",
 			option: {
 				type: "toggle",
