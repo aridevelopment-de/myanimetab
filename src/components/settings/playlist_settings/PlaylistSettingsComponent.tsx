@@ -8,6 +8,7 @@ import {
 	Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
 import { useEffect, useRef, useState } from "react";
@@ -247,7 +248,30 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								<Menu.Item onClick={() => setEditFolder(true)}>
 									Edit
 								</Menu.Item>
-								<Menu.Item color="red">Delete</Menu.Item>
+								<Menu.Item
+									color="red"
+									onClick={() => {
+										metaDb
+											.removeFolder(file as IFolder)
+											.then((_: any) => {
+												metaDb
+													.getSubFolders(
+														currentFolder.id
+													)
+													.then(setSubFolders);
+												metaDb
+													.getImages(currentFolder.id)
+													.then(setImages);
+												showNotification({
+													title: "Folder deleted",
+													message:
+														"Folder has been deleted and every file in it has been moved to the parent folder",
+												});
+											});
+									}}
+								>
+									Delete
+								</Menu.Item>
 							</>
 						) : menuType === "desktop" ? (
 							/* Normal context menu */

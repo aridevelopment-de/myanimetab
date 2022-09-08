@@ -303,12 +303,24 @@ class MetaDatabase extends Dexie {
 		return this.folders.put({ ...defaultProperties, ...settings });
 	}
 
-	async removeFolder(id: number) {
-		if (id === ROOT_FOLDER.id) {
+	async removeFolder(folder: IFolder) {
+		if (folder.id === ROOT_FOLDER.id) {
 			return false;
 		}
 
-		return this.folders.delete(id);
+		// Change every folder and image that has this folder as their parent
+		// so that their parent is the parent of this folder
+		await this.folders
+			.where("parent")
+			.equals(folder.id)
+			.modify({ parent: folder.parent });
+
+		await this.images
+			.where("folder")
+			.equals(folder.id)
+			.modify({ folder: folder.parent });
+
+		return await this.folders.delete(folder.id);
 	}
 
 	async editFolder(id: number, values: Omit<Partial<IFolder>, "id">) {
