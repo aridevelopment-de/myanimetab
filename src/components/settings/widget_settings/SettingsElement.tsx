@@ -76,34 +76,38 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 				</div>
 			</div>
 			<div>
-				{props.data.contentSettings?.map((componentSetting) => {
-					if (props.searchValue == null) {
-						return (
-							<SettingsFormItem
-								componentSetting={componentSetting}
-								componentId={props.data.fullId}
-								disabled={checked === false}
-							/>
-						);
-					}
+				{props.data.contentSettings?.map(
+					(componentSetting, index: number) => {
+						if (props.searchValue == null) {
+							return (
+								<SettingsFormItem
+									componentSetting={componentSetting}
+									componentId={props.data.fullId}
+									disabled={checked === false}
+									key={index}
+								/>
+							);
+						}
 
-					if (
-						componentSetting.name
-							.toLowerCase()
-							.includes(props.searchValue.toLowerCase())
-					) {
-						return (
-							<SettingsFormItem
-								componentSetting={componentSetting}
-								componentId={props.data.fullId}
-								searchValue={props.searchValue}
-								disabled={checked === false}
-							/>
-						);
-					}
+						if (
+							componentSetting.name
+								.toLowerCase()
+								.includes(props.searchValue.toLowerCase())
+						) {
+							return (
+								<SettingsFormItem
+									componentSetting={componentSetting}
+									componentId={props.data.fullId}
+									searchValue={props.searchValue}
+									disabled={checked === false}
+									key={index}
+								/>
+							);
+						}
 
-					return null;
-				})}
+						return null;
+					}
+				)}
 			</div>
 		</div>
 	);

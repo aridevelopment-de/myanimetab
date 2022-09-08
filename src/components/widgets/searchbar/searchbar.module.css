@@ -1,84 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap");
 
 .wrapper {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300;
-    position: absolute;
-    left: 50%;
-    z-index: 3;
-    transform: translateX(-50%);
-    transition: opacity 1.3s;
+	font-weight: 300;
+	position: absolute;
+	left: 50%;
+	z-index: 3;
+	transform: translateX(-50%);
+	transition: opacity 1.3s;
 }
 
 .wrapper.one {
-    top: calc(100% / 20);
+	top: calc(100% / 20);
 }
 
 .wrapper.two {
-    top: calc(100% / 12 * 2);
+	top: calc(100% / 12 * 2);
 }
 
 @media all and (max-width: 680px) {
-    .searchbar {
-        width: 80vw !important;
-    }
+	.searchbar {
+		width: 80vw !important;
+	}
 }
 
 .searchbar {
-    display: flex;
-    align-items: center;
-    border-radius: 20px;
-    border: white 2px solid;
-    border-radius: 30px;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 4em rgba(0, 0, 0, 0.6);
-    width: 35em;
-    padding: 5px 0;
-    z-index: 1;
+	display: flex;
+	align-items: center;
+	border-radius: 20px;
+	border: white 2px solid;
+	border-radius: 30px;
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 4em rgba(0, 0, 0, 0.6);
+	width: 35em;
+	padding: 5px 0;
+	z-index: 1;
 }
 
 .input {
-    font-size: 1.3em;
-    color: inherit;
-    outline: none;
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
-    border-radius: 40px;
-    min-height: inherit;
-    width: 100%;
-    padding-left: 0em;
-    margin-left: 1em;
+	font-size: 1.3em;
+	color: inherit;
+	outline: none;
+	border: none;
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: 40px;
+	min-height: inherit;
+	width: 100%;
+	padding-left: 0em;
+	margin-left: 1em;
 }
 
 .input::placeholder {
-    color: hsl(0, 0%, 93%);
+	color: hsl(0, 0%, 93%);
 }
 
 .input:focus {
-    outline: none;
+	outline: none;
 }
 
 .icon {
-    transform: scale(1.4);
-    margin-left: auto;
-    padding: 5px 1em;
-    cursor: pointer;
+	transform: scale(1.4);
+	margin-left: auto;
+	padding: 5px 1em;
+	cursor: pointer;
 }
 
 /* Engine chooser */
 .engine_icon__container {
-    padding: 5px 5px;
-    margin-left: 5px;
-    background-color: white;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	padding: 5px 5px;
+	margin-left: 5px;
+	background-color: white;
+	border-radius: 50%;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .engine_icon {
-    width: 24px;
-    height: 24px;
+	width: 24px;
+	height: 24px;
 }

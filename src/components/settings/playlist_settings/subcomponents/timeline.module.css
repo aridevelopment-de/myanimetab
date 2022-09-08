@@ -1,0 +1,10 @@
+.folder {
+	color: var(--mantine-color-blue-5);
+	font-weight: bold;
+	font-size: larger;
+}
+
+.folder:hover {
+	color: var(--mantine-color-blue-6);
+	cursor: pointer;
+}

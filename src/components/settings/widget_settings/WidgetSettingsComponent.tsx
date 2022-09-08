@@ -4,21 +4,20 @@ import {
 	Group,
 	Menu,
 	Modal,
-	Select,
 	Stack,
 	Text,
 	Textarea,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 import React, { useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { widgetsDb } from "../../../utils/db";
+import EventHandler from "../../../utils/eventhandler";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
-import { showNotification } from "@mantine/notifications";
-import { useForm } from "@mantine/form";
-import EventHandler from "../../../utils/eventhandler";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
@@ -42,7 +41,7 @@ const containsString = (string: string, component: Component) => {
 	return false;
 };
 
-const WidgetSettingsComponent = (props: {}) => {
+const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 	const [searchbarValue, setSearchbarValue] = useState("");
 	const [exportModalState, setExportModalState] = useState(false);
 	const [importModalState, setImportModalState] = useState(false);
@@ -221,7 +220,7 @@ const WidgetSettingsComponent = (props: {}) => {
 					<Menu.Dropdown>
 						<Menu.Label>Widget Type</Menu.Label>
 						{registry.knownComponents.map(
-							(knownComponent: KnownComponent) => {
+							(knownComponent: KnownComponent, index: number) => {
 								if (
 									knownComponent.metadata.installableComponent
 								) {
@@ -235,6 +234,7 @@ const WidgetSettingsComponent = (props: {}) => {
 													"rerenderAll"
 												);
 											}}
+											key={index}
 										>
 											{knownComponent.metadata.name}
 										</Menu.Item>

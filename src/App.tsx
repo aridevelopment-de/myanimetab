@@ -61,7 +61,15 @@ class App extends React.Component {
 	render() {
 		return (
 			<div className="App">
-				<MantineProvider withGlobalStyles withNormalizeCSS>
+				<MantineProvider
+					withGlobalStyles
+					withNormalizeCSS
+					withCSSVariables
+					theme={{
+						fontFamily: '"Urbanist", sans-serif',
+						colorScheme: "light",
+					}}
+				>
 					<NotificationsProvider>
 						<ModalsProvider>
 							<Background>
