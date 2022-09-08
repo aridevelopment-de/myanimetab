@@ -21,6 +21,7 @@ import {
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
+import Queue from "./queue/Queue";
 import EditFolderDialog from "./subcomponents/editfolder";
 import EditImageDialog from "./subcomponents/editimage";
 import TimeLine from "./subcomponents/timeline";
@@ -348,6 +349,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 						right-clicking on the menu
 					</Text>
 				) : null}
+				<Queue />
 			</div>
 		</>
 	);
