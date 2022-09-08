@@ -6,6 +6,7 @@ import { metaDb } from "./utils/db";
 import { addMissing } from "./utils/registry/fixmissing";
 
 metaDb.registerMeta("selected_image", 1);
+metaDb.registerMeta("selected_queue", null);
 metaDb.anyImagesOrInsert(
 	"https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp",
 	"love! live! drinking"
