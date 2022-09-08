@@ -3,9 +3,11 @@ import {
 	Button,
 	Drawer,
 	Group,
+	Modal,
 	Space,
 	Stack,
 	Text,
+	TextInput,
 } from "@mantine/core";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
@@ -19,60 +21,7 @@ import styles from "./queue.module.css";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import EventHandler from "../../../../utils/eventhandler";
-
-const QueueList = () => {
-	const queues = useLiveQuery(() => metaDb.queues.toArray() || []);
-	const currentQid = useMeta("selected_queue");
-
-	return (
-		<>
-			<Space h="md" />
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "flex-end",
-				}}
-			>
-				<Button
-					leftIcon={<AddIcon />}
-					onClick={() => metaDb.addQueue()}
-				>
-					Create Queue
-				</Button>
-			</div>
-			<Space h="lg" />
-			<Stack spacing="xs">
-				{queues &&
-					(queues as unknown as IQueue[]).map((queue: IQueue) => (
-						<div
-							className={styles.list__queue}
-							style={{
-								border:
-									currentQid === queue.id
-										? "1px solid var(--mantine-color-blue-5)"
-										: "none",
-							}}
-							key={queue.id}
-							onClick={() =>
-								metaDb.setMeta("selected_queue", queue.id)
-							}
-						>
-							<span>{queue.name}</span>
-							<Group position="right" spacing="xs">
-								<ActionIcon>
-									{/* TOOD: Open a modal for editing queue information */}
-									<Settings />
-								</ActionIcon>
-								<ActionIcon>
-									<ClearIcon />
-								</ActionIcon>
-							</Group>
-						</div>
-					))}
-			</Stack>
-		</>
-	);
-};
+import { useForm } from "@mantine/form";
 
 const Queue = () => {
 	const qid = useMeta("selected_queue");
@@ -214,6 +163,108 @@ const Queue = () => {
 				size="xl"
 			>
 				<QueueList />
+			</Drawer>
+		</>
+	);
+};
+
+const QueueList = () => {
+	const queues = useLiveQuery(() => metaDb.queues.toArray() || []);
+	const currentQid = useMeta("selected_queue");
+
+	const [editQueue, setEditQueue] = useState<IQueue | null>(null);
+	const editQueueForm = useForm({
+		initialValues: {
+			name: "",
+		},
+		validate: {
+			name: (value) =>
+				value.length > 0 ? null : "Queue name cannot be empty",
+		},
+	});
+
+	return (
+		<>
+			<Space h="md" />
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "flex-end",
+				}}
+			>
+				<Button
+					leftIcon={<AddIcon />}
+					onClick={() => metaDb.addQueue()}
+				>
+					Create Queue
+				</Button>
+			</div>
+			<Space h="lg" />
+			<Stack spacing="xs">
+				{queues &&
+					(queues as unknown as IQueue[]).map((queue: IQueue) => (
+						<div
+							className={styles.list__queue}
+							style={{
+								border:
+									currentQid === queue.id
+										? "1px solid var(--mantine-color-blue-5)"
+										: "none",
+							}}
+							key={queue.id}
+							onClick={() =>
+								metaDb.setMeta("selected_queue", queue.id)
+							}
+						>
+							<span>{queue.name}</span>
+							<Group position="right" spacing="xs">
+								<ActionIcon
+									onClick={() => {
+										editQueueForm.setFieldValue(
+											"name",
+											queue.name
+										);
+										setEditQueue(queue);
+									}}
+								>
+									<Settings />
+								</ActionIcon>
+								<ActionIcon>
+									<ClearIcon />
+								</ActionIcon>
+							</Group>
+						</div>
+					))}
+			</Stack>
+
+			<Drawer
+				position="right"
+				opened={editQueue !== null}
+				onClose={() => setEditQueue(null)}
+				padding="xl"
+				size="xl"
+				title="Editing queue information"
+			>
+				<form
+					onSubmit={editQueueForm.onSubmit((values, event) => {
+						metaDb.editQueue(editQueue!.id, { name: values.name });
+						setEditQueue(null);
+					})}
+				>
+					<Stack>
+						<TextInput
+							placeholder="Enter name of queue"
+							label="Name of Queue"
+							withAsterisk
+							{...editQueueForm.getInputProps("name", {
+								type: "input",
+							})}
+						/>
+						<Group position="right">
+							<Button type="submit">Save</Button>
+						</Group>
+					</Stack>
+				</form>
 			</Drawer>
 		</>
 	);
