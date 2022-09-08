@@ -15,7 +15,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import FolderOpen from "@mui/icons-material/FolderOpen";
 import Settings from "@mui/icons-material/Settings";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
 import styles from "./queue.module.css";
 import MinimizeIcon from "@mui/icons-material/Minimize";
@@ -170,18 +170,6 @@ const Queue = () => {
 
 const QueueList = () => {
 	const queues = useLiveQuery(() => metaDb.queues.toArray() || []);
-	const currentQid = useMeta("selected_queue");
-
-	const [editQueue, setEditQueue] = useState<IQueue | null>(null);
-	const editQueueForm = useForm({
-		initialValues: {
-			name: "",
-		},
-		validate: {
-			name: (value) =>
-				value.length > 0 ? null : "Queue name cannot be empty",
-		},
-	});
 
 	return (
 		<>
@@ -203,42 +191,76 @@ const QueueList = () => {
 			<Stack spacing="xs">
 				{queues &&
 					(queues as unknown as IQueue[]).map((queue: IQueue) => (
-						<div
-							className={styles.list__queue}
-							style={{
-								border:
-									currentQid === queue.id
-										? "1px solid var(--mantine-color-blue-5)"
-										: "none",
-							}}
-							key={queue.id}
-							onClick={() =>
-								metaDb.setMeta("selected_queue", queue.id)
-							}
-						>
-							<span>
-								{queue.name} ({queue.images.length})
-							</span>
-							<Group position="right" spacing="xs">
-								<ActionIcon
-									onClick={() => {
-										editQueueForm.setFieldValue(
-											"name",
-											queue.name
-										);
-										setEditQueue(queue);
-									}}
-								>
-									<Settings />
-								</ActionIcon>
-								<ActionIcon>
-									<ClearIcon />
-								</ActionIcon>
-							</Group>
-						</div>
+						<QueueListEntry queue={queue} key={queue.id} />
 					))}
 			</Stack>
+		</>
+	);
+};
 
+const QueueListEntry = (props: { queue: IQueue }) => {
+	const toolbarHovered = useRef<boolean>(false);
+	const currentQid = useMeta("selected_queue");
+
+	const [editQueue, setEditQueue] = useState<IQueue | null>(null);
+	const editQueueForm = useForm({
+		initialValues: {
+			name: "",
+		},
+		validate: {
+			name: (value) =>
+				value.length > 0 ? null : "Queue name cannot be empty",
+		},
+	});
+
+	return (
+		<>
+			<div
+				className={styles.list__queue}
+				style={{
+					border:
+						currentQid === props.queue.id
+							? "1px solid var(--mantine-color-blue-5)"
+							: "none",
+				}}
+				onClick={() =>
+					toolbarHovered
+						? void 0
+						: metaDb.setMeta("selected_queue", props.queue.id)
+				}
+			>
+				<span>
+					{props.queue.name} ({props.queue.images.length})
+				</span>
+				<Group
+					position="right"
+					spacing="xs"
+					onMouseEnter={() => (toolbarHovered.current = true)}
+					onMouseLeave={() => (toolbarHovered.current = false)}
+				>
+					<ActionIcon
+						onClick={() => {
+							editQueueForm.setFieldValue(
+								"name",
+								props.queue.name
+							);
+							setEditQueue(props.queue);
+						}}
+					>
+						<Settings />
+					</ActionIcon>
+					<ActionIcon
+						onClick={() => {
+							metaDb.deleteQueue(props.queue.id);
+							metaDb.setMeta("selected_queue", null);
+						}}
+					>
+						<ClearIcon />
+					</ActionIcon>
+				</Group>
+			</div>
+
+			{/* Edit queue drawer */}
 			<Drawer
 				position="right"
 				opened={editQueue !== null}
