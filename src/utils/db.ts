@@ -233,11 +233,11 @@ class MetaDatabase extends Dexie {
 		return this.images.get(id);
 	}
 
-	addBulkImages(urls: string[]) {
+	addBulkImages(urls: string[], folder: IFolder) {
 		return this.images.bulkPut(
 			urls.map((url: string) => {
 				return {
-					folder: ROOT_FOLDER.id,
+					folder: folder.id || ROOT_FOLDER.id,
 					url: url,
 					name: `Image #${Math.floor(Math.random() * 1000000)}`,
 				} as IImage;
@@ -267,6 +267,15 @@ class MetaDatabase extends Dexie {
 	}
 
 	async removeImage(id: number) {
+		// Unlink from any queues using filter
+		const queues = await this.queues.toArray();
+
+		for (const queue of queues) {
+			await this.queues.update(queue.id, {
+				images: queue.images.filter((imageId) => imageId !== id),
+			});
+		}
+
 		return this.images.delete(id);
 	}
 
