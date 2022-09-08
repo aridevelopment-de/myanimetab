@@ -225,8 +225,6 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								<Menu.Item onClick={() => setEditImage(true)}>
 									Edit
 								</Menu.Item>
-								<Menu.Item>View</Menu.Item>
-								<Menu.Item>Move into</Menu.Item>
 								<Menu.Item
 									color="red"
 									onClick={() => {
