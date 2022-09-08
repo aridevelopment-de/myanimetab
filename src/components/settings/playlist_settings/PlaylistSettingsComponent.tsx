@@ -141,7 +141,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			.split(",")
 			.map((url: string) => url.trim());
 
-		metaDb.addBulkImages(imagesToAdd);
+		metaDb.addBulkImages(imagesToAdd, currentFolder);
 		setAddImageModalState(false);
 
 		setTimeout(
@@ -230,10 +230,11 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								<Menu.Item
 									color="red"
 									onClick={() => {
-										metaDb.removeImage(file.id);
-										metaDb
-											.getImages(currentFolder.id)
-											.then(setImages);
+										metaDb.removeImage(file.id).then(() => {
+											metaDb
+												.getImages(currentFolder.id)
+												.then(setImages);
+										});
 									}}
 								>
 									Delete
