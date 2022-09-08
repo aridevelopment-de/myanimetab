@@ -69,7 +69,7 @@ const Queue = () => {
 				>
 					<span>
 						{currentQueue !== undefined
-							? currentQueue.name
+							? `${currentQueue.name} (${(images || []).length})`
 							: "Queue"}
 					</span>
 					<div className={styles.toolbar}>
@@ -216,7 +216,9 @@ const QueueList = () => {
 								metaDb.setMeta("selected_queue", queue.id)
 							}
 						>
-							<span>{queue.name}</span>
+							<span>
+								{queue.name} ({queue.images.length})
+							</span>
 							<Group position="right" spacing="xs">
 								<ActionIcon
 									onClick={() => {
