@@ -223,11 +223,11 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 							? "1px solid var(--mantine-color-blue-5)"
 							: "none",
 				}}
-				onClick={() =>
-					toolbarHovered
+				onClick={() => {
+					toolbarHovered.current
 						? void 0
-						: metaDb.setMeta("selected_queue", props.queue.id)
-				}
+						: metaDb.setMeta("selected_queue", props.queue.id);
+				}}
 			>
 				<span>
 					{props.queue.name} ({props.queue.images.length})
