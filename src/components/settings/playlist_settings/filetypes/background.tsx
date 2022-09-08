@@ -1,7 +1,7 @@
 import { Checkbox } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useEffect, useRef, useState } from "react";
-import { IImage, metaDb } from "../../../../utils/db";
+import { IImage, metaDb, useMeta } from "../../../../utils/db";
 import EventHandler from "../../../../utils/eventhandler";
 import globalstyles from "../playlistsettingscomponent.module.css";
 import styles from "./background.module.css";
@@ -15,6 +15,13 @@ const Background = (props: {
 	const [isInQueue, setIsInQueue] = useState<boolean>(false);
 	const [hovered, setHovered] = useState<boolean>(false);
 	const checkboxHover = useRef<boolean>();
+
+	/* Update isInQueue status when queue changes */
+	useMeta("selected_queue", (value: number) => {
+		if (value !== null) {
+			metaDb.queueContainsImage(value, props.image).then(setIsInQueue);
+		}
+	});
 
 	useEffect(() => {
 		metaDb.getMeta("selected_queue").then((value: any) => {
