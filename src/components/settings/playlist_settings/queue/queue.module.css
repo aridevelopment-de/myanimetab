@@ -30,21 +30,50 @@
 	gap: 2px;
 	flex-wrap: wrap;
 	/* max two rows */
-	max-height: 100px;
+	max-height: 150px;
 	overflow-y: auto;
 }
 
 .image {
-	height: 50px;
-	width: 50px;
-	border-radius: 10px;
+	border-radius: 3px;
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+	height: 75px;
+	aspect-ratio: 1;
 	background-color: var(--mantine-color-gray-2);
+	overflow: hidden;
+	position: relative;
+	isolation: isolate;
+	box-sizing: border-box;
+}
+
+.image:hover {
+	border: 0.5px solid var(--mantine-color-blue-5);
 }
 
 .image img {
-	height: 100%;
-	width: 100%;
-	border-radius: 3px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	height: 120px;
+	aspect-ratio: 1;
+	z-index: 1;
+}
+
+.clear_button {
+	position: absolute;
+	top: -3px;
+	right: -3px;
+	z-index: 2;
+	opacity: 0;
+}
+
+.image:hover .clear_button {
+	opacity: 1;
+}
+
+.clear_button:hover {
+	background-color: rgba(0, 0, 0, 0.2);
 }
 
 .list__queue {

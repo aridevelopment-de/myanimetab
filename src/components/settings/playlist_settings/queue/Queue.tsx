@@ -18,6 +18,7 @@ import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
 import styles from "./queue.module.css";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import EventHandler from "../../../../utils/eventhandler";
 
 const QueueList = () => {
 	const queues = useLiveQuery(() => metaDb.queues.toArray() || []);
@@ -75,6 +76,8 @@ const QueueList = () => {
 
 const Queue = () => {
 	const qid = useMeta("selected_queue");
+	const cImage = useMeta("selected_image");
+
 	const currentQueue = useLiveQuery(async () => {
 		const currentQueue = await metaDb.meta.get("selected_queue");
 
@@ -146,11 +149,48 @@ const Queue = () => {
 										<div
 											className={styles.image}
 											key={index}
+											style={{
+												border:
+													cImage === image.id
+														? "3px solid var(--mantine-color-blue-5)"
+														: undefined,
+											}}
 										>
 											<img
 												src={image.url}
 												alt={"Queue"}
+												onClick={() =>
+													metaDb.setMeta(
+														"selected_image",
+														image.id
+													)
+												}
 											/>
+											<ActionIcon
+												className={styles.clear_button}
+												color="red"
+												variant="transparent"
+												onClick={() => {
+													metaDb.removeImageFromQueue(
+														qid,
+														image
+													);
+
+													EventHandler.emit(
+														"queue.removeImage",
+														{ value: image.id }
+													);
+												}}
+											>
+												<ClearIcon
+													sx={{
+														fontSize: "19px",
+													}}
+													className={
+														styles.clear_icon
+													}
+												/>
+											</ActionIcon>
 										</div>
 									);
 								}
