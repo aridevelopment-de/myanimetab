@@ -440,6 +440,10 @@ class MetaDatabase extends Dexie {
 
 		return queue.images.includes(image.id);
 	}
+
+	async editQueue(qid: number, values: Omit<Partial<IQueue>, "id">) {
+		return this.queues.update(qid, values);
+	}
 }
 
 export const useMeta = (key: string, mapFunction?: Function): any => {
