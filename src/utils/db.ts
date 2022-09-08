@@ -345,22 +345,24 @@ class MetaDatabase extends Dexie {
 	}
 
 	/* Queue table */
-	async getQueue(qid: number): Promise<IQueue | undefined> {
+	async getQueue(qid: number | null): Promise<IQueue | undefined> {
 		// TOOD: Let this function call getImage
 		// TOOD: Implement cache on function getImage
+
+		if (qid === null || qid === undefined) {
+			return undefined;
+		}
+
 		return this.queues.get(qid);
 	}
 
-	async insertQueue(queue: Omit<IQueue, "id">): Promise<boolean> {
-		// check if queue name already exists
-		const existingQueue = await this.queues
-			.where("name")
-			.equals(queue.name)
-			.first();
-
-		if (existingQueue !== undefined) {
-			return false;
-		}
+	async addQueue(): Promise<boolean> {
+		// generate random queue name
+		const name = `Queue #${Math.floor(Math.random() * 1000)}`;
+		const queue = {
+			name,
+			images: [],
+		} as unknown as IQueue;
 
 		// @ts-ignore Id is not required
 		this.queues.put(queue);
@@ -371,7 +373,7 @@ class MetaDatabase extends Dexie {
 		return this.queues.delete(qid);
 	}
 
-	async insertImageToQueue(qid: number, image: IImage) {
+	async insertImageToQueue(qid: number, image: IImage): Promise<boolean> {
 		// images in queue are stored via id
 		const queue = await this.getQueue(qid);
 
@@ -385,7 +387,49 @@ class MetaDatabase extends Dexie {
 
 		queue.images.push(image.id);
 
-		return this.queues.update(qid, { images: queue.images });
+		try {
+			this.queues.update(qid, { images: queue.images });
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
+
+		return true;
+	}
+
+	async removeImageFromQueue(qid: number, image: IImage): Promise<boolean> {
+		// use the modify method of dexie
+
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		if (!queue.images.includes(image.id)) {
+			return false;
+		}
+
+		queue.images = queue.images.filter((id) => id !== image.id);
+
+		try {
+			this.queues.update(qid, { images: queue.images });
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
+
+		return true;
+	}
+
+	async queueContainsImage(qid: number, image: IImage) {
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		return queue.images.includes(image.id);
 	}
 }
 
