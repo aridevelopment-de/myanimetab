@@ -124,6 +124,12 @@ export interface IFolder {
 	color: string | null;
 }
 
+export interface IQueue {
+	id: number;
+	name: string;
+	images: Array<number>;
+}
+
 export const ROOT_FOLDER = {
 	id: 0,
 	parent: null,
@@ -135,6 +141,7 @@ class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
 	images!: Table<IImage>;
 	folders!: Table<IFolder>;
+	queues!: Table<IQueue>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -161,8 +168,16 @@ class MetaDatabase extends Dexie {
 			images: "++id, folder, url, name",
 			folders: "++id, parent, name, color",
 		});
+
+		this.version(5).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+		});
 	}
 
+	/* Meta table */
 	onMetaChange(name: string, callback: (value: any) => void) {
 		if (this.changes[name] === undefined) {
 			this.changes[name] = [];
@@ -196,6 +211,7 @@ class MetaDatabase extends Dexie {
 		});
 	}
 
+	/* Image table */
 	async anyImagesOrInsert(defaultUrl: string, defaultName: string) {
 		const images = await this.images.toArray();
 
@@ -254,7 +270,7 @@ class MetaDatabase extends Dexie {
 		return this.images.delete(id);
 	}
 
-	// Todo: Remove folder paths and only work with id's and names so relocating and renaming folders is a lot easier
+	/* Folder table */
 	async getSubFolders(parent: number): Promise<Array<IFolder>> {
 		return this.folders.where("parent").equals(parent).toArray();
 	}
@@ -326,6 +342,50 @@ class MetaDatabase extends Dexie {
 		}
 
 		return folders.reverse();
+	}
+
+	/* Queue table */
+	async getQueue(qid: number): Promise<IQueue | undefined> {
+		// TOOD: Let this function call getImage
+		// TOOD: Implement cache on function getImage
+		return this.queues.get(qid);
+	}
+
+	async insertQueue(queue: Omit<IQueue, "id">): Promise<boolean> {
+		// check if queue name already exists
+		const existingQueue = await this.queues
+			.where("name")
+			.equals(queue.name)
+			.first();
+
+		if (existingQueue !== undefined) {
+			return false;
+		}
+
+		// @ts-ignore Id is not required
+		this.queues.put(queue);
+		return true;
+	}
+
+	async deleteQueue(qid: number) {
+		return this.queues.delete(qid);
+	}
+
+	async insertImageToQueue(qid: number, image: IImage) {
+		// images in queue are stored via id
+		const queue = await this.getQueue(qid);
+
+		if (queue === undefined) {
+			return false;
+		}
+
+		if (queue.images.includes(image.id)) {
+			return false;
+		}
+
+		queue.images.push(image.id);
+
+		return this.queues.update(qid, { images: queue.images });
 	}
 }
 
