@@ -3,68 +3,43 @@ import { useSetting } from "../../../utils/eventhooks";
 import { Setting } from "../../../utils/registry/types";
 import styles from "./settingsformitem.module.css";
 
-function SettingsItemLabel(props: { name: string; searchValue?: string }) {
+export const SettingsItemLabel = (props: {
+	name: string;
+	searchValue?: string;
+	className?: string;
+}) => {
 	if (props.searchValue === undefined) {
-		return <p className={styles.item_label}>{props.name}</p>;
+		return <p className={props.className}>{props.name}</p>;
 	} else {
-		let recordLength = 0;
-		let recordStart = 0;
-		let start = 0;
-		let count = 0;
+		if (
+			props.name.toLowerCase().includes(props.searchValue.toLowerCase())
+		) {
+			const start = props.name
+				.toLowerCase()
+				.indexOf(props.searchValue.toLowerCase());
+			const length = props.searchValue.length;
 
-		for (let i = 0; i < props.searchValue.length; i++) {
-			if (
-				props.name
-					.toLowerCase()
-					.includes(
-						props.searchValue.toLowerCase().substring(0, i + 1)
-					)
-			) {
-				if (count === 0) {
-					start = props.name
-						.toLowerCase()
-						.indexOf(
-							props.searchValue.toLowerCase().substring(0, i + 1)
-						);
-				}
-
-				count++;
-
-				if (count > recordLength) {
-					recordLength = count;
-					recordStart = start;
-				}
-			} else {
-				count = 0;
-				start = 0;
-			}
-		}
-
-		if (recordLength > 0) {
 			return (
 				<p
-					className={styles.item_label}
+					className={props.className}
 					style={{ fontFamily: "inherit" }}
 				>
-					{props.name.substring(0, recordStart)}
+					{props.name.substring(0, start)}
 					<span
 						style={{
 							fontFamily: "inherit",
-							backgroundColor: "#9AB0303D",
+							backgroundColor: "var(--mantine-color-yellow-5)",
 						}}
 					>
-						{props.name.substring(
-							recordStart,
-							recordStart + recordLength
-						)}
+						{props.name.substring(start, start + length)}
 					</span>
-					{props.name.substring(recordStart + recordLength)}
+					{props.name.substring(start + length)}
 				</p>
 			);
 		} else {
 			return (
 				<p
-					className={styles.item_label}
+					className={props.className}
 					style={{ fontFamily: "inherit" }}
 				>
 					{props.name}
@@ -72,7 +47,7 @@ function SettingsItemLabel(props: { name: string; searchValue?: string }) {
 			);
 		}
 	}
-}
+};
 
 function SettingsFormItem(props: {
 	componentSetting: Setting;
@@ -91,6 +66,9 @@ function SettingsFormItem(props: {
 				<SettingsItemLabel
 					name={props.componentSetting.name}
 					searchValue={props.searchValue}
+					className={`${styles.item_label} ${
+						props.disabled ? styles.item_label__disabled : undefined
+					}`}
 				/>
 				<div>
 					<NativeSelect
@@ -105,6 +83,7 @@ function SettingsFormItem(props: {
 						}}
 						variant="filled"
 						disabled={props.disabled}
+						classNames={{ input: styles.element }}
 					/>
 				</div>
 			</div>
@@ -115,6 +94,9 @@ function SettingsFormItem(props: {
 				<SettingsItemLabel
 					name={props.componentSetting.name}
 					searchValue={props.searchValue}
+					className={`${styles.item_label} ${
+						props.disabled ? styles.item_label__disabled : undefined
+					}`}
 				/>
 				<div>
 					{props.componentSetting.hidden ? (
@@ -124,6 +106,11 @@ function SettingsFormItem(props: {
 							value={data}
 							variant="filled"
 							disabled={props.disabled}
+							classNames={{
+								input: styles.element,
+								icon: styles.element,
+								rightSection: styles.element,
+							}}
 						/>
 					) : (
 						<TextInput
@@ -132,6 +119,11 @@ function SettingsFormItem(props: {
 							value={data}
 							variant="filled"
 							disabled={props.disabled}
+							classNames={{
+								input: styles.element,
+								icon: styles.element,
+								rightSection: styles.element,
+							}}
 						/>
 					)}
 				</div>
