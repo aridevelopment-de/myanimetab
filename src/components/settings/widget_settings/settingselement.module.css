@@ -1,15 +1,16 @@
 .item {
-	margin-bottom: 32px;
 	animation: var(--fadeInAnimation);
-	background-color: rgba(133, 133, 133, 0.05);
+	background-color: var(--mantine-color-gray-2);
 	border-radius: 14px;
-	padding: 1em;
+	overflow: hidden;
 }
 
 .title {
 	display: flex;
 	align-items: center;
-	margin-bottom: 1.5em;
+	background-color: var(--mantine-color-gray-4);
+	padding: 1em;
+	cursor: pointer;
 }
 
 .title_text {
@@ -18,4 +19,23 @@
 	font-size: 20px;
 	color: #2f2f2f;
 	margin: 0;
+	user-select: none;
+}
+
+.content {
+	padding: 1.5em 1em;
+	padding-top: 0;
+	overflow: hidden;
+	opacity: 1;
+	transform: translateX(0%);
+	transition-property: all;
+	transition-duration: 750ms;
+	transition-timing-function: ease;
+}
+
+.content__minimized {
+	max-height: 0 !important;
+	padding: 0;
+	opacity: 0;
+	transform: translateX(-100%);
 }

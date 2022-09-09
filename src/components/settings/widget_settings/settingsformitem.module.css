@@ -1,6 +1,13 @@
 .item_label {
-	color: rgba(74, 74, 74, 0.8);
+	color: var(--mantine-color-gray-7);
 	font-size: 14px;
-	margin-bottom: 6px;
-	transition: opacity 0.2s;
+	transition: all 0.2s;
+}
+
+.item_label__disabled {
+	color: var(--mantine-color-gray-6);
+}
+
+.element {
+	transition: all 0.2s;
 }
