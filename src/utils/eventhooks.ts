@@ -1,31 +1,9 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import md5 from "md5";
 import { useEffect, useState } from "react";
-import { widgetsDb } from "./db";
+import { IWidget, widgetsDb } from "./db";
 import EventHandler from "./eventhandler";
 
-export const useSetting = (
-	id: string,
-	key: string,
-	trigger_function?: Function
-): [any, Function] => {
-	/* const [state, setState] = useState();
-    const changeStatus = (value: any) => widgetsDb.setSetting(id, key, value);
-
-    useEvent(`widget.${id}.${key}`, HashCode.value(id + key + String(trigger_function)), null, (data: any) => {
-        const value = (trigger_function || (() => {}))(data) || data;        
-        setState(value);
-    })
-
-    useEffect(() => {
-        widgetsDb.getSetting(id, key).then((data: any) => {
-            const value = (trigger_function || (() => {}))(data) || data;
-            setState(value);
-        })
-    }, [id, key, trigger_function])
-    
-    return [state, changeStatus]; */
-
+export const useSetting = (id: string, key: string): [any, Function] => {
 	const [state, setState] = useState();
 	const data = useLiveQuery(() =>
 		widgetsDb.widgets.where("id").equals(id).toArray()
@@ -45,6 +23,24 @@ export const useSetting = (
 	}, [data, key]);
 
 	return [state, changeData];
+};
+
+export const useWidget = (id: string): any => {
+	const [state, setState] = useState<IWidget>();
+
+	const data = useLiveQuery(() =>
+		widgetsDb.widgets.where("id").equals(id).toArray()
+	);
+
+	useEffect(() => {
+		if (data !== undefined) {
+			if (data[0] !== undefined) {
+				setState(data[0]);
+			}
+		}
+	}, [data]);
+
+	return state;
 };
 
 export const useEvent = (
@@ -70,51 +66,3 @@ export const useEvent = (
 
 	return [state, changeEvent];
 };
-
-/**
- * Javascript HashCode v1.0.0
- * This function returns a hash code (MD5) based on the argument object.
- * http://pmav.eu/stuff/javascript-hash-code
- *
- * Example:
- *  var s = "my String";
- *  alert(HashCode.value(s));
- *
- * pmav, 2010
- */
-var HashCode = (function () {
-	var serialize = function (object: any) {
-		// Private
-		var type,
-			serializedCode = "";
-
-		type = typeof object;
-
-		if (type === "object") {
-			var element;
-
-			for (element in object) {
-				serializedCode +=
-					"[" +
-					type +
-					":" +
-					element +
-					serialize(object[element]) +
-					"]";
-			}
-		} else if (type === "function") {
-			serializedCode += "[" + type + ":" + object.toString() + "]";
-		} else {
-			serializedCode += "[" + type + ":" + object + "]";
-		}
-
-		return serializedCode.replace(/\s/g, "");
-	};
-
-	// Public, API
-	return {
-		value: function (object: any) {
-			return md5(serialize(object));
-		},
-	};
-})();
