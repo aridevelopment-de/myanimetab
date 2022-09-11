@@ -26,7 +26,7 @@ export const useSetting = (id: string, key: string): [any, Function] => {
 };
 
 export const useWidget = (id: string): any => {
-	const [state, setState] = useState<IWidget>();
+	const [state, setState] = useState<{ [key: string]: string }>();
 
 	const data = useLiveQuery(() =>
 		widgetsDb.widgets.where("id").equals(id).toArray()
@@ -35,7 +35,7 @@ export const useWidget = (id: string): any => {
 	useEffect(() => {
 		if (data !== undefined) {
 			if (data[0] !== undefined) {
-				setState(data[0]);
+				setState(data[0].settings);
 			}
 		}
 	}, [data]);
