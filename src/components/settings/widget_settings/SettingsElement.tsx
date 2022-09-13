@@ -1,5 +1,5 @@
 import { Menu, Stack, Switch } from "@mantine/core";
-import { useSetting, useWidget } from "../../../utils/eventhooks";
+import { useSetting } from "../../../utils/eventhooks";
 import { Component } from "../../../utils/registry/types";
 import styles from "./settingselement.module.css";
 import SettingsFormItem, { SettingsItemLabel } from "./SettingsFormItem";
@@ -8,13 +8,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { useEffect, useRef, useState } from "react";
-import { widgetsDb } from "../../../utils/db";
 
 const MAX_HEIGHT = 1200; // about 6 dropdowns
 
 function SettingsElement(props: { data: Component; searchValue: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const widget = useWidget(props.data.fullId);
+	const [checked, setChecked] = useSetting(props.data.fullId, "state");
 	const [minimized, setMinimized] = useState<boolean>(false);
 	const contentRef = useRef<HTMLDivElement>();
 	const toolbarHovered = useRef<boolean>(false);
@@ -34,7 +33,7 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 	}, [contentRef, contentRef.current, minimized]);
 
 	return (
-		<div className={`${styles.item} ${!widget.state ? "disabled" : ""}`}>
+		<div className={`${styles.item} ${!checked ? "disabled" : ""}`}>
 			{/* Header */}
 			<div
 				className={styles.title}
@@ -100,15 +99,11 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 							</Menu.Dropdown>
 						</Menu>
 					) : null}
-					{widget.state !== undefined ? (
+					{checked !== undefined ? (
 						<Switch
-							checked={widget.state}
+							checked={checked}
 							onChange={(e) => {
-								widgetsDb.setSetting(
-									props.data.fullId,
-									"state",
-									e.currentTarget.checked
-								);
+								setChecked(e.currentTarget.checked);
 								EventHandler.emit("rerenderAll");
 							}}
 						/>
@@ -143,7 +138,7 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 								<SettingsFormItem
 									componentSetting={componentSetting}
 									componentId={props.data.fullId}
-									disabled={widget.state === false}
+									disabled={checked === false}
 									key={index}
 								/>
 							);
@@ -159,7 +154,7 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 									componentSetting={componentSetting}
 									componentId={props.data.fullId}
 									searchValue={props.searchValue}
-									disabled={widget.state === false}
+									disabled={checked === false}
 									key={index}
 								/>
 							);
@@ -172,7 +167,7 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 								<SettingsFormItem
 									componentSetting={componentSetting}
 									componentId={props.data.fullId}
-									disabled={widget.state === false}
+									disabled={checked === false}
 									key={index}
 								/>
 							);
