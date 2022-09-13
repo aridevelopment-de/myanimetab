@@ -47,7 +47,7 @@ export const useCachedSetting = (id: string, key: string): [any, Function] => {
 				}
 			});
 		}
-	}, [id, key, SETTINGS_CACHE]);
+	}, [id, key, SETTINGS_CACHE[id]]);
 
 	return [state, changeData];
 };
