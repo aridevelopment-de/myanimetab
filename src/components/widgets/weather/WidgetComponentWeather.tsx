@@ -48,36 +48,40 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 
 	useEffect(() => {
 		const retrieveData = async () => {
-			const API_KEY = await widgetsDb.getSetting(props.id, "api_key");
-			const CITY = await widgetsDb.getSetting(props.id, "city");
-			const UNIT = metricValues[widget.unit];
+			if (widget.unit !== undefined) {
+				const API_KEY = await widgetsDb.getSetting(props.id, "api_key");
+				const CITY = await widgetsDb.getSetting(props.id, "city");
+				const UNIT = metricValues[widget.unit];
 
-			axios
-				.get(
-					`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`
-				)
-				.then((response) => {
-					if (response.status === 200) {
-						setData({
-							fullCityName: response.data.name,
-							temperature: Math.round(response.data.main.temp),
-							icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@4x.png`,
-							statusCode: 200,
-						});
-					} else if (
-						response.status === 404 ||
-						response.status === 401 ||
-						response.status === 429 // too many requests
-					) {
-						setData({
-							...data,
-							statusCode: response.status,
-						});
-					}
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+				axios
+					.get(
+						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`
+					)
+					.then((response) => {
+						if (response.status === 200) {
+							setData({
+								fullCityName: response.data.name,
+								temperature: Math.round(
+									response.data.main.temp
+								),
+								icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@4x.png`,
+								statusCode: 200,
+							});
+						} else if (
+							response.status === 404 ||
+							response.status === 401 ||
+							response.status === 429 // too many requests
+						) {
+							setData({
+								...data,
+								statusCode: response.status,
+							});
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+					});
+			}
 		};
 
 		retrieveData();
