@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
-import { IWidget, widgetsDb } from "./db";
+import { widgetsDb } from "./db";
 import EventHandler from "./eventhandler";
 
 let SETTINGS_CACHE: { [key: string]: { [key: string]: any } } = {};
