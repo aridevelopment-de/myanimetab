@@ -1,56 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
-import { IWidget, widgetsDb } from "./db";
+import { widgetsDb } from "./db";
 import EventHandler from "./eventhandler";
-
-let SETTINGS_CACHE: { [key: string]: { [key: string]: any } } = {};
-
-export const useCachedSetting = (id: string, key: string): [any, Function] => {
-	const [state, setState] = useState(
-		SETTINGS_CACHE[id] !== undefined &&
-			SETTINGS_CACHE[id][key] !== undefined
-			? SETTINGS_CACHE[id][key]
-			: null
-	);
-
-	const changeData = (newValue: any, update_database?: boolean) => {
-		setState(newValue);
-
-		if (SETTINGS_CACHE[id] === undefined) {
-			SETTINGS_CACHE[id] = {};
-		}
-
-		SETTINGS_CACHE[id][key] = newValue;
-		SETTINGS_CACHE = { ...SETTINGS_CACHE };
-
-		if (update_database) {
-			widgetsDb.setSetting(id, key, newValue);
-		}
-	};
-
-	useEffect(() => {
-		if (SETTINGS_CACHE[id] !== undefined) {
-			if (SETTINGS_CACHE[id][key] !== undefined) {
-				setState(SETTINGS_CACHE[id][key]);
-				return;
-			} else {
-				widgetsDb.getSetting(id, key).then((value) => {
-					if (value) {
-						changeData(value, false);
-					}
-				});
-			}
-		} else {
-			widgetsDb.getSetting(id, key).then((value) => {
-				if (value) {
-					changeData(value, false);
-				}
-			});
-		}
-	}, [id, key, SETTINGS_CACHE]);
-
-	return [state, changeData];
-};
 
 export const useSetting = (id: string, key: string): [any, Function] => {
 	const [state, setState] = useState();
