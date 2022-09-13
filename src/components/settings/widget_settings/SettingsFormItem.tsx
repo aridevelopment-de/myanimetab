@@ -1,5 +1,5 @@
 import { NativeSelect, PasswordInput, TextInput } from "@mantine/core";
-import { useSetting } from "../../../utils/eventhooks";
+import { useCachedSetting, useSetting } from "../../../utils/eventhooks";
 import { Setting } from "../../../utils/registry/types";
 import styles from "./settingsformitem.module.css";
 
@@ -55,7 +55,7 @@ function SettingsFormItem(props: {
 	searchValue?: string;
 	disabled: boolean;
 }) {
-	const [data, setData] = useSetting(
+	const [data, setData] = useCachedSetting(
 		props.componentId,
 		props.componentSetting.key
 	);
@@ -78,7 +78,8 @@ function SettingsFormItem(props: {
 							setData(
 								props.componentSetting.displayedValues.indexOf(
 									e.currentTarget.value
-								)
+								),
+								true
 							);
 						}}
 						variant="filled"
@@ -102,7 +103,9 @@ function SettingsFormItem(props: {
 					{props.componentSetting.hidden ? (
 						<PasswordInput
 							placeholder={props.componentSetting.tooltip}
-							onChange={(e) => setData(e.currentTarget.value)}
+							onChange={(e) =>
+								setData(e.currentTarget.value, true)
+							}
 							value={data}
 							variant="filled"
 							disabled={props.disabled}
@@ -115,7 +118,9 @@ function SettingsFormItem(props: {
 					) : (
 						<TextInput
 							placeholder={props.componentSetting.tooltip}
-							onChange={(e) => setData(e.currentTarget.value)}
+							onChange={(e) =>
+								setData(e.currentTarget.value, true)
+							}
 							value={data}
 							variant="filled"
 							disabled={props.disabled}

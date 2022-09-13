@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { widgetsDb } from "../../../utils/db";
-import { useSetting } from "../../../utils/eventhooks";
+import { useSetting, useWidget } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import errorstyles from "./error.module.css";
 import ErrorComponent from "./ErrorComponent";
@@ -38,9 +38,7 @@ function LoadingComponent(props: { opacity: number }) {
 }
 
 function WeatherWidget(props: { blur: boolean; id: string }) {
-	const [position, _] = useSetting(props.id, "position");
-	const [unit, _1] = useSetting(props.id, "unit");
-	const [autoHideValue, _2] = useSetting(props.id, "auto_hide");
+	const widget = useWidget(props.id);
 	const [data, setData] = useState({
 		statusCode: -1,
 		fullCityName: "Frankfurt am Main",
@@ -52,7 +50,7 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 		const retrieveData = async () => {
 			const API_KEY = await widgetsDb.getSetting(props.id, "api_key");
 			const CITY = await widgetsDb.getSetting(props.id, "city");
-			const UNIT = metricValues[unit];
+			const UNIT = metricValues[widget.unit];
 
 			axios
 				.get(
@@ -85,26 +83,26 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 		retrieveData();
 		const interval = setInterval(retrieveData, refreshRate);
 		return () => clearInterval(interval);
-	}, [unit]);
+	}, [widget, widget.unit]);
 
-	if (position === undefined) return <></>;
+	if (widget.position === undefined) return <></>;
 
 	return (
-		<div className={`${styles.wrapper} ${positionValues[position]}`}>
+		<div className={`${styles.wrapper} ${positionValues[widget.position]}`}>
 			{data.statusCode === 200 ? (
 				<NormalComponent
 					data={data}
-					unit={unit}
-					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+					unit={widget.unit}
+					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
 				/>
 			) : data.statusCode !== -1 ? (
 				<ErrorComponent
 					status={data.statusCode}
-					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
 				/>
 			) : (
 				<LoadingComponent
-					opacity={props.blur ? opacityValues[autoHideValue] : 1}
+					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
 				/>
 			)}
 		</div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSetting } from "../../../utils/eventhooks";
+import { useWidget } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import TimeUtils from "../../../utils/timeutils";
 import styles from "./clock.module.css";
@@ -9,11 +9,9 @@ const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const timeFormatValues = ["24h", "12h"]; // if these values changes,  also change the if conditions
 
 function Clock(props: { blur: boolean; id: string }) {
-	const [position, _] = useSetting(props.id, "position");
-	const [timeFormat, _1] = useSetting(props.id, "time_format");
-	const [autoHideValue, _2] = useSetting(props.id, "auto_hide");
+	const widget = useWidget(props.id);
 	const [currentTime, setCurrentTime] = useState(
-		TimeUtils.convertTimeToClockFormat(new Date(), timeFormat === 1)
+		TimeUtils.convertTimeToClockFormat(new Date(), widget.timeFormat === 1)
 	);
 
 	useEffect(() => {
@@ -21,7 +19,7 @@ function Clock(props: { blur: boolean; id: string }) {
 			let currentDate = new Date();
 			let currentFmtDate = TimeUtils.convertTimeToClockFormat(
 				currentDate,
-				timeFormat === 1
+				widget.timeFormat === 1
 			);
 			let lastFmtDate = currentTime;
 
@@ -34,26 +32,32 @@ function Clock(props: { blur: boolean; id: string }) {
 		}, 10000);
 
 		return () => clearInterval(interval);
-	}, [currentTime, timeFormat]);
+	}, [currentTime, widget.timeFormat]);
 
-	if (position === undefined) return <></>;
+	if (widget.position === undefined) return <></>;
 
 	return (
-		<div className={`${styles.wrapper} ${positionValues[position]}`}>
+		<div className={`${styles.wrapper} ${positionValues[widget.position]}`}>
 			<div
 				className={`${styles.clock} widget`}
 				style={{
-					opacity: props.blur ? opacityValues[autoHideValue] : 1,
+					opacity: props.blur
+						? opacityValues[widget.autoHideValue]
+						: 1,
 				}}
 			>
 				<div>
 					<span
-						id={timeFormat === 0 ? styles.time_12hr : styles.time}
+						id={
+							widget.timeFormat === 0
+								? styles.time_12hr
+								: styles.time
+						}
 					>
 						{" "}
 						{currentTime.time}{" "}
 					</span>
-					{timeFormat === 1 ? (
+					{widget.timeFormat === 1 ? (
 						<span id={styles.period}>{currentTime.timePeriod}</span>
 					) : null}
 				</div>

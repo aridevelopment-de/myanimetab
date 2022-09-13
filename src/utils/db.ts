@@ -2,13 +2,13 @@ import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
 import EventHandler from "./eventhandler";
 
-interface Widget {
+export interface IWidget {
 	id: string; // <type>-<number>
 	settings: any;
 }
 
 class WidgetDatabase extends Dexie {
-	widgets!: Table<Widget>;
+	widgets!: Table<IWidget>;
 
 	constructor() {
 		super("widgets");
@@ -18,11 +18,11 @@ class WidgetDatabase extends Dexie {
 		});
 	}
 
-	async toJson(): Promise<Array<Widget>> {
+	async toJson(): Promise<Array<IWidget>> {
 		return await this.widgets.toArray();
 	}
 
-	async fromJSON(data: Array<Widget>) {
+	async fromJSON(data: Array<IWidget>) {
 		// TODO: Add data validation
 		await this.widgets.clear();
 		await this.widgets.bulkAdd(data);
@@ -63,7 +63,7 @@ class WidgetDatabase extends Dexie {
 
 			const id = `${type}-${firstMissingIdentifier}`;
 
-			const widget: Widget = {
+			const widget: IWidget = {
 				id,
 				settings: settings || {},
 			};
@@ -72,7 +72,7 @@ class WidgetDatabase extends Dexie {
 		});
 	}
 
-	getWidget(id: string): Promise<Widget | undefined> {
+	getWidget(id: string): Promise<IWidget | undefined> {
 		return this.widgets.get(id);
 	}
 
@@ -88,7 +88,7 @@ class WidgetDatabase extends Dexie {
 	}
 
 	async getSetting(id: string, key: string): Promise<any | undefined> {
-		return this.widgets.get(id).then((widget: Widget | undefined) => {
+		return this.widgets.get(id).then((widget: IWidget | undefined) => {
 			if (widget === undefined) {
 				return undefined;
 			}
