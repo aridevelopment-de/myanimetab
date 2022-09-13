@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
-import { useSetting } from "../../../utils/eventhooks";
+import { useSetting, useWidget } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import SearchEngine from "../../../utils/searchengine";
 import SuggestionCaller from "../../../utils/searchsuggestioncaller";
@@ -23,25 +23,27 @@ const searchEngines = [
 ];
 
 function SearchBar(props: { blur: boolean; id: string }) {
-	const [position, _1] = useSetting(props.id, "vertical_align");
+	const widget = useWidget(props.id);
 	const [searchEngine, setSearchEngine] = useSetting(
 		props.id,
 		"search_engine"
 	);
-	const [openWith, _2] = useSetting(props.id, "open_with");
-	const [autoHideValue, _3] = useSetting(props.id, "auto_hide");
 	const [modalChooseEngine, setModalChooseEngine] = useState<boolean>(false);
 	const [suggestions, setSuggestions] = useState<Array<string>>([]);
 	const [content, setContent] = useState<string>("");
 
-	if (position === undefined) return <></>;
+	if (widget.vertical_align === undefined) return <></>;
 
 	return (
-		<div className={`${styles.wrapper} ${verticalAlignValues[position]}`}>
+		<div
+			className={`${styles.wrapper} ${
+				verticalAlignValues[widget.vertical_align]
+			}`}
+		>
 			<div
 				className={`${styles.searchbar} widget`}
 				style={{
-					opacity: props.blur ? opacityValues[autoHideValue] : 1,
+					opacity: props.blur ? opacityValues[widget.auto_hide] : 1,
 				}}
 			>
 				<div>
@@ -75,7 +77,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 								// @ts-ignore
 								e.target.value,
 								searchEngine,
-								openWith
+								widget.open_with
 							);
 						}
 					}}
@@ -112,7 +114,11 @@ function SearchBar(props: { blur: boolean; id: string }) {
 				<SearchIcon
 					className={styles.icon}
 					onClick={() =>
-						SearchEngine.search(content, searchEngine, openWith)
+						SearchEngine.search(
+							content,
+							searchEngine,
+							widget.open_with
+						)
 					}
 				/>
 			</div>
