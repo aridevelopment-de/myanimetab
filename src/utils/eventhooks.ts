@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
-import { IWidget, widgetsDb } from "./db";
+import { widgetsDb } from "./db";
 import EventHandler from "./eventhandler";
 
 export const useSetting = (id: string, key: string): [any, Function] => {
@@ -25,8 +25,15 @@ export const useSetting = (id: string, key: string): [any, Function] => {
 	return [state, changeData];
 };
 
+const EmptyElement = new Proxy(
+	{},
+	{
+		get: (obj, prop) => undefined,
+	}
+);
+
 export const useWidget = (id: string): any => {
-	const [state, setState] = useState<{ [key: string]: string }>();
+	const [state, setState] = useState<{ [key: string]: string }>(EmptyElement);
 
 	const data = useLiveQuery(() =>
 		widgetsDb.widgets.where("id").equals(id).toArray()
