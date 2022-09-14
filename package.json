@@ -61,6 +61,6 @@
   },
   "devDependencies": {
     "@types/md5": "^2.3.2",
-    "cypress": "^9.5.4"
+    "cypress": "^10.8.0"
   }
 }
