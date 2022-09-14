@@ -1,0 +1,40 @@
+.control_menu {
+    position: absolute;
+    top: 0.7em;
+    padding: 0.7em;
+    border-radius: 20px;
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: hidden;
+    transition: transform 1s, opacity 2s;
+    z-index: 2;
+    transform: translateY(0%);
+}
+
+.control_menu.one {
+    left: 0.7em;
+}
+
+.control_menu.two {
+    right: 0.7em;
+}
+
+.item__wrapper:not(.expand_less__wrapper) {
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+}
+
+.expand_less__wrapper {
+    padding-top: 0.25em;
+}
+
+.item__wrapper div svg {
+    color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.5);
+    transition: color 300ms;
+    cursor: pointer;
+}
+
+.item__wrapper div svg:hover {
+    color: rgba(255, 255, 255, 0.8);
+}

@@ -1,0 +1,13 @@
+.item_label {
+	color: var(--mantine-color-gray-7);
+	font-size: 14px;
+	transition: all 0.2s;
+}
+
+.item_label__disabled {
+	color: var(--mantine-color-gray-6);
+}
+
+.element {
+	transition: all 0.2s;
+}

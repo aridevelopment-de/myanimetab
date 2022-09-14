@@ -1,3 +1,22 @@
+## Database
+
+Startup
+- Check if indexeddb exists with the current version
+    - if not: create one
+- Scan through indexeddb
+- Get identifier for widgets from indexeddb
+    - Only have to know what type the identifier is, not which instance
+    - Let the identifier be prefixed with the global widget identifier (taken from widgets.json)
+        - searchbar-0
+- Create instances based on user settings
+- Give those instances their id as a prop
+
+When widget added 
+- Add settings
+
+When widget removed
+- Remove settings
+
 ## Todo list
 
 * [x] Reimplement everything in react
@@ -11,7 +30,7 @@
         - [ ] Choose playlist
         - [ ] Link the current spotify song to specific images
     + [ ] Weather Widget
-        - [ ] Set current location
+        - [x] Set current location
         - [ ] See forecast up to 7 days
     + [ ] Notes widget
         - [ ] Add notes
@@ -47,8 +66,8 @@
         - [ ] Remove images
         - [ ] Upload via url
         - [ ] Add Image via upload?
-* [ ] Settings Page
+* [x] Settings Page
     + [x] Make settings saveable
-    + [ ] Widget "market"
+    + [x] Widget "market"
 * [x] Make Searchbar padding with percents not with fixed size
 * [x] Add Background Changer every x seconds
