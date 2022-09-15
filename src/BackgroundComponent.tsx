@@ -10,9 +10,19 @@ import { useSetting } from "./utils/eventhooks";
 
 function Background(props: any) {
 	const [blur, setBlur] = useState(false);
-	const background = useLiveQuery(async () =>
-		metaDb.images.get((await metaDb.meta.get("selected_image"))?.value)
-	);
+	const background = useLiveQuery(async () => {
+		const selectedImage = await metaDb.meta.get("selected_image");
+
+		if (selectedImage !== undefined) {
+			const image = await metaDb.images.get(selectedImage.value);
+
+			if (image !== undefined) {
+				return image;
+			}
+		}
+
+		return null;
+	});
 
 	return (
 		<div
