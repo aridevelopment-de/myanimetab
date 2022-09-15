@@ -1,11 +1,12 @@
 {
   "name": "client",
   "main": "src/index.tsx",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.3.0",
+    "@fontsource/inter": "^4.5.12",
     "@mantine/core": "^5.2.3",
     "@mantine/form": "^5.2.3",
     "@mantine/hooks": "^5.2.3",

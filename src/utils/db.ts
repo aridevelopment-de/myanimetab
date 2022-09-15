@@ -2,6 +2,8 @@ import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
 import EventHandler from "./eventhandler";
 
+const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 export interface IWidget {
 	id: string; // <type>-<number>
 	settings: any;
@@ -177,6 +179,23 @@ class MetaDatabase extends Dexie {
 		});
 	}
 
+	async initializeFirstTimers(): Promise<boolean> {
+		// Check if this is the first time the app is opened
+		if ((await this.getMeta("exists")) === undefined) {
+			this.registerMeta("exists", true);
+			await this.registerMeta("selected_image", 1);
+			await this.registerMeta("selected_queue", null);
+			await this.anyImagesOrInsert(
+				"https://best-extension.extfans.com/theme/wallpapers/pmafipeoccakjnacdojijhgmelhjbk/df23e73165204f223d080cbd0b4bc4.webp",
+				"love! live! drinking"
+			);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	/* Meta table */
 	onMetaChange(name: string, callback: (value: any) => void) {
 		if (this.changes[name] === undefined) {
@@ -203,12 +222,15 @@ class MetaDatabase extends Dexie {
 		this.emitOnMetaChange(name, value);
 	}
 
-	registerMeta(name: string, value: any) {
-		this.getMeta(name).then((meta) => {
-			if (meta === undefined) {
-				this.meta.put({ name: name, value: value });
-			}
-		});
+	async registerMeta(name: string, value: any): Promise<boolean> {
+		const meta = await this.getMeta(name);
+
+		if (meta === undefined) {
+			this.meta.put({ name: name, value: value });
+			return true;
+		}
+
+		return false;
 	}
 
 	/* Image table */

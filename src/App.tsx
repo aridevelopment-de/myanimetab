@@ -8,6 +8,7 @@ import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
+import "@fontsource/inter";
 
 class App extends React.Component {
 	constructor(props) {
