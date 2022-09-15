@@ -26,8 +26,9 @@ const EditFolderDialog = (props: {
 			name: ((props.file as IFolder) || { name: "" }).name
 				.split("/")
 				.pop(),
-			color: ((props.file as IFolder) || { color: theme.colors.blue[5] })
-				.color,
+			color:
+				((props.file as IFolder) || { color: theme.colors.blue[5] })
+					.color || theme.colors.blue[5],
 		},
 		validate: {
 			name: (value: string) =>
