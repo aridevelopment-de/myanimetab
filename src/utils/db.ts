@@ -218,8 +218,10 @@ class MetaDatabase extends Dexie {
 	}
 
 	setMeta(name: string, value: any) {
-		this.meta.update(name, { value: value });
-		this.emitOnMetaChange(name, value);
+		if (value !== undefined) {
+			this.meta.update(name, { value: value });
+			this.emitOnMetaChange(name, value);
+		}
 	}
 
 	async registerMeta(name: string, value: any): Promise<boolean> {

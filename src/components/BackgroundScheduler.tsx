@@ -22,7 +22,7 @@ const BackgroundScheduler = () => {
 				await widgetsDb.getSetting("wallpaper-0", "playlist_order")
 			];
 
-		let nextImageId = null;
+		let nextImageId = undefined;
 
 		switch (playlistOrder) {
 			case "Ordered":
@@ -40,7 +40,10 @@ const BackgroundScheduler = () => {
 				return;
 		}
 
-		metaDb.setMeta("selected_image", nextImageId);
+		// if the queue is empty, do nothing
+		if (nextImageId !== undefined) {
+			metaDb.setMeta("selected_image", nextImageId);
+		}
 	};
 
 	/* Wallpaer should switch on page visit */
