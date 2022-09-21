@@ -136,7 +136,7 @@ const Background = (props: {
 								position: "absolute",
 								top: "7px",
 								right: "7px",
-								zIndex: 100,
+								zIndex: 10,
 							}}
 							checked={isInQueue}
 							onChange={(event) =>
