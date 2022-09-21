@@ -6,6 +6,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { useEffect, useState } from "react";
+import { widgetsDb } from "../../../utils/db";
 import EventHandler from "../../../utils/eventhandler";
 import { useSetting } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
@@ -16,7 +17,7 @@ const positionValues = [styles.two, styles.one];
 function ControlBar(props: { blur: boolean; id: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [position, _] = useSetting(props.id, "position");
-	const [unlocked, setUnlocked] = useState(true); // useSetting(props.id, "state");
+	const [unlocked, setUnlocked] = useSetting("wallpaper-0", "state");
 	const [collapsed, setCollapsed] = useState(false);
 	useEffect(() => setCollapsed(props.blur), [props.blur]);
 
