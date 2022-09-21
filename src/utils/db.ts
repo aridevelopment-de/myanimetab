@@ -1,5 +1,6 @@
 import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
+import { downloadContent } from "./browserutils";
 import EventHandler from "./eventhandler";
 
 const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

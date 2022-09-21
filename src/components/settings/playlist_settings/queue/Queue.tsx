@@ -3,25 +3,25 @@ import {
 	Button,
 	Drawer,
 	Group,
-	Modal,
 	Space,
 	Stack,
 	Text,
 	TextInput,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import AddIcon from "@mui/icons-material/Add";
-import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import FolderOpen from "@mui/icons-material/FolderOpen";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import MinimizeIcon from "@mui/icons-material/Minimize";
 import Settings from "@mui/icons-material/Settings";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
-import styles from "./queue.module.css";
-import MinimizeIcon from "@mui/icons-material/Minimize";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import EventHandler from "../../../../utils/eventhandler";
-import { useForm } from "@mantine/form";
+import styles from "./queue.module.css";
+import DownloadIcon from "@mui/icons-material/Download";
+import { downloadContent } from "../../../../utils/browserutils";
 
 const Queue = () => {
 	const qid = useMeta("selected_queue");
@@ -75,6 +75,28 @@ const Queue = () => {
 					<div className={styles.toolbar}>
 						<ActionIcon onClick={() => setQueueManagerOpened(true)}>
 							<FolderOpen />
+						</ActionIcon>
+						<ActionIcon
+							onClick={async () => {
+								// export metaDb.queues, metaDb.images and metaDb.folders
+								// to a json file
+								const data = {
+									copy_the_value_inside_the_quotation_marks_and_paste_it_into_the_image_add_menu:
+										(await metaDb.images.toArray())
+											.map((image: IImage) => image.url)
+											.join(", "),
+									queues: await metaDb.queues.toArray(),
+									images: await metaDb.images.toArray(),
+									folders: await metaDb.folders.toArray(),
+								};
+
+								downloadContent(
+									"export.json",
+									JSON.stringify(data)
+								);
+							}}
+						>
+							<DownloadIcon />
 						</ActionIcon>
 						{minimized ? (
 							<ActionIcon onClick={() => setMinimized(false)}>
