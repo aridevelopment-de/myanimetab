@@ -161,6 +161,9 @@ const Queue = () => {
 				title="Manage your image queues"
 				padding="xl"
 				size="xl"
+				styles={{
+					drawer: { overflowY: "auto" },
+				}}
 			>
 				<QueueList />
 			</Drawer>
@@ -188,7 +191,12 @@ const QueueList = () => {
 				</Button>
 			</div>
 			<Space h="lg" />
-			<Stack spacing="xs">
+			<Stack
+				spacing="xs"
+				style={{
+					overflowY: "auto",
+				}}
+			>
 				{queues &&
 					(queues as unknown as IQueue[]).map((queue: IQueue) => (
 						<QueueListEntry queue={queue} key={queue.id} />
