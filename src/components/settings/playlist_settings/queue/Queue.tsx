@@ -201,6 +201,12 @@ const QueueList = () => {
 					(queues as unknown as IQueue[]).map((queue: IQueue) => (
 						<QueueListEntry queue={queue} key={queue.id} />
 					))}
+				{queues && queues.length === 0 && (
+					<Text color="dimmed">
+						You don't have any queues yet. Create one by clicking
+						the button above.
+					</Text>
+				)}
 			</Stack>
 		</>
 	);
@@ -260,7 +266,21 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 					<ActionIcon
 						onClick={() => {
 							metaDb.deleteQueue(props.queue.id);
-							metaDb.setMeta("selected_queue", null);
+							// get amount of queues from metaDb.queues
+							// if 0, set selected_queue to null
+							// else, set selected_queue to first queue
+							metaDb.queues.count().then((count) => {
+								if (count === 0) {
+									metaDb.setMeta("selected_queue", null);
+								} else {
+									metaDb.queues.toArray().then((queues) => {
+										metaDb.setMeta(
+											"selected_queue",
+											queues[0].id
+										);
+									});
+								}
+							});
 						}}
 					>
 						<ClearIcon />
