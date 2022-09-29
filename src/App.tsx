@@ -9,18 +9,13 @@ import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 import "@fontsource/inter";
+import { useState, useEffect } from "react";
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
+const App = (_) => {
+	const [installedComponents, setInstalledComponents] = useState<Array<Component>>([]);
 
-		this.state = {
-			installedComponents: [],
-		};
-	}
-
-	componentDidMount(): void {
-		const filterEnabledComponents = (components: Array<Component>) => {
+	useEffect(() => {
+		const filterEnabledComponents = () => {
 			(async () => {
 				let enabledComponents = [];
 
@@ -35,70 +30,67 @@ class App extends React.Component {
 					}
 				}
 
-				this.setState({ installedComponents: enabledComponents });
-				this.forceUpdate();
+				setInstalledComponents(enabledComponents)
 			})();
 		};
 
 		registry.setupDefaultComponents().then(() => {
 			registry.loadInstalledComponents(() => {
-				filterEnabledComponents(registry.installedComponents);
+				filterEnabledComponents();
 			});
 		});
 
 		EventHandler.on("rerenderAll", "app", () => {
 			setTimeout(() => {
 				registry.loadInstalledComponents(() =>
-					filterEnabledComponents(registry.installedComponents)
+					filterEnabledComponents()
 				);
 			}, 50);
 		});
-	}
 
-	componentWillUnmount(): void {
-		EventHandler.off("rerenderAll", "app");
-	}
+		return () => {
+			EventHandler.off("rerenderAll", "app");
+		};
+	}, []);
 
-	render() {
-		return (
-			<div className="App">
-				<MantineProvider
-					withGlobalStyles
-					withNormalizeCSS
-					withCSSVariables
-					theme={{
-						fontFamily: '"Inter", sans-serif',
-						colorScheme: "light",
-					}}
-				>
-					<NotificationsProvider>
-						<ModalsProvider>
-							<Background>
-								{(blur) => {
-									return this.state.installedComponents.map(
-										(component: Component) => {
-											if (component.element === null) {
-												return null;
-											}
-
-											return (
-												<component.element
-													id={component.fullId}
-													key={component.fullId}
-													blur={blur}
-												/>
-											);
+	return (
+		<div className="App">
+			<MantineProvider
+				withGlobalStyles
+				withNormalizeCSS
+				withCSSVariables
+				theme={{
+					fontFamily: '"Inter", sans-serif',
+					colorScheme: "light",
+				}}
+			>
+				<NotificationsProvider>
+					<ModalsProvider>
+						<Background>
+							{(blur) => {
+								return installedComponents.map(
+									(component: Component) => {
+										if (component.element === null) {
+											return null;
 										}
-									);
-								}}
-							</Background>
-							<SettingsComponent />
-						</ModalsProvider>
-					</NotificationsProvider>
-				</MantineProvider>
-			</div>
-		);
-	}
-}
+
+										return (
+											<component.element
+												id={component.fullId}
+												key={component.fullId}
+												blur={blur}
+											/>
+										);
+									}
+								);
+							}}
+						</Background>
+						<SettingsComponent />
+					</ModalsProvider>
+				</NotificationsProvider>
+			</MantineProvider>
+		</div>
+	);
+};
 
 export default App;
