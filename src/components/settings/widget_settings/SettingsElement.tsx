@@ -77,13 +77,6 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 										<DeleteIcon sx={{ fontSize: "23px" }} />
 									}
 									onClick={() => {
-										EventHandler.emit(
-											"settings_window_state",
-											{
-												opened: false,
-											}
-										);
-
 										registry.uninstallComponent(props.data);
 
 										setTimeout(
