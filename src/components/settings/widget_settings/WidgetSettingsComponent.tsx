@@ -1,11 +1,13 @@
 // @ts-nocheck
-import { Button, Menu, Stack } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack } from "@mantine/core";
 import React, { useState } from "react";
 import EventHandler from "../../../utils/eventhandler";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
+import OpenWithIcon from "@mui/icons-material/OpenWith";
+import Add from "@mui/icons-material/Add";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
@@ -44,41 +46,55 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 					placeholder="Enter Keywords"
 					autoComplete="off"
 				/>
-				<Menu shadow="md" width={200}>
-					<Menu.Target>
-						<Button variant="outline" color="gray">
-							+
-						</Button>
-					</Menu.Target>
-					<Menu.Dropdown>
-						<Menu.Label>Widget Type</Menu.Label>
-						{registry.knownComponents.map(
-							(knownComponent: KnownComponent, index: number) => {
-								if (
-									knownComponent.metadata.installableComponent
-								) {
-									return (
-										<Menu.Item
-											onClick={() => {
-												registry.installComponent(
-													knownComponent
-												);
-												EventHandler.emit(
-													"rerenderAll"
-												);
-											}}
-											key={index}
-										>
-											{knownComponent.metadata.name}
-										</Menu.Item>
-									);
-								}
+				<div
+					style={{
+						display: "flex",
+						gap: "0.5em",
+					}}
+				>
+					<Menu shadow="md" width={200}>
+						<Menu.Target>
+							<ActionIcon variant="outline" color="gray">
+								<Add />
+							</ActionIcon>
+						</Menu.Target>
+						<Menu.Dropdown>
+							<Menu.Label>Widget Type</Menu.Label>
+							{registry.knownComponents.map(
+								(
+									knownComponent: KnownComponent,
+									index: number
+								) => {
+									if (
+										knownComponent.metadata
+											.installableComponent
+									) {
+										return (
+											<Menu.Item
+												onClick={() => {
+													registry.installComponent(
+														knownComponent
+													);
+													EventHandler.emit(
+														"rerenderAll"
+													);
+												}}
+												key={index}
+											>
+												{knownComponent.metadata.name}
+											</Menu.Item>
+										);
+									}
 
-								return null;
-							}
-						)}
-					</Menu.Dropdown>
-				</Menu>
+									return null;
+								}
+							)}
+						</Menu.Dropdown>
+					</Menu>
+					<ActionIcon variant="outline" color="gray">
+						<OpenWithIcon />
+					</ActionIcon>
+				</div>
 			</div>
 			<Stack>
 				{registry.installedComponents.map((component: Component) => {
