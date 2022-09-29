@@ -10,9 +10,11 @@ import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 import "@fontsource/inter";
 import { useState, useEffect } from "react";
+import { useMoverState } from "./hooks/widgetmover";
 
 const App = (_) => {
 	const [installedComponents, setInstalledComponents] = useState<Array<Component>>([]);
+	const moverEnabled = useMoverState((state) => state.enabled);
 
 	useEffect(() => {
 		const filterEnabledComponents = () => {
@@ -85,7 +87,7 @@ const App = (_) => {
 								);
 							}}
 						</Background>
-						<SettingsComponent />
+						{!moverEnabled && <SettingsComponent />}
 					</ModalsProvider>
 				</NotificationsProvider>
 			</MantineProvider>
