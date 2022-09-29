@@ -7,7 +7,13 @@ const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export interface IWidget {
 	id: string; // <type>-<number>
-	settings: any;
+	settings: {
+		position?: {
+			x: number;
+			y: number;
+		},
+		[key: string]: any;
+	};
 }
 
 class WidgetDatabase extends Dexie {
@@ -17,6 +23,10 @@ class WidgetDatabase extends Dexie {
 		super("widgets");
 
 		this.version(1).stores({
+			widgets: "id, settings",
+		});
+
+		this.version(2).stores({
 			widgets: "id, settings",
 		});
 	}
