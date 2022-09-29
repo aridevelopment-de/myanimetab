@@ -8,6 +8,7 @@ import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
 import Add from "@mui/icons-material/Add";
+import { IWidgetMover, useMoverState } from "../../../hooks/widgetmover";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
@@ -33,6 +34,7 @@ const containsString = (string: string, component: Component) => {
 
 const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 	const [searchbarValue, setSearchbarValue] = useState("");
+	const setWidgetMoverState = useMoverState((state: IWidgetMover) => state.setEnabled);
 
 	return (
 		<React.Fragment>
@@ -91,7 +93,13 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 							)}
 						</Menu.Dropdown>
 					</Menu>
-					<ActionIcon variant="outline" color="gray">
+					<ActionIcon variant="outline" color="gray" onClick={() => {
+						EventHandler.emit("settings_window_state", {
+							opened: false,
+						});
+
+						setWidgetMoverState(true);
+					}}>
 						<OpenWithIcon />
 					</ActionIcon>
 				</div>
