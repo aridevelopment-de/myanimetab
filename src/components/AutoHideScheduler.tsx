@@ -1,5 +1,6 @@
 import { useSetting } from "../utils/eventhooks";
 import { useEffect } from "react";
+import { useMoverState } from "../hooks/widgetmover";
 
 const AUTO_HIDE_VALUES = [5, 10, 30, 60, 300];
 const EVENTS = ["mousemove", "keydown", "keyup", "mouseup"];
@@ -7,6 +8,7 @@ const EVENTS = ["mousemove", "keydown", "keyup", "mouseup"];
 const AutoHideScheduler = (props: { setBlur: Function; blur: boolean }) => {
 	const [autoHideTimeLapse, _3] = useSetting("autohide-0", "time_lapse");
 	const [shouldAutoHide, _4] = useSetting("autohide-0", "state");
+	const moverEnabled = useMoverState((state) => state.enabled);
 
 	useEffect(() => {
 		let interval: ReturnType<typeof setInterval>;
@@ -23,7 +25,7 @@ const AutoHideScheduler = (props: { setBlur: Function; blur: boolean }) => {
 				.addEventListener(event, resetBlur);
 		}
 
-		if (!shouldAutoHide) {
+		if (!shouldAutoHide || moverEnabled) {
 			props.setBlur(false);
 		} else {
 			interval = setInterval(() => {
@@ -42,7 +44,7 @@ const AutoHideScheduler = (props: { setBlur: Function; blur: boolean }) => {
 					.removeEventListener(event, resetBlur);
 			}
 		};
-	}, [shouldAutoHide, props, autoHideTimeLapse]);
+	}, [shouldAutoHide, props, autoHideTimeLapse, moverEnabled]);
 
 	return <></>;
 };

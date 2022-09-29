@@ -1,6 +1,7 @@
 import { metaDb, widgetsDb } from "../utils/db";
 import { useSetting, useEvent } from "../utils/eventhooks";
 import { useEffect, useState } from "react";
+import { useMoverState } from "../hooks/widgetmover";
 
 const ORDER_VALUES = ["Ordered", "Shuffled"];
 const SWITCH_VALUES = [null, 10, 60, 120, 300, 600, 1800, 3600];
@@ -9,6 +10,7 @@ const BackgroundScheduler = () => {
 	const [whenWallpaperSwitch, _1] = useSetting("wallpaper-0", "when_switch");
 	const [shouldWallpaperSwitch, _2] = useSetting("wallpaper-0", "state");
 	const [hasWallpaperSwitched, setHasWallpaperSwitched] = useState<boolean>();
+	const moverEnabled = useMoverState((state) => state.enabled);
 
 	const nextBackground = async () => {
 		const imageId = await metaDb.getMeta("selected_image");
@@ -60,7 +62,7 @@ const BackgroundScheduler = () => {
 	useEffect(() => {
 		let interval: NodeJS.Timeout | null = null;
 
-		if (shouldWallpaperSwitch && whenWallpaperSwitch) {
+		if (shouldWallpaperSwitch && whenWallpaperSwitch && !moverEnabled) {
 			let milliseconds = SWITCH_VALUES[whenWallpaperSwitch];
 
 			// Should run with timer
@@ -76,7 +78,7 @@ const BackgroundScheduler = () => {
 		return () => {
 			if (interval) clearInterval(interval);
 		};
-	}, [shouldWallpaperSwitch, whenWallpaperSwitch]);
+	}, [shouldWallpaperSwitch, whenWallpaperSwitch, moverEnabled]);
 
 	return <></>;
 };
