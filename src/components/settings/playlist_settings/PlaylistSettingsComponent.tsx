@@ -150,9 +150,19 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			50
 		);
 	};
-
 	return (
 		<>
+			<div className={styles.toolbar_container}>
+				<Button
+					variant="outline"
+					color="gray"
+					onClick={() => {
+						setAddImageModalState(!addImageModalState);
+					}}
+				>
+					+
+				</Button>
+			</div>
 			{/* Add Image Modal */}
 			<Modal
 				opened={addImageModalState}

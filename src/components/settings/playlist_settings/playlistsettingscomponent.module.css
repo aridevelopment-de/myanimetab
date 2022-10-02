@@ -37,3 +37,11 @@
 .toolbar {
 	max-height: 200px !important;
 }
+
+.toolbar_container {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	margin-top: 16px;
+	margin-bottom: 15px;
+}
