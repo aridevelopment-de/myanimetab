@@ -152,6 +152,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 	};
 	return (
 		<>
+			{/* Additional add image button for playlist tab*/}
 			<div className={styles.toolbar_container}>
 				<Button
 					variant="outline"
