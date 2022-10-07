@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useMoverSettings, useMoverState } from "../../../hooks/widgetmover";
 import styles from "./styles.module.css";
 
@@ -12,6 +13,7 @@ const percWToPix = (percentage: number) => {
 }
 
 const WidgetMoverWrapper = (props: any) => {
+	const box = useRef<HTMLDivElement | null>(null);
 	const moverEnabled = useMoverState((state) => state.enabled);
 	const [selectedWidget, setSelectedWidget] = useMoverSettings((state) => [
 		state.selectedWidget,
@@ -19,7 +21,13 @@ const WidgetMoverWrapper = (props: any) => {
 	]);
 	
 	const onMouseMove = (e: any) => {
+		if (!box.current) return;
 
+		const [mouseX, mouseY, boxWidth, boxHeight] = [e.clientX, e.clientY, box.current.offsetWidth, box.current.offsetHeight]
+		const [boxLeft, boxRight, boxTop, boxBottom] = [mouseX - boxWidth / 2, mouseX + boxWidth / 2, mouseY - boxHeight / 2, mouseY + boxHeight / 2];
+
+		box.current.style.top = `${boxTop}px`;
+		box.current.style.left = `${boxLeft}px`;
 	}
 
 	const onMouseDown = () => {
@@ -46,6 +54,7 @@ const WidgetMoverWrapper = (props: any) => {
 				top: `${0}%`,
 				left: `${0}%`,
 			}}
+			ref={box}
 		>
 			<div className={styles.inner}>
 				{/*@ts-ignore*/}
