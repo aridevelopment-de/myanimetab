@@ -2,6 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
 import { widgetsDb } from "./db";
 import EventHandler from "./eventhandler";
+import { EventType } from './eventhandler';
 
 let SETTINGS_CACHE: { [key: string]: { [key: string]: any } } = {};
 
@@ -100,7 +101,7 @@ export const useWidget = (id: string): any => {
 };
 
 export const useEvent = (
-	event_name: string,
+	event_name: EventType,
 	identifier: string,
 	default_value?: any,
 	trigger_function?: Function

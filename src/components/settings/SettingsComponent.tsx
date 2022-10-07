@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { useState, useRef } from "react";
+import { EventType } from "../../utils/eventhandler";
 import { useEvent } from "../../utils/eventhooks";
 import PlaylistSettingsComponent from "./playlist_settings/PlaylistSettingsComponent";
 import styles from "./settingscomponent.module.css";
@@ -15,7 +16,7 @@ const pages = {
 
 function SettingsComponent(_props: any) {
 	const [opened, setOpened] = useEvent(
-		"settings_window_state",
+		EventType.SETTINGS_WINDOW_STATE,
 		"settings_component",
 		false,
 		(data: { opened: boolean }) => data.opened
