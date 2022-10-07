@@ -2,7 +2,7 @@ import { Checkbox } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useEffect, useRef, useState } from "react";
 import { IImage, metaDb, useMeta } from "../../../../utils/db";
-import EventHandler from "../../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../../utils/eventhandler";
 import globalstyles from "../playlistsettingscomponent.module.css";
 import styles from "./background.module.css";
 
@@ -33,7 +33,7 @@ const Background = (props: {
 		});
 
 		EventHandler.on(
-			"queue.removeImage",
+			EventType.QUEUE_REMOVE_IMAGE,
 			`image-filetype-#${props.image.id}`,
 			(data: { value: number }) => {
 				if (data.value === props.image.id) {
@@ -44,7 +44,7 @@ const Background = (props: {
 
 		return () => {
 			EventHandler.off(
-				"queue.removeImage",
+				EventType.QUEUE_REMOVE_IMAGE,
 				`image-filetype-#${props.image.id}`
 			);
 		};

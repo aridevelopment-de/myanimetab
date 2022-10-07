@@ -18,7 +18,7 @@ import Settings from "@mui/icons-material/Settings";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useRef, useState } from "react";
 import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
-import EventHandler from "../../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../../utils/eventhandler";
 import styles from "./queue.module.css";
 import DownloadIcon from "@mui/icons-material/Download";
 import { downloadContent } from "../../../../utils/browserutils";
@@ -148,7 +148,7 @@ const Queue = () => {
 													);
 
 													EventHandler.emit(
-														"queue.removeImage",
+														EventType.QUEUE_REMOVE_IMAGE,
 														{ value: image.id }
 													);
 												}}
