@@ -11,6 +11,8 @@ import { NotificationsProvider } from "@mantine/notifications";
 import "@fontsource/inter";
 import { useState, useEffect } from "react";
 import { useMoverState } from "./hooks/widgetmover";
+import MoverControlbar from "./components/widgetmover/movercontrolbar/MoverControlbar";
+import { SnapLineRenderer } from "./components/widgetmover/snaplinerenderer/SnapLineRenderer";
 
 const App = (_) => {
 	const [installedComponents, setInstalledComponents] = useState<Array<Component>>([]);
@@ -68,6 +70,14 @@ const App = (_) => {
 			>
 				<NotificationsProvider>
 					<ModalsProvider>
+						{moverEnabled ? (
+							<>
+							<MoverControlbar />
+							<SnapLineRenderer />
+							</>
+						) : (
+							<SettingsComponent />
+						)}
 						<Background>
 							{(blur) => {
 								return installedComponents.map(
@@ -75,7 +85,7 @@ const App = (_) => {
 										if (component.element === null) {
 											return null;
 										}
-
+										
 										return (
 											<component.element
 												id={component.fullId}
@@ -87,7 +97,6 @@ const App = (_) => {
 								);
 							}}
 						</Background>
-						{!moverEnabled && <SettingsComponent />}
 					</ModalsProvider>
 				</NotificationsProvider>
 			</MantineProvider>
