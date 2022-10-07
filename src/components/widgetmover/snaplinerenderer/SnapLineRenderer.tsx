@@ -4,6 +4,7 @@ import { metaDb } from "../../../utils/db";
 
 export const SnapLineRenderer = () => {
     const snapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
+    // do not remove glowLines as it serves for updating the component
     const [existsGlowSnapLine, glowLines] = useSnapLineState((state) => [state.existsGlowSnapLine, state.glownSnapLines]);
     
     if (!snapLines) return <></>;
