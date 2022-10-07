@@ -1,6 +1,5 @@
 import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
-import { downloadContent } from "./browserutils";
 import EventHandler from "./eventhandler";
 
 const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -11,7 +10,7 @@ export interface IWidget {
 		position?: {
 			x: number;
 			y: number;
-		},
+		};
 		[key: string]: any;
 	};
 }
@@ -150,11 +149,28 @@ export const ROOT_FOLDER = {
 	color: null,
 } as IFolder;
 
+export type IVerticalSnapLine = {
+	id: number;
+	axis: "vertical";
+	left?: number;
+	right?: number;
+};
+
+export type IHorizontalSnapLine = {
+	id: number;
+	axis: "horizontal";
+	top?: number;
+	bottom?: number;
+};
+
+export type ISnapLine = IVerticalSnapLine | IHorizontalSnapLine;
+
 class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
 	images!: Table<IImage>;
 	folders!: Table<IFolder>;
 	queues!: Table<IQueue>;
+	snapLines!: Table<ISnapLine>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -188,6 +204,22 @@ class MetaDatabase extends Dexie {
 			folders: "++id, parent, name, color",
 			queues: "++id, &name, images",
 		});
+
+		this.version(6).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
+
+		this.version(7).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
 	}
 
 	async initializeFirstTimers(): Promise<boolean> {
@@ -201,10 +233,43 @@ class MetaDatabase extends Dexie {
 				"love! live! drinking"
 			);
 
+			const snapLines = await this.snapLines.toArray();
+
+			if (snapLines.length === 0) {
+				await this.snapLines.bulkAdd([
+					{
+						id: 0,
+						axis: "horizontal",
+						top: 5,
+					},
+					{
+						id: 1,
+						axis: "horizontal",
+						bottom: 5,
+					},
+					{
+						id: 2,
+						axis: "vertical",
+						left: 5,
+					},
+					{
+						id: 3,
+						axis: "vertical",
+						right: 5,
+					},
+				]);
+			}
+
 			return true;
 		}
 
 		return false;
+	}
+
+	/* Snapline table */
+	addSnapLine(snapLine: Omit<ISnapLine, "id">) {
+		// @ts-ignore
+		return this.snapLines.add(snapLine);
 	}
 
 	/* Meta table */
