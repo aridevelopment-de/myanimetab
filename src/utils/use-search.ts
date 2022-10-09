@@ -1,27 +1,22 @@
 import { useEffect, useState } from "react";
 import { IFolder, IImage, metaDb, ROOT_FOLDER } from "./db";
 
-export const useSearch = (term: string) => {
+export const useSearch = () => {
 	const [results, setResults] = useState<IImage[]>([]);
 
 	const search = async (term: string) => {
-		if (term === "") return;
+		if (!term) {
+			setResults([]);
+			return;
+		}
 
 		const results = await getImagesRecur(ROOT_FOLDER);
 
 		const filteredResults = results.filter((image: IImage) => {
-			return (
-				image.name !== undefined &&
-				image.name.toLowerCase().includes(term)
-			);
+			return image.name.toLowerCase().includes(term);
 		});
-
 		setResults(filteredResults);
 	};
-
-	useEffect(() => {
-		search(term);
-	}, [results]);
 
 	return { results, search };
 };

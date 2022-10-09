@@ -6,7 +6,7 @@ import {
 	Modal,
 	Stack,
 	Text,
-	Textarea
+	Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -18,7 +18,7 @@ import {
 	IImage,
 	metaDb,
 	ROOT_FOLDER,
-	useMeta
+	useMeta,
 } from "../../../utils/db";
 import { useSearch } from "../../../utils/use-search";
 import Background from "./filetypes/background";
@@ -153,26 +153,8 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		);
 	};
 
-	const getImagesRecur = async (folder: IFolder) => {
-		const rootSubFolders = await metaDb.getSubFolders(folder.id);
-		const subImages = await metaDb.getImages(folder.id);
-
-		let imageCollection: IImage[] = [];
-		imageCollection = imageCollection.concat(subImages);
-
-		if (rootSubFolders.length > 0) {
-			for (let i = 0; i < rootSubFolders.length; i++) {
-				const subFolderImages = await getImagesRecur(rootSubFolders[i]);
-				imageCollection = imageCollection.concat(subFolderImages);
-			}
-			return imageCollection;
-		}
-
-		return imageCollection;
-	};
-
 	const [searchbarValue, setSearchbarValue] = useState<string>("");
-	const { results, search } = useSearch("", setSearchbarValue);
+	const { results, search } = useSearch();
 
 	const inputHandler: UIEventHandler = async (e) => {
 		setSearchbarValue((e.target as HTMLInputElement).value);
@@ -184,7 +166,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			{/* Additional add image button for playlist tab*/}
 			<div className={styles.toolbar_container}>
 				<input
-					onInput={inputHandler}
+					onChange={inputHandler}
 					type="text"
 					spellCheck="false"
 					placeholder="Enter Keywords"
@@ -402,29 +384,6 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								/>
 							);
 						}
-
-						// if (containsStringFolder(searchbarValue, folder)) {
-						// 	return (
-						// 		<Folder
-						// 			folder={folder}
-						// 			onClick={() => setCurrentFolder(folder)}
-						// 			draggedElement={draggedElement}
-						// 			onDroppedImage={() => {
-						// 				setDraggedElement(undefined);
-						// 				setCurrentFolder(currentFolder);
-
-						// 				setTimeout(
-						// 					() =>
-						// 						metaDb
-						// 							.getImages(currentFolder.id)
-						// 							.then(setImages),
-						// 					50
-						// 				);
-						// 			}}
-						// 			key={folder.id}
-						// 		/>
-						// 	);
-						// }
 					})}
 					{images.map((image: IImage, index: number) => {
 						if (searchbarValue.trim() === "") {
