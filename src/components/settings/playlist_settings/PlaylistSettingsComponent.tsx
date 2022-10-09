@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
 	Button,
 	Group,
@@ -151,8 +152,75 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		);
 	};
 
+	const getImagesRecur = async (folder: IFolder) => {
+		const rootSubFolders = await metaDb.getSubFolders(folder.id);
+		const subImages = await metaDb.getImages(folder.id);
+
+		let imageCollection: IImage[] = [];
+		imageCollection = imageCollection.concat(subImages);
+
+		if (rootSubFolders.length > 0) {
+			for (let i = 0; i < rootSubFolders.length; i++) {
+				const subFolderImages = await getImagesRecur(rootSubFolders[i]);
+				imageCollection = imageCollection.concat(subFolderImages);
+			}
+			return imageCollection;
+		}
+
+		return imageCollection;
+	};
+
+	const getSearchResults = async (string: string) => {
+		const results = await getImagesRecur(ROOT_FOLDER);
+
+		results.filter((image: IImage) => {
+			return (
+				image.name !== undefined &&
+				image.name.toLowerCase().includes(string)
+			);
+		});
+
+		return results.map((image: IImage, index: number) => {
+			return (
+				<>
+					{
+						<Background
+							selected={false}
+							image={image}
+							index={index}
+							setDraggedElement={setDraggedElement}
+							key={index}
+						/>
+					}
+				</>
+			);
+		});
+	};
+
+	const [searchbarValue, setSearchbarValue] = useState("");
+
 	return (
 		<>
+			{/* Additional add image button for playlist tab*/}
+			<div className={styles.toolbar_container}>
+				<input
+					onInput={(e) => setSearchbarValue(e.target.value)}
+					value={searchbarValue}
+					type="text"
+					spellCheck="false"
+					placeholder="Enter Keywords"
+					autoComplete="off"
+				/>
+				<Button
+					variant="outline"
+					color="gray"
+					onClick={() => {
+						setAddImageModalState(!addImageModalState);
+					}}
+				>
+					+
+				</Button>
+			</div>
 			{/* Add Image Modal */}
 			<Modal
 				opened={addImageModalState}
@@ -333,38 +401,66 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 					/>
 				</div>
 				<div className={styles.images}>
-					{subFolders.map((folder: IFolder) => (
-						<Folder
-							folder={folder}
-							onClick={() => setCurrentFolder(folder)}
-							draggedElement={draggedElement}
-							onDroppedImage={() => {
-								setDraggedElement(undefined);
-								setCurrentFolder(currentFolder);
+					{subFolders.map((folder: IFolder) => {
+						if (searchbarValue.trim() === "") {
+							return (
+								<Folder
+									folder={folder}
+									onClick={() => setCurrentFolder(folder)}
+									draggedElement={draggedElement}
+									onDroppedImage={() => {
+										setDraggedElement(undefined);
+										setCurrentFolder(currentFolder);
+										setTimeout(
+											() =>
+												metaDb
+													.getImages(currentFolder.id)
+													.then(setImages),
+											50
+										);
+									}}
+									key={folder.id}
+								/>
+							);
+						}
 
-								setTimeout(
-									() =>
-										metaDb
-											.getImages(currentFolder.id)
-											.then(setImages),
-									50
-								);
-							}}
-							key={folder.id}
-						/>
-					))}
+						// if (containsStringFolder(searchbarValue, folder)) {
+						// 	return (
+						// 		<Folder
+						// 			folder={folder}
+						// 			onClick={() => setCurrentFolder(folder)}
+						// 			draggedElement={draggedElement}
+						// 			onDroppedImage={() => {
+						// 				setDraggedElement(undefined);
+						// 				setCurrentFolder(currentFolder);
 
-					{images.map((image: IImage, index: number) => {
-						return (
-							<Background
-								selected={currentImageId === image.id}
-								image={image}
-								index={index}
-								setDraggedElement={setDraggedElement}
-								key={index}
-							/>
-						);
+						// 				setTimeout(
+						// 					() =>
+						// 						metaDb
+						// 							.getImages(currentFolder.id)
+						// 							.then(setImages),
+						// 					50
+						// 				);
+						// 			}}
+						// 			key={folder.id}
+						// 		/>
+						// 	);
+						// }
 					})}
+					{images.map((image: IImage, index: number) => {
+						if (searchbarValue.trim() === "") {
+							return (
+								<Background
+									selected={currentImageId === image.id}
+									image={image}
+									index={index}
+									setDraggedElement={setDraggedElement}
+									key={index}
+								/>
+							);
+						}
+					})}
+					<getSearchResults />
 				</div>
 				{images.length === 0 && subFolders.length === 0 ? (
 					<Text color="dimmed">
