@@ -153,6 +153,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		);
 	};
 
+
 	const [searchbarValue, setSearchbarValue] = useState<string>("");
 	const { results, search } = useSearch();
 
