@@ -6,20 +6,21 @@ import {
 	Modal,
 	Stack,
 	Text,
-	Textarea,
+	Textarea
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
-import { useEffect, useRef, useState } from "react";
+import { UIEventHandler, useEffect, useRef, useState } from "react";
 import {
 	IFolder,
 	IImage,
 	metaDb,
 	ROOT_FOLDER,
-	useMeta,
+	useMeta
 } from "../../../utils/db";
+import { useSearch } from "../../../utils/use-search";
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
@@ -170,28 +171,20 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		return imageCollection;
 	};
 
-	const getSearchResults = async (string: string) => {
-		const results = await getImagesRecur(ROOT_FOLDER);
+	const [searchbarValue, setSearchbarValue] = useState<string>("");
+	const { results, search } = useSearch("", setSearchbarValue);
 
-		results.filter((image: IImage) => {
-			return (
-				image.name !== undefined &&
-				image.name.toLowerCase().includes(string)
-			);
-		});
-
-		return results;
+	const inputHandler: UIEventHandler = async (e) => {
+		setSearchbarValue((e.target as HTMLInputElement).value);
+		await search((e.target as HTMLInputElement).value);
 	};
 
-	const [searchbarValue, setSearchbarValue] = useState("");
-	const results = getSearchResults(searchbarValue);
 	return (
 		<>
 			{/* Additional add image button for playlist tab*/}
 			<div className={styles.toolbar_container}>
 				<input
-					onInput={(e) => setSearchbarValue(e.target.value)}
-					value={searchbarValue}
+					onInput={inputHandler}
 					type="text"
 					spellCheck="false"
 					placeholder="Enter Keywords"
@@ -461,7 +454,6 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 							</>
 						);
 					})}
-					<getSearchResults />
 				</div>
 				{images.length === 0 && subFolders.length === 0 ? (
 					<Text color="dimmed">
