@@ -20,7 +20,7 @@ import {
 	ROOT_FOLDER,
 	useMeta,
 } from "../../../utils/db";
-import { useSearch } from "../../../utils/use-search";
+import { useImageSearch } from "../../../utils/use-image-search";
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
@@ -153,9 +153,8 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		);
 	};
 
-
 	const [searchbarValue, setSearchbarValue] = useState<string>("");
-	const { results, search } = useSearch();
+	const { results, search } = useImageSearch();
 
 	const inputHandler: UIEventHandler = async (e) => {
 		setSearchbarValue((e.target as HTMLInputElement).value);
@@ -385,6 +384,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								/>
 							);
 						}
+						return null;
 					})}
 					{images.map((image: IImage, index: number) => {
 						if (searchbarValue.trim() === "") {
@@ -398,22 +398,17 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								/>
 							);
 						}
+						return null;
 					})}
-					{results.map((image: IImage, index: number) => {
-						return (
-							<>
-								{
-									<Background
-										selected={false}
-										image={image}
-										index={index}
-										setDraggedElement={setDraggedElement}
-										key={index}
-									/>
-								}
-							</>
-						);
-					})}
+					{results.map((image: IImage, index: number) => (
+						<Background
+							selected={false}
+							image={image}
+							index={index}
+							setDraggedElement={setDraggedElement}
+							key={index}
+						/>
+					))}
 				</div>
 				{images.length === 0 && subFolders.length === 0 ? (
 					<Text color="dimmed">

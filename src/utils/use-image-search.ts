@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IFolder, IImage, metaDb, ROOT_FOLDER } from "./db";
 
-export const useSearch = () => {
+export const useImageSearch = () => {
 	const [results, setResults] = useState<IImage[]>([]);
 
 	const search = async (term: string) => {
@@ -10,10 +10,10 @@ export const useSearch = () => {
 			return;
 		}
 
-		const results = await getImagesRecur(ROOT_FOLDER);
+		const results = await getImagesRecursive(ROOT_FOLDER);
 
 		const filteredResults = results.filter((image: IImage) => {
-			return image.name.toLowerCase().includes(term);
+			return image.name.toLowerCase().includes(term.toLowerCase());
 		});
 		setResults(filteredResults);
 	};
@@ -21,7 +21,7 @@ export const useSearch = () => {
 	return { results, search };
 };
 
-const getImagesRecur = async (folder: IFolder) => {
+const getImagesRecursive = async (folder: IFolder) => {
 	const rootSubFolders = await metaDb.getSubFolders(folder.id);
 	const subImages = await metaDb.getImages(folder.id);
 
@@ -30,7 +30,7 @@ const getImagesRecur = async (folder: IFolder) => {
 
 	if (rootSubFolders.length > 0) {
 		for (let i = 0; i < rootSubFolders.length; i++) {
-			const subFolderImages = await getImagesRecur(rootSubFolders[i]);
+			const subFolderImages = await getImagesRecursive(rootSubFolders[i]);
 			imageCollection = imageCollection.concat(subFolderImages);
 		}
 		return imageCollection;
