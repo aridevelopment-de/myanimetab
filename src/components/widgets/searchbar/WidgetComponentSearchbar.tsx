@@ -31,6 +31,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 	const [modalChooseEngine, setModalChooseEngine] = useState<boolean>(false);
 	const [suggestions, setSuggestions] = useState<Array<string>>([]);
 	const [content, setContent] = useState<string>("");
+	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 	if (widget.vertical_align === undefined) return <></>;
 
@@ -71,6 +72,48 @@ function SearchBar(props: { blur: boolean; id: string }) {
 				</div>
 				<input
 					className={styles.input}
+					onKeyDown={(e) => {
+						if (e.keyCode === 38 || e.keyCode === 40) {
+							e.preventDefault();
+						}
+						
+						// up arrow
+						if (e.keyCode === 38) {
+							let r = null;
+
+							if (selectedIndex === null) {
+								r = suggestions.length - 1;
+							} else if (selectedIndex > 0) {
+								r = selectedIndex - 1;
+							}
+
+							setSelectedIndex(r);
+
+							if (r !== null) {
+								setContent(suggestions[r]);
+							} else {
+								setContent(suggestions[0]);
+							}
+						}
+						// down arrow
+						else if (e.keyCode === 40) {
+							let r = null;
+
+							if (selectedIndex === null) {
+								r = 0;
+							} else if (selectedIndex < suggestions.length - 1) {
+								r = selectedIndex + 1;
+							}
+
+							setSelectedIndex(r);
+
+							if (r !== null) {
+								setContent(suggestions[r]);
+							} else {
+								setContent(suggestions[0]);
+							}
+						}
+					}}
 					onKeyUp={(e) => {
 						if (e.keyCode === 13) {
 							SearchEngine.search(
@@ -81,18 +124,26 @@ function SearchBar(props: { blur: boolean; id: string }) {
 							);
 						}
 					}}
-					onInput={(event) => {
-						// @ts-ignore
+					onInput={(event: any) => {
 						setContent(event.target.value);
+						if (selectedIndex !== null) setSelectedIndex(null);
 
-						// @ts-ignore
 						if (event.target.value.length > 1) {
 							SuggestionCaller.fetchSearchSuggestions(
-								// @ts-ignore
 								event.target.value,
 								(data: { suggestions: Array<string> }) => {
 									setSuggestions(
-										data.suggestions.slice(0, 5)
+										[
+											data.suggestions
+												.slice(0, 5)
+												.map((s) => s.toLowerCase())
+												.includes(
+													event.target.value.toLowerCase()
+												)
+												? null
+												: event.target.value,
+											...data.suggestions.slice(0, 5),
+										].filter((e) => e !== null)
 									);
 								}
 							);
@@ -125,6 +176,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 			<SearchSuggestions
 				suggestions={suggestions}
 				showing={suggestions.length > 0 && content.length > 1}
+				selectedIndex={selectedIndex}
 			/>
 		</div>
 	);

@@ -6,7 +6,8 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { useEffect, useState } from "react";
-import EventHandler from "../../../utils/eventhandler";
+import { widgetsDb } from "../../../utils/db";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { useSetting } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import styles from "./controlbar.module.css";
@@ -16,7 +17,7 @@ const positionValues = [styles.two, styles.one];
 function ControlBar(props: { blur: boolean; id: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [position, _] = useSetting(props.id, "position");
-	const [unlocked, setUnlocked] = useState(true); // useSetting(props.id, "state");
+	const [unlocked, setUnlocked] = useSetting("wallpaper-0", "state");
 	const [collapsed, setCollapsed] = useState(false);
 	useEffect(() => setCollapsed(props.blur), [props.blur]);
 
@@ -32,7 +33,7 @@ function ControlBar(props: { blur: boolean; id: string }) {
 			<div className={styles.item__wrapper}>
 				<div
 					onClick={() =>
-						EventHandler.emit("settings_window_state", {
+						EventHandler.emit(EventType.SETTINGS_WINDOW_STATE, {
 							opened: true,
 						})
 					}
@@ -44,7 +45,7 @@ function ControlBar(props: { blur: boolean; id: string }) {
 			<div className={styles.item__wrapper}>
 				<div
 					onClick={() => {
-						EventHandler.emits(["skip_image", "playlist_refresh"]);
+						EventHandler.emits([EventType.SKIP_IMAGE, EventType.PLAYLIST_REFRESH]);
 						setUnlocked(true);
 					}}
 				>

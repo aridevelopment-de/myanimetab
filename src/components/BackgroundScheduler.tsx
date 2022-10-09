@@ -1,6 +1,7 @@
 import { metaDb, widgetsDb } from "../utils/db";
-import { useSetting } from "../utils/eventhooks";
+import { useSetting, useEvent } from "../utils/eventhooks";
 import { useEffect, useState } from "react";
+import { EventType } from "../utils/eventhandler";
 
 const ORDER_VALUES = ["Ordered", "Shuffled"];
 const SWITCH_VALUES = [null, 10, 60, 120, 300, 600, 1800, 3600];
@@ -45,6 +46,8 @@ const BackgroundScheduler = () => {
 			metaDb.setMeta("selected_image", nextImageId);
 		}
 	};
+
+	useEvent(EventType.SKIP_IMAGE, "background-scheduler", null, nextBackground);
 
 	/* Wallpaer should switch on page visit */
 	useEffect(() => {

@@ -1,6 +1,5 @@
 import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
-import EventHandler from "./eventhandler";
 
 const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -100,8 +99,6 @@ class WidgetDatabase extends Dexie {
 	}
 
 	setSetting(id: string, key: string, value: any) {
-		EventHandler.emit(`widget.${id}.${key}`, value);
-
 		key = `settings.${key}`;
 		this.widgets.update(id, { [key]: value });
 	}

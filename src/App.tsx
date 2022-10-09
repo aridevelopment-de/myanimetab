@@ -3,7 +3,7 @@ import React from "react";
 import Background from "./BackgroundComponent";
 import SettingsComponent from "./components/settings/SettingsComponent";
 import { widgetsDb } from "./utils/db";
-import EventHandler from "./utils/eventhandler";
+import EventHandler, { EventType } from "./utils/eventhandler";
 import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
@@ -46,7 +46,7 @@ class App extends React.Component {
 			});
 		});
 
-		EventHandler.on("rerenderAll", "app", () => {
+		EventHandler.on(EventType.RERENDER_ALL, "app", () => {
 			setTimeout(() => {
 				registry.loadInstalledComponents(() =>
 					filterEnabledComponents(registry.installedComponents)
@@ -56,7 +56,7 @@ class App extends React.Component {
 	}
 
 	componentWillUnmount(): void {
-		EventHandler.off("rerenderAll", "app");
+		EventHandler.off(EventType.RERENDER_ALL, "app");
 	}
 
 	render() {
