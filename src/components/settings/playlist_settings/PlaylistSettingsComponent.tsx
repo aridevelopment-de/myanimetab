@@ -180,25 +180,11 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 			);
 		});
 
-		return results.map((image: IImage, index: number) => {
-			return (
-				<>
-					{
-						<Background
-							selected={false}
-							image={image}
-							index={index}
-							setDraggedElement={setDraggedElement}
-							key={index}
-						/>
-					}
-				</>
-			);
-		});
+		return results;
 	};
 
 	const [searchbarValue, setSearchbarValue] = useState("");
-
+	const results = getSearchResults(searchbarValue);
 	return (
 		<>
 			{/* Additional add image button for playlist tab*/}
@@ -459,6 +445,21 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 								/>
 							);
 						}
+					})}
+					{results.map((image: IImage, index: number) => {
+						return (
+							<>
+								{
+									<Background
+										selected={false}
+										image={image}
+										index={index}
+										setDraggedElement={setDraggedElement}
+										key={index}
+									/>
+								}
+							</>
+						);
 					})}
 					<getSearchResults />
 				</div>
