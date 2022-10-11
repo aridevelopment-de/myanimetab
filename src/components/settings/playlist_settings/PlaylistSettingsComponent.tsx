@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
 	Button,
 	Group,
@@ -11,7 +12,7 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import FolderIcon from "@mui/icons-material/Folder";
 import ImageIcon from "@mui/icons-material/Image";
-import { useEffect, useRef, useState } from "react";
+import { UIEventHandler, useEffect, useRef, useState } from "react";
 import {
 	IFolder,
 	IImage,
@@ -19,6 +20,7 @@ import {
 	ROOT_FOLDER,
 	useMeta,
 } from "../../../utils/db";
+import { useImageSearch } from "../../../utils/use-image-search";
 import Background from "./filetypes/background";
 import Folder from "./filetypes/folder";
 import styles from "./playlistsettingscomponent.module.css";
@@ -151,8 +153,35 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 		);
 	};
 
+	const [searchbarValue, setSearchbarValue] = useState<string>("");
+	const { results, search } = useImageSearch();
+
+	const inputHandler: UIEventHandler = async (e) => {
+		setSearchbarValue((e.target as HTMLInputElement).value);
+		await search((e.target as HTMLInputElement).value);
+	};
+
 	return (
 		<>
+			{/* Additional add image button for playlist tab*/}
+			<div className={styles.toolbar_container}>
+				<input
+					onChange={inputHandler}
+					type="text"
+					spellCheck="false"
+					placeholder="Enter Keywords"
+					autoComplete="off"
+				/>
+				<Button
+					variant="outline"
+					color="gray"
+					onClick={() => {
+						setAddImageModalState(!addImageModalState);
+					}}
+				>
+					+
+				</Button>
+			</div>
 			{/* Add Image Modal */}
 			<Modal
 				opened={addImageModalState}
@@ -333,38 +362,53 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 					/>
 				</div>
 				<div className={styles.images}>
-					{subFolders.map((folder: IFolder) => (
-						<Folder
-							folder={folder}
-							onClick={() => setCurrentFolder(folder)}
-							draggedElement={draggedElement}
-							onDroppedImage={() => {
-								setDraggedElement(undefined);
-								setCurrentFolder(currentFolder);
-
-								setTimeout(
-									() =>
-										metaDb
-											.getImages(currentFolder.id)
-											.then(setImages),
-									50
-								);
-							}}
-							key={folder.id}
+					{subFolders.map((folder: IFolder) => {
+						if (searchbarValue.trim() === "") {
+							return (
+								<Folder
+									folder={folder}
+									onClick={() => setCurrentFolder(folder)}
+									draggedElement={draggedElement}
+									onDroppedImage={() => {
+										setDraggedElement(undefined);
+										setCurrentFolder(currentFolder);
+										setTimeout(
+											() =>
+												metaDb
+													.getImages(currentFolder.id)
+													.then(setImages),
+											50
+										);
+									}}
+									key={folder.id}
+								/>
+							);
+						}
+						return null;
+					})}
+					{images.map((image: IImage, index: number) => {
+						if (searchbarValue.trim() === "") {
+							return (
+								<Background
+									selected={currentImageId === image.id}
+									image={image}
+									index={index}
+									setDraggedElement={setDraggedElement}
+									key={index}
+								/>
+							);
+						}
+						return null;
+					})}
+					{results.map((image: IImage, index: number) => (
+						<Background
+							selected={false}
+							image={image}
+							index={index}
+							setDraggedElement={setDraggedElement}
+							key={index}
 						/>
 					))}
-
-					{images.map((image: IImage, index: number) => {
-						return (
-							<Background
-								selected={currentImageId === image.id}
-								image={image}
-								index={index}
-								setDraggedElement={setDraggedElement}
-								key={index}
-							/>
-						);
-					})}
 				</div>
 				{images.length === 0 && subFolders.length === 0 ? (
 					<Text color="dimmed">
