@@ -47,6 +47,21 @@ class CustomComponentRegistry {
 			}
 		}
 
+		settings["snaps"] = {
+			horizontal: {
+				top: null,
+				mid: null,
+				bottom: null,
+				percentage: 50,
+			},
+			vertical: {
+				left: null,
+				mid: null,
+				right: null,
+				percentage: 50,
+			}
+		}
+
 		return settings;
 	}
 
