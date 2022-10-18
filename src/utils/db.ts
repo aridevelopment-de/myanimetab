@@ -4,13 +4,29 @@ import EventHandler from "./eventhandler";
 
 const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+export type ISnapConfiguration = {
+	horizontal: {
+		// snap line ids
+		top: number | null;
+		mid: number | null;
+		bottom: number | null;
+		// x percentage
+		percentage: number | null;
+	},
+	vertical: {
+		// snap line ids
+		left: number | null;
+		mid: number | null;
+		right: number | null;
+		// y percentage
+		percentage: number | null;
+	}
+}
+
 export interface IWidget {
 	id: string; // <type>-<number>
 	settings: {
-		position?: {
-			x: number;
-			y: number;
-		};
+		snaps: ISnapConfiguration;
 		[key: string]: any;
 	};
 }
@@ -28,6 +44,14 @@ class WidgetDatabase extends Dexie {
 		this.version(2).stores({
 			widgets: "id, settings",
 		});
+
+		this.version(3).stores({
+			widgets: "id, settings",
+		});
+		
+		this.version(4).stores({
+			widgets: "id, settings",
+		})
 	}
 
 	async toJson(): Promise<Array<IWidget>> {
@@ -77,7 +101,21 @@ class WidgetDatabase extends Dexie {
 
 			const widget: IWidget = {
 				id,
-				settings: settings || {},
+				// @ts-ignore
+				settings: settings || {
+					snaps: {
+						horizontal: {
+							top: null,
+							mid: 50,
+							bottom: null,
+						},
+						vertical: {
+							left: null,
+							mid: 50,
+							right: null,
+						},
+					},
+				},
 			};
 
 			return this.widgets.add(widget);
