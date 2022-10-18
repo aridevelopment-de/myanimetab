@@ -7,10 +7,7 @@ export const applySnap = (
 	snapXRel: number,
 	snapYRel: number,
 	availableSnapLines: ISnapLine[]
-): [[IVerticalSnapLine, number][], [IHorizontalSnapLine, number][]] => {
-	/* const snapYRel = boxTop;
-  const snapXRel = boxLeft; */
-	
+): [[IVerticalSnapLine, number][], [IHorizontalSnapLine, number][]] => {	
 	const snapLines: ISnapLine[] = availableSnapLines.filter((snapLine) => {
 		if (snapLine.axis === "horizontal") {
 			if (!snapLine.top)
