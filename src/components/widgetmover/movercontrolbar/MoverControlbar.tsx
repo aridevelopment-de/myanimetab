@@ -9,9 +9,11 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useLiveQuery } from "dexie-react-hooks";
 import { metaDb, ISnapLine, IHorizontalSnapLine, IVerticalSnapLine } from '../../../utils/db';
 import Delete from "@mui/icons-material/Delete";
+import { useHover } from "@mantine/hooks";
 
 const MoverControlbar = () => {
     const [moverEnabled, setMoverEnabled] = useMoverState((state) => [state.enabled, state.setEnabled]);
+    const { hovered, ref } = useHover();
 
     /*
     - Exitting mover mode
@@ -22,7 +24,7 @@ const MoverControlbar = () => {
     */
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${hovered ? styles.container_hover : ""}`} ref={ref}>
             <div className={styles.actionbar}>
                 <ActionIcon onClick={() => setMoverEnabled(false)}>
                     <LogoutIcon />
