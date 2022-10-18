@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Button, Menu, Stack } from "@mantine/core";
 import React, { useState } from "react";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
@@ -64,7 +64,7 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 													knownComponent
 												);
 												EventHandler.emit(
-													"rerenderAll"
+													EventType.RERENDER_ALL
 												);
 											}}
 											key={index}

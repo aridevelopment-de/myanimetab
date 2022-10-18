@@ -4,6 +4,7 @@ import styles from "./searchsuggestion.module.css";
 function SearchSuggestions(props: {
 	suggestions: Array<string>;
 	showing: boolean;
+	selectedIndex: number | null;
 }) {
 	return (
 		<div
@@ -12,9 +13,9 @@ function SearchSuggestions(props: {
 			}`}
 		>
 			<div className={styles.suggestions}>
-				{props.suggestions.map((element) => (
+				{props.suggestions.map((element, idx) => (
 					<div
-						className={styles.item__wrapper}
+						className={`${styles.item__wrapper} ${props.selectedIndex === idx ? styles.selected : ""}`}
 						key={element}
 						// @ts-ignore
 						onClick={(e) => SearchEngine.search(e.target.innerHTML)}

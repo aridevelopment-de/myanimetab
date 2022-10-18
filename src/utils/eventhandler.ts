@@ -1,13 +1,15 @@
-interface CallBacks {
-    [eventName: string]: {
-        [id: string]: Function;
-    };
+export enum EventType {
+    QUEUE_REMOVE_IMAGE = "QUEUE_REMOVE_IMAGE",
+    SETTINGS_WINDOW_STATE = "SETTINGS_WINDOW_STATE",
+    RERENDER_ALL = "RERENDER_ALL",
+    SKIP_IMAGE = "SKIP_IMAGE",
+    PLAYLIST_REFRESH = "PLAYLIST_REFRESH",
 }
 
 const EventHandler = {
-    callbacks: {} as CallBacks,
+    callbacks: {} as { [key in EventType]: { [id: string]: Function } },
 
-    emit: (eventName: string, data: any=null) => {
+    emit: (eventName: EventType, data: any=null) => {
         console.debug("[Event] Event published: " + eventName);
         console.debug(data);
         
@@ -18,7 +20,7 @@ const EventHandler = {
         }
     },
 
-    emits: (eventNames: Array<string>, datas: Array<any>=[]) => {
+    emits: (eventNames: Array<EventType>, datas: Array<any>=[]) => {
         eventNames.forEach((eventName, index) => {
             if (datas === null) {
                 EventHandler.emit(eventName);
@@ -28,7 +30,7 @@ const EventHandler = {
         });
     },
 
-    on: (eventName: string, id: string, callback: Function) => {
+    on: (eventName: EventType, id: string, callback: Function) => {
         if (!EventHandler.callbacks[eventName]) {
             EventHandler.callbacks[eventName] = {};
         }
@@ -36,7 +38,7 @@ const EventHandler = {
         EventHandler.callbacks[eventName][id] = callback;
     },
 
-    off: (eventName: string, id: string) => {
+    off: (eventName: EventType, id: string) => {
         if (EventHandler.callbacks[eventName]) {
             delete EventHandler.callbacks[eventName][id];
         }
