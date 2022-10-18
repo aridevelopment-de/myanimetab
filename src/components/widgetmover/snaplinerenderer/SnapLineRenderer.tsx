@@ -2,6 +2,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useSnapLineState } from "../../../hooks/widgetmover";
 import { metaDb } from "../../../utils/db";
 
+export const SNAPLINE_WIDTH = 5;
+
 export const SnapLineRenderer = () => {
     const snapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
     // do not remove glowLines as it serves for updating the component
@@ -24,7 +26,7 @@ export const SnapLineRenderer = () => {
                             key={snapLine.id}
                             style={{
                                 position: "absolute",
-                                height: "5px",
+                                height: `${SNAPLINE_WIDTH}px`,
                                 width: "100%",
                                 opacity: opacity,
                                 top: `${snapLine.top}%` || undefined,
@@ -42,7 +44,7 @@ export const SnapLineRenderer = () => {
                             key={snapLine.id}
                             style={{
                                 position: "absolute",
-                                width: "5px",
+                                width: `${SNAPLINE_WIDTH}px`,
                                 height: "100%",
                                 opacity: opacity,
                                 left: `${snapLine.left}%` || undefined,
