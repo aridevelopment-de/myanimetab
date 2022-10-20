@@ -1,14 +1,10 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+// Overall settings for the whole widget mover interface
 export interface IWidgetMover {
     enabled: boolean;
     setEnabled: (enabled: boolean) => void;
-}
-
-export interface IMoverSettings {
-    selectedWidget: string | null;
-    setSelectedWidget: (widget: string | null) => void;
 }
 
 export const useMoverState = create<IWidgetMover>()(
@@ -18,6 +14,12 @@ export const useMoverState = create<IWidgetMover>()(
     })),
 )
 
+// General store to get the current widget being moved
+export interface IMoverSettings {
+    selectedWidget: string | null;
+    setSelectedWidget: (widget: string | null) => void;
+}
+
 export const useMoverSettings = create<IMoverSettings>()(
     devtools((set) => ({
         selectedWidget: null,
@@ -25,31 +27,40 @@ export const useMoverSettings = create<IMoverSettings>()(
     })),
 )
 
-export enum GlowPriority {
-    None = 0,
-    Snap = 1,
-    Hover = 2,
-    All = 3,
-}
-
+// Snapline glowing (kind of like a semaphore)
 export interface ISnapLinesState {
-    glownSnapLines: {id: number, align: "horizontal" | "vertical", priority: GlowPriority}[];
-    existsGlowSnapLine: (id: number, align: "horizontal" | "vertical") => boolean;
-    addGlowSnapLine: (id: number, align: "horizontal" | "vertical", priority: GlowPriority) => void;
-    removeGlowSnapLine: (id: number, priority: GlowPriority) => void;
-    clearGlowSnapLines: (priority: GlowPriority) => void;
-    clearGlowVerticalSnapLines: (priority: GlowPriority) => void;
-    clearGlowHorizontalSnapLines: (priority: GlowPriority) => void;
+    glown: {id: number, count: number}[];
+    exists: (id: number) => boolean;
+    add: (id: number) => void;
+    remove: (id: number) => boolean;
 }
 
 export const useSnapLineState = create<ISnapLinesState>()(
     devtools((set, get) => ({
-        glownSnapLines: [],
-        existsGlowSnapLine: (id, align) => get().glownSnapLines.some((line) => line.id === id && line.align === align),
-        addGlowSnapLine: (id, align: "horizontal" | "vertical", priority: GlowPriority) => set((state) => ({ glownSnapLines: [...state.glownSnapLines, {id, align, priority}] })),
-        removeGlowSnapLine: (id, priority: GlowPriority) => set((state) => ({ glownSnapLines: state.glownSnapLines.filter((i) => i.id !== id && i.priority <= priority) })),
-        clearGlowSnapLines: (priority: GlowPriority) => set((state) => ({ glownSnapLines: state.glownSnapLines.filter((i) => i.priority <= priority) })),
-        clearGlowVerticalSnapLines: (priority: GlowPriority) => set((state) => ({ glownSnapLines: state.glownSnapLines.filter((i) => i.align === "vertical" && i.priority <= priority) })),
-        clearGlowHorizontalSnapLines: (priority: GlowPriority) => set((state) => ({ glownSnapLines: state.glownSnapLines.filter((i) => i.align === "horizontal" && i.priority <= priority) })),
+        glown: [],
+        exists: (id) => get().glown.some((g) => g.id === id),
+        add: (id) => {
+            const glown = get().glown;
+            const index = glown.findIndex((g) => g.id === id);
+            if (index !== -1) {
+                glown[index].count++;
+            } else {
+                glown.push({id, count: 1});
+            }
+            set({glown});
+        },
+        remove: (id) => {
+            const glown = get().glown;
+            const index = glown.findIndex((g) => g.id === id);
+            if (index !== -1) {
+                glown[index].count--;
+                if (glown[index].count === 0) {
+                    glown.splice(index, 1);
+                    set({glown});
+                    return true;
+                }
+            }
+            return false;
+        }
     })),
 );

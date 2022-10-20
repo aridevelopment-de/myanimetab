@@ -1,5 +1,5 @@
 import { ActionIcon, NumberInput } from "@mantine/core";
-import { GlowPriority, useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
+import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
 import styles from './styles.module.css'
 import snapstyles from './snaplinelist.module.css'
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -61,14 +61,14 @@ const MoverControlbar = () => {
 
 const SnapLineList = () => {
     const snapLines = useLiveQuery(() => metaDb.snapLines.toArray());
-    const [addSnapLineGlowing, removeSnapLineGlowing] = useSnapLineState((state) => [state.addGlowSnapLine, state.removeGlowSnapLine]);
+    const [addSnapLineGlowing, removeSnapLineGlowing] = useSnapLineState((state) => [state.add, state.remove]);
 
     const onMouseHover = (snapLine: ISnapLine) => {
-        addSnapLineGlowing(snapLine.id, snapLine.axis, GlowPriority.Hover);
+        addSnapLineGlowing(snapLine.id);
     }
 
     const onMouseLeave = (snapLine: ISnapLine) => {
-        removeSnapLineGlowing(snapLine.id, GlowPriority.Hover);
+        removeSnapLineGlowing(snapLine.id);
     }
 
     return (
