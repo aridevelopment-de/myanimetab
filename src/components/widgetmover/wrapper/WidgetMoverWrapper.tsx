@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useRef, useState, useEffect } from "react";
-import { useMoverSettings, useMoverState } from "../../../hooks/widgetmover";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { useMoverSettings, useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
 import {
 	IHorizontalSnapLine,
 	ISnapConfiguration,
@@ -11,8 +11,6 @@ import {
 import { SNAPLINE_WIDTH } from "../snaplinerenderer/SnapLineRenderer";
 import styles from "./styles.module.css";
 import { applySnap } from "./utils";
-
-const THRESHHOLD = 10;
 
 const percHToPix = (percentage: number) => {
 	return (percentage * window.innerHeight) / 100;
@@ -47,6 +45,7 @@ enum CoordinateAxis {
 const WidgetMoverWrapper = (props: any) => {
 	const box = useRef<HTMLDivElement | null>(null);
 	const moverEnabled = useMoverState((state) => state.enabled);
+	const [addGlow, removeGlow] = useSnapLineState((state) => [state.add, state.remove]);
 	const [selectedWidget, setSelectedWidget] = useMoverSettings((state) => [
 		state.selectedWidget,
 		state.setSelectedWidget,
@@ -56,6 +55,11 @@ const WidgetMoverWrapper = (props: any) => {
 		horizontal: { top: null, mid: null, bottom: null, percentage: 50 },
 		vertical: { left: null, mid: null, right: null, percentage: 50 },
 	});
+
+	// We have to use a ref here as you won't be able to acces the updated snapConfig state within the functions
+	// See https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback for more information
+	const snapConfigRef = useRef<ISnapConfiguration>();
+	snapConfigRef.current = snapConfig;
 	const [boxPos, setBoxPos] = useState<{
 		top?: number;
 		right?: number;
@@ -65,9 +69,12 @@ const WidgetMoverWrapper = (props: any) => {
 		shiftY: boolean;
 	}>({ top: 0, left: 0, shiftX: false, shiftY: false });
 
-	const setSnap = (snapPos: SnapPos, snapLine: ISnapLine) => {
+	const setSnap = useCallback((snapPos: SnapPos, snapLine: ISnapLine) => {
 		switch (snapPos) {
 			case SnapPos.HTOP:
+				if (snapConfigRef.current!.horizontal.top === snapLine.id) break;
+			 	addGlow(snapLine.id);
+
 				setSnapConfig((prev) => ({
 					...prev,
 					horizontal: {
@@ -85,6 +92,9 @@ const WidgetMoverWrapper = (props: any) => {
 				}));
 				break;
 			case SnapPos.HMID:
+				if (snapConfigRef.current!.horizontal.mid === snapLine.id) break;
+			 	addGlow(snapLine.id);
+				
 				setSnapConfig((prev) => ({
 					...prev,
 					horizontal: {
@@ -102,15 +112,19 @@ const WidgetMoverWrapper = (props: any) => {
 				}));
 				break;
 			case SnapPos.HBOTTOM:
-				setSnapConfig((prev) => ({
-					...prev,
-					horizontal: {
+			 	if (snapConfigRef.current!.horizontal.bottom === snapLine.id) break;
+			 	addGlow(snapLine.id);
+				
+				setSnapConfig((prev) => {
+					return {
+						...prev,
+						horizontal: {
 						top: null,
 						mid: null,
 						bottom: snapLine.id,
 						percentage: null,
 					},
-				}));
+				}});
 				setBoxPos((prev) => ({
 					...prev,
 					top: undefined,
@@ -120,6 +134,8 @@ const WidgetMoverWrapper = (props: any) => {
 				break;
 
 			case SnapPos.VLEFT:
+				if (snapConfigRef.current!.vertical.left === snapLine.id) break;
+				addGlow(snapLine.id);
 				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
@@ -137,6 +153,8 @@ const WidgetMoverWrapper = (props: any) => {
 				}));
 				break;
 			case SnapPos.VMID:
+				if (snapConfigRef.current!.vertical.mid === snapLine.id) break;
+				addGlow(snapLine.id);
 				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
@@ -154,6 +172,8 @@ const WidgetMoverWrapper = (props: any) => {
 				}));
 				break;
 			case SnapPos.VRIGHT:
+				if (snapConfigRef.current!.vertical.right === snapLine.id) break;
+				addGlow(snapLine.id);
 				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
@@ -171,7 +191,7 @@ const WidgetMoverWrapper = (props: any) => {
 				}));
 				break;
 		}
-	};
+	}, [snapConfigRef, addGlow]);
 
 	const setPos = (axis: CoordinateAxis, percentage: number) => {
 		switch (axis) {
@@ -213,7 +233,7 @@ const WidgetMoverWrapper = (props: any) => {
 		}
 	};
 
-	const onMouseMove = (e: any) => {
+	const onMouseMove = useCallback((e: any) => {
 		if (!box.current || snapLines === undefined) return;
 
 		const [mouseX, mouseY, boxWidth, boxHeight] = [
@@ -285,7 +305,7 @@ const WidgetMoverWrapper = (props: any) => {
 
 		if (verticalSnapLines.length > 0) {
 			const [snapLine, vertConf] = verticalSnapLines[0];
-
+			
 			setSnap(
 				vertConf === boxLeft
 					? SnapPos.VLEFT
@@ -295,6 +315,10 @@ const WidgetMoverWrapper = (props: any) => {
 				snapLine
 			);
 		} else {
+			if (snapConfigRef.current!.vertical.right !== null) removeGlow(snapConfigRef.current!.vertical.right);			
+			if (snapConfigRef.current!.vertical.mid !== null) removeGlow(snapConfigRef.current!.vertical.mid);			
+			if (snapConfigRef.current!.vertical.left !== null) removeGlow(snapConfigRef.current!.vertical.left);			
+
 			setPos(CoordinateAxis.VERTICAL, pixToPercW(boxLeft));
 		}
 
@@ -309,10 +333,13 @@ const WidgetMoverWrapper = (props: any) => {
 				snapLine
 			);
 		} else {
+			if (snapConfigRef.current!.horizontal.top !== null) removeGlow(snapConfigRef.current!.horizontal.top);			
+			if (snapConfigRef.current!.horizontal.mid !== null) removeGlow(snapConfigRef.current!.horizontal.mid);			
+			if (snapConfigRef.current!.horizontal.bottom !== null) removeGlow(snapConfigRef.current!.horizontal.bottom);			
+
 			setPos(CoordinateAxis.HORIZONTAL, pixToPercH(boxTop));
-			
 		}
-	};
+	}, [setSnap, snapLines, snapConfigRef, removeGlow]);
 
 	const onMouseDown = () => {
 		if (!selectedWidget) {

@@ -7,18 +7,14 @@ export const SNAPLINE_WIDTH = 5;
 export const SnapLineRenderer = () => {
     const snapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
     // do not remove glowLines as it serves for updating the component
-    const [existsGlowSnapLine, glowLines] = useSnapLineState((state) => [state.existsGlowSnapLine, state.glownSnapLines]);
+    const [existsGlowSnapLine, glowLines] = useSnapLineState((state) => [state.exists, state.glown]);
     
     if (!snapLines) return <></>;
 
     return (
         <>
             {snapLines.map((snapLine) => {
-                let opacity = 0.3;
-
-                if (existsGlowSnapLine(snapLine.id, snapLine.axis)) {
-                    opacity = 1;
-                }
+                let opacity = existsGlowSnapLine(snapLine.id) ? 1 : 0.3;
 
                 if (snapLine.axis === "horizontal") {
                     return (
