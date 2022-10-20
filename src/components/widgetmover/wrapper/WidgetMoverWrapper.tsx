@@ -329,10 +329,6 @@ const WidgetMoverWrapper = (props: any) => {
 		document.body.removeEventListener("mouseup", onMouseUp);
 	};
 
-	useEffect(() => {
-		console.log(snapConfig);
-	}, [snapConfig]);
-
 	return (
 		<div
 			className={`${styles.wrapper} ${
