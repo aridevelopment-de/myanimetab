@@ -1,13 +1,15 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useRef, useState, useEffect, useCallback } from "react";
-import { useMoverSettings, useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useMoverSettings, useMoverState } from "../../../hooks/widgetmover";
 import {
 	IHorizontalSnapLine,
 	ISnapConfiguration,
 	ISnapLine,
 	IVerticalSnapLine,
 	metaDb,
+	widgetsDb
 } from "../../../utils/db";
+import EventHandler from "../../../utils/eventhandler";
 import { SNAPLINE_WIDTH } from "../snaplinerenderer/SnapLineRenderer";
 import styles from "./styles.module.css";
 import { applySnap } from "./utils";
@@ -42,7 +44,7 @@ enum CoordinateAxis {
 	VERTICAL,
 }
 
-const WidgetMoverWrapper = (props: any) => {
+const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	const box = useRef<HTMLDivElement | null>(null);
 	const moverEnabled = useMoverState((state) => state.enabled);
 	const [selectedWidget, setSelectedWidget] = useMoverSettings((state) => [
@@ -67,6 +69,65 @@ const WidgetMoverWrapper = (props: any) => {
 		shiftX: boolean;
 		shiftY: boolean;
 	}>({ top: 0, left: 0, shiftX: false, shiftY: false });
+
+	const getSnapLine = (id: number, sn: ISnapLine[]): ISnapLine | undefined => {
+		return sn.find((line) => line.id === id);
+	}
+
+	useEffect(() => {
+		EventHandler.on("widgetmover:disabled", props.id, () => {
+			console.debug("Saving snap config for widget", props.id);
+			widgetsDb.setSnapConfiguration(props.id, snapConfig);
+		})
+	}, [moverEnabled, snapConfig, props.id]);
+
+	useEffect(() => {
+		(async () => {
+			const sn = await metaDb.snapLines.toArray();
+			widgetsDb.getSetting(props.id, "snaps").then((config: ISnapConfiguration) => {
+				if (config) {
+					console.debug("Loading snap config for widget", props.id);
+					setSnapConfig(config);
+					
+					const newBoxPos: any = {};
+	
+					if (config.horizontal.percentage) {
+						newBoxPos.top = config.horizontal.percentage;
+					} else {
+						if (config.horizontal.top) {
+							const snapLine = getSnapLine(config.horizontal.top, sn) as IHorizontalSnapLine;
+							newBoxPos.top = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+						} else if (config.horizontal.mid) {
+							const snapLine = getSnapLine(config.horizontal.mid, sn) as IHorizontalSnapLine;
+							newBoxPos.top = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+							newBoxPos.shiftY = true;
+						} else if (config.horizontal.bottom) {
+							const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
+							newBoxPos.bottom = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+						}
+					}
+	
+					if (config.vertical.percentage) {
+						newBoxPos.left = config.vertical.percentage;
+					} else {
+						if (config.vertical.left) {
+							const snapLine = getSnapLine(config.vertical.left, sn) as IVerticalSnapLine;
+							newBoxPos.left = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+						} else if (config.vertical.mid) {
+							const snapLine = getSnapLine(config.vertical.mid, sn) as IVerticalSnapLine;
+							newBoxPos.left = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+							newBoxPos.shiftX = true;
+						} else if (config.vertical.right) {
+							const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
+							newBoxPos.right = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+						}
+					}
+	
+					setBoxPos(newBoxPos);
+				}
+			})
+		})();
+	}, [moverEnabled, props.id]);
 
 	const setSnap = useCallback((snapPos: SnapPos, snapLine: ISnapLine) => {
 		switch (snapPos) {
@@ -324,18 +385,22 @@ const WidgetMoverWrapper = (props: any) => {
 	}, [setSnap, snapLines]);
 
 	const onMouseDown = () => {
-		if (!selectedWidget) {
-			setSelectedWidget(props.id);
-		}
+		if (moverEnabled) {
+			if (!selectedWidget) {
+				setSelectedWidget(props.id);
+			}
 
-		document.body.addEventListener("mousemove", onMouseMove);
-		document.body.addEventListener("mouseup", onMouseUp);
+			document.body.addEventListener("mousemove", onMouseMove);
+			document.body.addEventListener("mouseup", onMouseUp);
+		}
 	};
 
 	const onMouseUp = () => {
-		setSelectedWidget(null);
-		document.body.removeEventListener("mousemove", onMouseMove);
-		document.body.removeEventListener("mouseup", onMouseUp);
+		if (moverEnabled) {
+			setSelectedWidget(null);
+			document.body.removeEventListener("mousemove", onMouseMove);
+			document.body.removeEventListener("mouseup", onMouseUp);
+		}
 	};
 
 	return (
