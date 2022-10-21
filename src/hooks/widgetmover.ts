@@ -1,5 +1,6 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
+import EventHandler from '../utils/eventhandler';
 
 // Overall settings for the whole widget mover interface
 export interface IWidgetMover {
@@ -9,8 +10,13 @@ export interface IWidgetMover {
 
 export const useMoverState = create<IWidgetMover>()(
     devtools((set) => ({
-        enabled: true, // TODO: defaults to false
-        setEnabled: (enabled) => set({ enabled }),
+        enabled: false, // TODO: defaults to false
+        setEnabled: (enabled) => {
+            if (!enabled) {
+                EventHandler.emit("widgetmover:disabled")
+            }
+            set({ enabled })
+        },
     })),
 )
 
