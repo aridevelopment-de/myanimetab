@@ -126,6 +126,10 @@ class WidgetDatabase extends Dexie {
 		return this.widgets.get(id);
 	}
 
+	async setSnapConfiguration(id: string, config: ISnapConfiguration) {
+		return this.setSetting(id, "snaps", config);
+	}
+
 	async getIdentifiers(): Promise<Array<{ id: string; number: string }>> {
 		return this.widgets.toArray().then((widgets) => {
 			return widgets.map((widget) => {
