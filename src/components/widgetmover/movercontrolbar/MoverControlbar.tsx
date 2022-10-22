@@ -1,21 +1,34 @@
 import { ActionIcon, NumberInput } from "@mantine/core";
 import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
-import styles from './styles.module.css'
-import snapstyles from './snaplinelist.module.css'
-import LogoutIcon from '@mui/icons-material/Logout';
-import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter';
-import DeblurIcon from '@mui/icons-material/Deblur';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import styles from "./styles.module.css";
+import snapstyles from "./snaplinelist.module.css";
+import LogoutIcon from "@mui/icons-material/Logout";
+import VerticalAlignCenterIcon from "@mui/icons-material/VerticalAlignCenter";
+import DeblurIcon from "@mui/icons-material/Deblur";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useLiveQuery } from "dexie-react-hooks";
-import { metaDb, ISnapLine, IHorizontalSnapLine, IVerticalSnapLine } from '../../../utils/db';
+import {
+	metaDb,
+	ISnapLine,
+	IHorizontalSnapLine,
+	IVerticalSnapLine,
+} from "../../../utils/db";
 import Delete from "@mui/icons-material/Delete";
 import { useHover } from "@mantine/hooks";
+import { useEffect, useState } from "react";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const MoverControlbar = () => {
-    const [moverEnabled, setMoverEnabled] = useMoverState((state) => [state.enabled, state.setEnabled]);
-    const { hovered, ref } = useHover();
+	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
+		state.enabled,
+		state.setEnabled,
+	]);
+	const { hovered, ref } = useHover();
 
-    /*
+	/*
     - Exitting mover mode
     - Dim Background / undim background
     - Creating horizontal snap line
@@ -23,69 +36,213 @@ const MoverControlbar = () => {
     - Dropdown snapline list
     */
 
-    return (
-        <div className={`${styles.container} ${hovered ? styles.container_hover : ""}`} ref={ref}>
-            <div className={styles.actionbar}>
-                <ActionIcon onClick={() => setMoverEnabled(false)}>
-                    <LogoutIcon />
-                </ActionIcon>
-                <div className={styles.seperator} />
-                <ActionIcon>
-                    <DeblurIcon />
-                </ActionIcon>
-                <div className={styles.seperator} />
-                <ActionIcon onClick={() => {
-                    metaDb.addSnapLine({
-                        axis: "horizontal",
-                        top: 50,
-                    } as IHorizontalSnapLine)
-                }}>
-                    <VerticalAlignCenterIcon sx={{ rotate: "90deg" }} />
-                </ActionIcon>
-                <ActionIcon onClick={() => {
-                    metaDb.addSnapLine({
-                        axis: "vertical",
-                        left: 50,
-                    } as IVerticalSnapLine)
-                }}>
-                    <VerticalAlignCenterIcon />
-                </ActionIcon>
-                <ActionIcon>
-                    <ArrowDropDownIcon />
-                </ActionIcon>
-            </div>
-            <SnapLineList />
-        </div>
-    )
-}
+	return (
+		<div
+			className={`${styles.container} ${
+				hovered ? styles.container_hover : ""
+			}`}
+			ref={ref}
+		>
+			<div className={styles.actionbar}>
+				<ActionIcon onClick={() => setMoverEnabled(false)}>
+					<LogoutIcon />
+				</ActionIcon>
+				<div className={styles.seperator} />
+				<ActionIcon>
+					<DeblurIcon />
+				</ActionIcon>
+				<div className={styles.seperator} />
+				<ActionIcon
+					onClick={() => {
+						metaDb.addSnapLine({
+							axis: "horizontal",
+							top: 50,
+						} as IHorizontalSnapLine);
+					}}
+				>
+					<VerticalAlignCenterIcon />
+				</ActionIcon>
+				<ActionIcon
+					onClick={() => {
+						metaDb.addSnapLine({
+							axis: "vertical",
+							left: 50,
+						} as IVerticalSnapLine);
+					}}
+				>
+					<VerticalAlignCenterIcon sx={{ rotate: "90deg" }} />
+				</ActionIcon>
+				<ActionIcon>
+					<ArrowDropDownIcon />
+				</ActionIcon>
+			</div>
+			<SnapLineList />
+		</div>
+	);
+};
+
+const TinyPercentageInput = (props: { value: number; setValue: Function }) => {
+	return (
+		<NumberInput
+			size="xs"
+			min={0}
+			max={100}
+			step={1}
+			value={props.value}
+			onChange={(value) => {
+				if (value !== undefined) {
+					props.setValue(value);
+				}
+			}}
+			style={{ width: "50px" }}
+			formatter={(value) => `${value?.replace("%", "")}%`}
+			hideControls
+		/>
+	);
+};
+
+const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
+	const [addGlow, removeGlow] = useSnapLineState((state) => [
+		state.add,
+		state.remove,
+	]);
+	const [percentage, setPercentage] = useState(
+		props.snapLine.axis === "horizontal"
+			? props.snapLine.top! || props.snapLine.bottom!
+			: props.snapLine.left! || props.snapLine.right!
+	);
+    const {hovered, ref} = useHover();
+
+    useEffect(() => {
+        if(hovered) {
+            addGlow(props.snapLine.id);
+        } else {
+            removeGlow(props.snapLine.id);
+        }
+    }, [hovered]);
+
+	return (
+		<div
+			className={snapstyles.snapline}
+			key={props.snapLine.id}
+            ref={ref}
+		>
+			<VerticalAlignCenterIcon
+				sx={{
+					rotate:
+						props.snapLine.axis === "vertical" ? "90deg" : "0deg",
+				}}
+			/>
+			<TinyPercentageInput
+				/* TODO: Account for switching left/right and top/bottom */
+				value={percentage}
+				setValue={(value: number) => {
+					setPercentage(value);
+
+					if (props.snapLine.axis === "horizontal") {
+						if (
+							props.snapLine.top !== undefined &&
+							props.snapLine.top !== value
+						) {
+							metaDb.snapLines.update(props.snapLine.id, {
+								top: value,
+							});
+						} else if (props.snapLine.bottom !== value) {
+							metaDb.snapLines.update(props.snapLine.id, {
+								bottom: value,
+							});
+						}
+					} else {
+						if (
+							props.snapLine.left !== undefined &&
+							props.snapLine.left !== value
+						) {
+							metaDb.snapLines.update(props.snapLine.id, {
+								left: value,
+							});
+						} else if (props.snapLine.right !== value) {
+							metaDb.snapLines.update(props.snapLine.id, {
+								right: value,
+							});
+						}
+					}
+				}}
+			/>
+			<div
+				style={{
+					marginLeft: "auto",
+					display: "flex",
+					flexDirection: "row",
+				}}
+			>
+				<ActionIcon
+					onClick={() => {
+						// toggle top/bottom or left/right depending on the axis
+						if (props.snapLine.axis === "horizontal") {
+							if (props.snapLine.top !== undefined) {
+								metaDb.snapLines.update(props.snapLine.id, {
+									top: undefined,
+									bottom: 100 - props.snapLine.top!,
+								});
+                                setPercentage(100 - props.snapLine.top!);
+							} else {
+								metaDb.snapLines.update(props.snapLine.id, {
+									top: 100 - props.snapLine.bottom!,
+									bottom: undefined,
+								});
+                                setPercentage(100 - props.snapLine.bottom!);
+							}
+						} else {
+                            if (props.snapLine.left !== undefined) {
+                                metaDb.snapLines.update(props.snapLine.id, {
+                                    left: undefined,
+                                    right: 100 - props.snapLine.left!,
+                                });
+                                setPercentage(100 - props.snapLine.left!);
+                            } else {
+                                metaDb.snapLines.update(props.snapLine.id, {
+                                    left: 100 - props.snapLine.right!,
+                                    right: undefined,
+                                });
+                                setPercentage(100 - props.snapLine.right!);
+                            }
+                        }
+					}}
+				>
+					{props.snapLine.axis === "horizontal" ? (
+						props.snapLine.top !== undefined ? (
+							<ArrowDownwardIcon />
+						) : (
+							<ArrowUpwardIcon />
+						)
+					) : props.snapLine.left !== undefined ? (
+						<ArrowForwardIcon />
+					) : (
+						<ArrowBackIcon />
+					)}
+				</ActionIcon>
+				<ActionIcon
+					onClick={async () =>
+						await metaDb.deleteSnapLine(props.snapLine.id)
+					}
+				>
+					<Delete />
+				</ActionIcon>
+			</div>
+		</div>
+	);
+};
 
 const SnapLineList = () => {
-    const snapLines = useLiveQuery(() => metaDb.snapLines.toArray());
-    const [addSnapLineGlowing, removeSnapLineGlowing] = useSnapLineState((state) => [state.add, state.remove]);
+	const snapLines = useLiveQuery(() => metaDb.snapLines.toArray());
 
-    const onMouseHover = (snapLine: ISnapLine) => {
-        addSnapLineGlowing(snapLine.id);
-    }
-
-    const onMouseLeave = (snapLine: ISnapLine) => {
-        removeSnapLineGlowing(snapLine.id);
-    }
-
-    return (
-        <div className={snapstyles.container}>
-            {snapLines?.map((snapLine, index) => (
-                <div className={snapstyles.snapline} key={snapLine.id} onMouseEnter={() => onMouseHover(snapLine)} onMouseLeave={() => onMouseLeave(snapLine)}>
-                    <VerticalAlignCenterIcon sx={{ rotate: snapLine.axis === "vertical" ? "90deg" : "0deg" }} />
-                    <div style={{ marginLeft: 'auto' }}>
-                        <ActionIcon onClick={() => metaDb.snapLines.delete(snapLine.id)}>
-                            <Delete />
-                        </ActionIcon>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}
-
+	return (
+		<div className={snapstyles.container}>
+			{snapLines?.map((snapLine, index) => (
+				<SnapLineListEntry snapLine={snapLine} />
+			))}
+		</div>
+	);
+};
 
 export default MoverControlbar;
