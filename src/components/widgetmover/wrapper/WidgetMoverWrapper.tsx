@@ -119,7 +119,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 							newBoxPos.shiftX = true;
 						} else if (config.vertical.right) {
 							const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
-							newBoxPos.right = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+							newBoxPos.right = snapLine.left ? 100 - snapLine.left! : snapLine.right!;
 						}
 					}
 	
@@ -147,7 +147,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					bottom: undefined,
-					top: pixToPercH(sn.top! + SNAPLINE_WIDTH),
+					top: pixToPercH(sn.top! + (sn.bottom === undefined ? SNAPLINE_WIDTH : 0)),
 					shiftY: false,
 				}));
 				break;
@@ -166,7 +166,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					bottom: undefined,
-					top: pixToPercH(sn.top! + SNAPLINE_WIDTH / 2),
+					top: pixToPercH(sn.top! + (sn.bottom !== null ? SNAPLINE_WIDTH / 2 : 0)),
 					shiftY: true,
 				}));
 				break;
