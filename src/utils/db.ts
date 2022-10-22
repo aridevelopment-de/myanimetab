@@ -130,6 +130,43 @@ class WidgetDatabase extends Dexie {
 		return this.setSetting(id, "snaps", config);
 	}
 
+	async unlinkSnapLine(snapId: number) {
+		const widgets = await this.widgets.toArray();
+
+		for (let i = 0; i < widgets.length; i++) {
+			const widget = widgets[i];
+			const settings = widget.settings;
+
+			if (!settings.snaps) continue;
+
+			if (settings.snaps.horizontal.top === snapId) {
+				settings.snaps.horizontal.top = 50;
+			}
+
+			if (settings.snaps.horizontal.mid === snapId) {
+				settings.snaps.horizontal.mid = 50;
+			}
+
+			if (settings.snaps.horizontal.bottom === snapId) {
+				settings.snaps.horizontal.bottom = 50;
+			}
+
+			if (settings.snaps.vertical.left === snapId) {
+				settings.snaps.vertical.left = 50;
+			}
+
+			if (settings.snaps.vertical.mid === snapId) {
+				settings.snaps.vertical.mid = 50;
+			}
+
+			if (settings.snaps.vertical.right === snapId) {
+				settings.snaps.vertical.right = 50;
+			}
+
+			this.widgets.update(widget.id, { settings });
+		}
+	}
+
 	async getIdentifiers(): Promise<Array<{ id: string; number: string }>> {
 		return this.widgets.toArray().then((widgets) => {
 			return widgets.map((widget) => {
@@ -312,6 +349,11 @@ class MetaDatabase extends Dexie {
 	addSnapLine(snapLine: Omit<ISnapLine, "id">) {
 		// @ts-ignore
 		return this.snapLines.add(snapLine);
+	}
+
+	async deleteSnapLine(id: number) {;
+		await widgetsDb.unlinkSnapLine(id);
+		return this.snapLines.delete(id);
 	}
 
 	/* Meta table */
