@@ -130,9 +130,11 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	}, [moverEnabled, props.id]);
 
 	const setSnap = useCallback((snapPos: SnapPos, snapLine: ISnapLine) => {
+		let sn: any;
 		switch (snapPos) {
 			case SnapPos.HTOP:
 				if (snapConfigRef.current!.horizontal.top === snapLine.id) break;
+				sn = snapLine as IHorizontalSnapLine;
 				setSnapConfig((prev) => ({
 					...prev,
 					horizontal: {
@@ -145,12 +147,13 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					bottom: undefined,
-					top: pixToPercH((snapLine as IHorizontalSnapLine).top!! + SNAPLINE_WIDTH),
+					top: pixToPercH(sn.top! + SNAPLINE_WIDTH),
 					shiftY: false,
 				}));
 				break;
 			case SnapPos.HMID:
 				if (snapConfigRef.current!.horizontal.mid === snapLine.id) break;				
+				sn = snapLine as IHorizontalSnapLine;
 				setSnapConfig((prev) => ({
 					...prev,
 					horizontal: {
@@ -163,12 +166,13 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					bottom: undefined,
-					top: pixToPercH((snapLine as IHorizontalSnapLine).top!! + SNAPLINE_WIDTH / 2),
+					top: pixToPercH(sn.top! + SNAPLINE_WIDTH / 2),
 					shiftY: true,
 				}));
 				break;
 			case SnapPos.HBOTTOM:
-			 	if (snapConfigRef.current!.horizontal.bottom === snapLine.id) break;				
+			 	if (snapConfigRef.current!.horizontal.bottom === snapLine.id) break;		
+				sn = snapLine as IHorizontalSnapLine;		
 				setSnapConfig((prev) => {
 					return {
 						...prev,
@@ -182,14 +186,15 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					top: undefined,
-					bottom: pixToPercH((snapLine as IHorizontalSnapLine).top!!),
+					bottom: sn.bottom !== undefined ? sn.bottom! : 100 - pixToPercH(sn.top!),
 					shiftY: false,
 				}));
 				break;
 
 			case SnapPos.VLEFT:
 				if (snapConfigRef.current!.vertical.left === snapLine.id) break;
-								setSnapConfig((prev) => ({
+				sn = snapLine as IVerticalSnapLine;
+				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
 						left: snapLine.id,
@@ -201,12 +206,13 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					right: undefined,
-					left: pixToPercW((snapLine as IVerticalSnapLine).left!! + SNAPLINE_WIDTH),
+					left: pixToPercW(sn.left! + (sn.right === undefined ? SNAPLINE_WIDTH : 0)),
 					shiftX: false,
 				}));
 				break;
 			case SnapPos.VMID:
 				if (snapConfigRef.current!.vertical.mid === snapLine.id) break;
+				sn = snapLine as IVerticalSnapLine;
 				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
@@ -216,15 +222,17 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 						percentage: null,
 					},
 				}));
+				console.log(sn.right === undefined ? SNAPLINE_WIDTH / 2 : 0)
 				setBoxPos((prev) => ({
 					...prev,
 					right: undefined,
-					left: pixToPercW((snapLine as IVerticalSnapLine).left!! + SNAPLINE_WIDTH / 2),
+					left: pixToPercW(sn.left! + (sn.right === undefined ? SNAPLINE_WIDTH / 2 : -SNAPLINE_WIDTH / 2)),
 					shiftX: true,
 				}));
 				break;
 			case SnapPos.VRIGHT:
 				if (snapConfigRef.current!.vertical.right === snapLine.id) break;
+				sn = snapLine as IVerticalSnapLine;
 				setSnapConfig((prev) => ({
 					...prev,
 					vertical: {
@@ -237,7 +245,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					left: undefined,
-					right: pixToPercW((snapLine as IVerticalSnapLine).left!!),
+					right: sn.right === undefined ? 100 - pixToPercW(sn.left!!) : pixToPercW(percWToPix(sn.right!) + SNAPLINE_WIDTH),
 					shiftX: false,
 				}));
 				break;
