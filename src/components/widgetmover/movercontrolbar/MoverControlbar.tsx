@@ -20,6 +20,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import EventHandler from "../../../utils/eventhandler";
 
 const MoverControlbar = () => {
 	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
@@ -111,22 +112,18 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 			? props.snapLine.top! || props.snapLine.bottom!
 			: props.snapLine.left! || props.snapLine.right!
 	);
-    const {hovered, ref} = useHover();
+	const { hovered, ref } = useHover();
 
-    useEffect(() => {
-        if(hovered) {
-            addGlow(props.snapLine.id);
-        } else {
-            removeGlow(props.snapLine.id);
-        }
-    }, [hovered]);
+	useEffect(() => {
+		if (hovered) {
+			addGlow(props.snapLine.id);
+		} else {
+			removeGlow(props.snapLine.id);
+		}
+	}, [hovered]);
 
 	return (
-		<div
-			className={snapstyles.snapline}
-			key={props.snapLine.id}
-            ref={ref}
-		>
+		<div className={snapstyles.snapline} key={props.snapLine.id} ref={ref}>
 			<VerticalAlignCenterIcon
 				sx={{
 					rotate:
@@ -166,6 +163,8 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 							});
 						}
 					}
+
+					EventHandler.emit("snapline:update", {snapId: props.snapLine.id, axis: props.snapLine.axis, percentage: value});
 				}}
 			/>
 			<div
@@ -184,29 +183,29 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 									top: undefined,
 									bottom: 100 - props.snapLine.top!,
 								});
-                                setPercentage(100 - props.snapLine.top!);
+								setPercentage(100 - props.snapLine.top!);
 							} else {
 								metaDb.snapLines.update(props.snapLine.id, {
 									top: 100 - props.snapLine.bottom!,
 									bottom: undefined,
 								});
-                                setPercentage(100 - props.snapLine.bottom!);
+								setPercentage(100 - props.snapLine.bottom!);
 							}
 						} else {
-                            if (props.snapLine.left !== undefined) {
-                                metaDb.snapLines.update(props.snapLine.id, {
-                                    left: undefined,
-                                    right: 100 - props.snapLine.left!,
-                                });
-                                setPercentage(100 - props.snapLine.left!);
-                            } else {
-                                metaDb.snapLines.update(props.snapLine.id, {
-                                    left: 100 - props.snapLine.right!,
-                                    right: undefined,
-                                });
-                                setPercentage(100 - props.snapLine.right!);
-                            }
-                        }
+							if (props.snapLine.left !== undefined) {
+								metaDb.snapLines.update(props.snapLine.id, {
+									left: undefined,
+									right: 100 - props.snapLine.left!,
+								});
+								setPercentage(100 - props.snapLine.left!);
+							} else {
+								metaDb.snapLines.update(props.snapLine.id, {
+									left: 100 - props.snapLine.right!,
+									right: undefined,
+								});
+								setPercentage(100 - props.snapLine.right!);
+							}
+						}
 					}}
 				>
 					{props.snapLine.axis === "horizontal" ? (

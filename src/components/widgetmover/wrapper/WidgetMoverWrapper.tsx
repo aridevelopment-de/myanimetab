@@ -74,17 +74,15 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 		return sn.find((line) => line.id === id);
 	}
 
-	useEffect(() => {
-		EventHandler.on("widgetmover:disabled", props.id, () => {
-			console.debug("Saving snap config for widget", props.id);
-			widgetsDb.setSnapConfiguration(props.id, snapConfig);
-		})
-	}, [moverEnabled, snapConfig, props.id]);
+	const loadSnaplines = useCallback(async (useCurrent: boolean = false) => {
+		const sn = await metaDb.snapLines.toArray();
+			widgetsDb.getSetting(props.id, "snaps").then((config_: ISnapConfiguration) => {
+				let config: ISnapConfiguration = config_;
 
-	useEffect(() => {
-		(async () => {
-			const sn = await metaDb.snapLines.toArray();
-			widgetsDb.getSetting(props.id, "snaps").then((config: ISnapConfiguration) => {
+				if (useCurrent) {
+					config = snapConfigRef.current!;
+				}
+
 				if (config) {
 					console.debug("Loading snap config for widget", props.id);
 					setSnapConfig(config);
@@ -126,8 +124,32 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 					setBoxPos(newBoxPos);
 				}
 			})
-		})();
-	}, [moverEnabled, props.id]);
+	}, [props.id]);
+
+	useEffect(() => {
+		EventHandler.on("snapline:update", props.id, (data: {snapId: number, axis: "horizontal" | "vertical", percentage: number}) => {
+			loadSnaplines(true);
+		})
+
+		return () => {
+			EventHandler.off("snapline:update", props.id)
+		}
+	}, [props.id, loadSnaplines]);
+
+	useEffect(() => {
+		EventHandler.on("widgetmover:disabled", props.id, () => {
+			console.debug("Saving snap config for widget", props.id);
+			widgetsDb.setSnapConfiguration(props.id, snapConfig);
+		});
+
+		return () => {
+			EventHandler.off("widgetmover:disabled", props.id);
+		}
+	}, [moverEnabled, snapConfig, props.id]);
+
+	useEffect(() => {
+		loadSnaplines();
+	}, [moverEnabled, props.id, loadSnaplines]);
 
 	const setSnap = useCallback((snapPos: SnapPos, snapLine: ISnapLine) => {
 		let sn: any;
