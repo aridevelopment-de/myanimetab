@@ -103,7 +103,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 							newBoxPos.shiftY = true;
 						} else if (config.horizontal.bottom) {
 							const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
-							newBoxPos.bottom = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+							newBoxPos.bottom = snapLine.top ? 100 - snapLine.top : snapLine.bottom!;
 						}
 					}
 	
