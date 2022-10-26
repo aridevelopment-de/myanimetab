@@ -1,37 +1,34 @@
-import { ActionIcon, NumberInput } from "@mantine/core";
-import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
-import styles from "./styles.module.css";
-import snapstyles from "./snaplinelist.module.css";
+import { ActionIcon, Badge, NumberInput } from "@mantine/core";
+import { useHover } from "@mantine/hooks";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import Delete from "@mui/icons-material/Delete";
 import LogoutIcon from "@mui/icons-material/Logout";
 import VerticalAlignCenterIcon from "@mui/icons-material/VerticalAlignCenter";
-import DeblurIcon from "@mui/icons-material/Deblur";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useLiveQuery } from "dexie-react-hooks";
-import {
-	metaDb,
-	ISnapLine,
-	IHorizontalSnapLine,
-	IVerticalSnapLine,
-} from "../../../utils/db";
-import Delete from "@mui/icons-material/Delete";
-import { useHover } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
+import {
+	IHorizontalSnapLine, ISnapLine, IVerticalSnapLine, metaDb
+} from "../../../utils/db";
 import EventHandler from "../../../utils/eventhandler";
+import snapstyles from "./snaplinelist.module.css";
+import styles from "./styles.module.css";
 
 const MoverControlbar = () => {
 	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
 		state.enabled,
 		state.setEnabled,
 	]);
+	const [showLines, setShowLines] = useState<boolean>(true);
 	const { hovered, ref } = useHover();
 
 	/*
     - Exitting mover mode
-    - Dim Background / undim background
     - Creating horizontal snap line
     - Creating vertical snap line
     - Dropdown snapline list
@@ -47,10 +44,6 @@ const MoverControlbar = () => {
 			<div className={styles.actionbar}>
 				<ActionIcon onClick={() => setMoverEnabled(false)}>
 					<LogoutIcon />
-				</ActionIcon>
-				<div className={styles.seperator} />
-				<ActionIcon>
-					<DeblurIcon />
 				</ActionIcon>
 				<div className={styles.seperator} />
 				<ActionIcon
@@ -73,11 +66,15 @@ const MoverControlbar = () => {
 				>
 					<VerticalAlignCenterIcon sx={{ rotate: "90deg" }} />
 				</ActionIcon>
-				<ActionIcon>
-					<ArrowDropDownIcon />
+				<ActionIcon onClick={() => setShowLines(!showLines)}>
+					{showLines ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
 				</ActionIcon>
+				<div className={styles.seperator} />
+				<Badge variant="filled" color="red" size="xs">
+					Beta
+				</Badge>
 			</div>
-			<SnapLineList />
+			{showLines && <SnapLineList />}
 		</div>
 	);
 };
@@ -164,7 +161,11 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 						}
 					}
 
-					EventHandler.emit("snapline:update", {snapId: props.snapLine.id, axis: props.snapLine.axis, percentage: value});
+					EventHandler.emit("snapline:update", {
+						snapId: props.snapLine.id,
+						axis: props.snapLine.axis,
+						percentage: value,
+					});
 				}}
 			/>
 			<div
