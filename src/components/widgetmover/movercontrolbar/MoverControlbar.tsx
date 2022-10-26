@@ -27,7 +27,6 @@ const MoverControlbar = () => {
 		state.setEnabled,
 	]);
 	const [showLines, setShowLines] = useState<boolean>(true);
-	const { hovered, ref: hoverRef } = useHover();
 	const { ref: dragRef, top, left } = useDrag(20, 20);
 
 	/*
@@ -39,14 +38,13 @@ const MoverControlbar = () => {
 
 	return (
 		<div
-			className={`${styles.container} ${
-				hovered ? styles.container_hover : ""
-			}`}
+			className={`${styles.container}`}
 			style={{
 				top,
 				left,
 			}}
-			ref={mergeRefs(hoverRef, dragRef)}
+			// @ts-ignore
+			ref={dragRef}
 		>
 			<div className={styles.actionbar}>
 				<ActionIcon onClick={() => setMoverEnabled(false)}>
@@ -135,7 +133,6 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 				}}
 			/>
 			<TinyPercentageInput
-				/* TODO: Account for switching left/right and top/bottom */
 				value={percentage}
 				setValue={(value: number) => {
 					setPercentage(value);
