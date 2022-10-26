@@ -12,13 +12,8 @@ export const useDrag = (initialTop?: number, initialLeft?: number) => {
         let x = positionRef.current!.left;
         let y = positionRef.current!.top;
 
-        console.log(x, y);
-
         x = Math.max(0, Math.min(x + e.movementX, window.innerWidth - ref.current!.clientWidth));
         y = Math.max(0, Math.min(y + e.movementY, window.innerHeight - ref.current!.clientHeight));
-        
-        console.log("TO", x, y);
-        console.log("=======")
 
         setPosition({ top: y, left: x });
       };
