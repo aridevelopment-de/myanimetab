@@ -11,11 +11,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import VerticalAlignCenterIcon from "@mui/icons-material/VerticalAlignCenter";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
+import { useDrag } from "../../../hooks/usedrag";
 import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
 import {
 	IHorizontalSnapLine, ISnapLine, IVerticalSnapLine, metaDb
 } from "../../../utils/db";
 import EventHandler from "../../../utils/eventhandler";
+import { mergeRefs } from "../../../utils/reactutils";
 import snapstyles from "./snaplinelist.module.css";
 import styles from "./styles.module.css";
 
@@ -25,7 +27,8 @@ const MoverControlbar = () => {
 		state.setEnabled,
 	]);
 	const [showLines, setShowLines] = useState<boolean>(true);
-	const { hovered, ref } = useHover();
+	const { hovered, ref: hoverRef } = useHover();
+	const { ref: dragRef, top, left } = useDrag(20, 20);
 
 	/*
     - Exitting mover mode
@@ -39,7 +42,11 @@ const MoverControlbar = () => {
 			className={`${styles.container} ${
 				hovered ? styles.container_hover : ""
 			}`}
-			ref={ref}
+			style={{
+				top,
+				left,
+			}}
+			ref={mergeRefs(hoverRef, dragRef)}
 		>
 			<div className={styles.actionbar}>
 				<ActionIcon onClick={() => setMoverEnabled(false)}>
