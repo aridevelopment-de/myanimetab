@@ -14,7 +14,10 @@ import { useEffect, useState } from "react";
 import { useDrag } from "../../../hooks/usedrag";
 import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
 import {
-	IHorizontalSnapLine, ISnapLine, IVerticalSnapLine, metaDb
+	IHorizontalSnapLine,
+	ISnapLine,
+	IVerticalSnapLine,
+	metaDb,
 } from "../../../utils/db";
 import EventHandler from "../../../utils/eventhandler";
 import { mergeRefs } from "../../../utils/reactutils";
@@ -226,9 +229,15 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 					)}
 				</ActionIcon>
 				<ActionIcon
-					onClick={async () =>
-						await metaDb.deleteSnapLine(props.snapLine.id)
-					}
+					onClick={async () => {
+						metaDb
+							.deleteSnapLine(props.snapLine.id)
+							.then(() =>
+								EventHandler.emit("snapline:delete", {
+									snapId: props.snapLine.id,
+								})
+							);
+					}}
 				>
 					<Delete />
 				</ActionIcon>

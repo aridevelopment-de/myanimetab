@@ -352,7 +352,7 @@ class MetaDatabase extends Dexie {
 	}
 
 	async deleteSnapLine(id: number) {;
-		await widgetsDb.unlinkSnapLine(id);
+		// await widgetsDb.unlinkSnapLine(id);
 		return this.snapLines.delete(id);
 	}
 

@@ -129,10 +129,41 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	useEffect(() => {
 		EventHandler.on("snapline:update", props.id, (data: {snapId: number, axis: "horizontal" | "vertical", percentage: number}) => {
 			loadSnaplines(true);
-		})
+		});
+
+		EventHandler.on("snapline:delete", props.id, (data: {snapId: number}) => {
+			if (snapConfigRef.current) {
+				const newConfig = snapConfigRef.current;
+
+				if (newConfig.horizontal.top === data.snapId) {
+					newConfig.horizontal.top = null;
+					newConfig.horizontal.percentage = 50;
+				} else if (newConfig.horizontal.mid === data.snapId) {
+					newConfig.horizontal.mid = null;
+					newConfig.horizontal.percentage = 50;
+				} else if (newConfig.horizontal.bottom === data.snapId) {
+					newConfig.horizontal.bottom = null;
+					newConfig.horizontal.percentage = 50;
+				} else if (newConfig.vertical.left === data.snapId) {
+					newConfig.vertical.left = null;
+					newConfig.vertical.percentage = 50;
+				} else if (newConfig.vertical.mid === data.snapId) {
+					newConfig.vertical.mid = null;
+					newConfig.vertical.percentage = 50;
+				} else if (newConfig.vertical.right === data.snapId) {
+					newConfig.vertical.right = null;
+					newConfig.vertical.percentage = 50;
+				}
+
+				setSnapConfig(newConfig);
+			}
+
+			loadSnaplines(true);
+		});
 
 		return () => {
-			EventHandler.off("snapline:update", props.id)
+			EventHandler.off("snapline:update", props.id);
+			EventHandler.off("snapline:delete", props.id);
 		}
 	}, [props.id, loadSnaplines]);
 
