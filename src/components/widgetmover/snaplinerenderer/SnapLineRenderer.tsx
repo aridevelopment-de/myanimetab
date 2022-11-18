@@ -2,7 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useSnapLineState } from "../../../hooks/widgetmover";
 import { metaDb } from "../../../utils/db";
 
-export const SNAPLINE_WIDTH = 5;
+export const SNAPLINE_WIDTH = 3;
 
 export const SnapLineRenderer = () => {
     const snapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
