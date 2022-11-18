@@ -189,7 +189,10 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	}, [moverEnabled, props.id, loadSnaplines]);
 
 	const setSnap = useCallback((snapPos: SnapPos, snapLine: ISnapLine) => {
-		let sn: any;
+		let sn: any; // Note: top, bottom, right and left will be set automatically to pixels
+
+		// Snap won't 100% be accurate because when the snapline changes direction, the snapline will move itself by a small amount making alingment impossible
+
 		switch (snapPos) {
 			case SnapPos.HTOP:
 				if (snapConfigRef.current!.horizontal.top === snapLine.id) break;
@@ -206,7 +209,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					bottom: undefined,
-					top: pixToPercH(sn.top! + (sn.bottom === undefined ? SNAPLINE_WIDTH : 0)),
+					top: pixToPercH(sn.top! + SNAPLINE_WIDTH),
 					shiftY: false,
 				}));
 				break;
@@ -304,7 +307,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					left: undefined,
-					right: sn.right === undefined ? 100 - pixToPercW(sn.left!!) : pixToPercW(percWToPix(sn.right!) + SNAPLINE_WIDTH),
+					right: sn.right === undefined ? 100 - pixToPercW(sn.left!!) : sn.right!,
 					shiftX: false,
 				}));
 				break;
