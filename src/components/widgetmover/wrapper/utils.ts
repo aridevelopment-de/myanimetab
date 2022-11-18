@@ -1,7 +1,7 @@
 import { IHorizontalSnapLine, ISnapLine, IVerticalSnapLine } from "../../../utils/db";
 import { SNAPLINE_WIDTH } from '../snaplinerenderer/SnapLineRenderer';
 
-export const THRESHHOLD = 20;
+export const THRESHHOLD = 30;
 
 export const applySnap = (
 	snapXRel: number,
