@@ -336,6 +336,16 @@ class MetaDatabase extends Dexie {
 						axis: "vertical",
 						right: 5,
 					},
+					{
+						id: 4,
+						axis: "horizontal",
+						top: 50,
+					},
+					{
+						id: 5,
+						axis: "vertical",
+						left: 50,
+					}
 				]);
 			}
 
