@@ -1,5 +1,4 @@
 import { ActionIcon, Badge, NumberInput } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -24,6 +23,7 @@ import { mergeRefs } from "../../../utils/reactutils";
 import snapstyles from "./snaplinelist.module.css";
 import styles from "./styles.module.css";
 import SaveIcon from '@mui/icons-material/Save';
+import { useHover } from "../../../hooks/usehover";
 
 const MoverControlbar = () => {
 	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
@@ -121,7 +121,7 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 			? props.snapLine.top! || props.snapLine.bottom!
 			: props.snapLine.left! || props.snapLine.right!
 	);
-	const { hovered, ref } = useHover();
+	const [ref, hovered] = useHover();
 
 	useEffect(() => {
 		if (hovered) {
@@ -129,9 +129,12 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 		} else {
 			removeGlow(props.snapLine.id);
 		}
-	}, [hovered]);
+	}, [hovered, props.snapLine.id, addGlow, removeGlow]);
+
+	console.log(props.snapLine.id + ": " + hovered)
 
 	return (
+		// @ts-ignore
 		<div className={snapstyles.snapline} key={props.snapLine.id} ref={ref}>
 			<VerticalAlignCenterIcon
 				sx={{
