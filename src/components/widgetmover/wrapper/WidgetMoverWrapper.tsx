@@ -94,14 +94,14 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 					} else {
 						if (config.horizontal.top) {
 							const snapLine = getSnapLine(config.horizontal.top, sn) as IHorizontalSnapLine;
-							newBoxPos.top = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH) : 100 - snapLine.bottom!;
 						} else if (config.horizontal.mid) {
 							const snapLine = getSnapLine(config.horizontal.mid, sn) as IHorizontalSnapLine;
-							newBoxPos.top = snapLine.top ? snapLine.top : 100 - snapLine.bottom!;
+							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH / 2) : 100 - snapLine.bottom! - pixToPercH(SNAPLINE_WIDTH / 2);
 							newBoxPos.shiftY = true;
 						} else if (config.horizontal.bottom) {
 							const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
-							newBoxPos.bottom = snapLine.top ? 100 - snapLine.top : snapLine.bottom!;
+							newBoxPos.bottom = snapLine.top ? 100 - snapLine.top : snapLine.bottom! + pixToPercH(SNAPLINE_WIDTH);
 						}
 					}
 	
@@ -110,14 +110,14 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 					} else {
 						if (config.vertical.left) {
 							const snapLine = getSnapLine(config.vertical.left, sn) as IVerticalSnapLine;
-							newBoxPos.left = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH) : 100 - snapLine.right!;
 						} else if (config.vertical.mid) {
 							const snapLine = getSnapLine(config.vertical.mid, sn) as IVerticalSnapLine;
-							newBoxPos.left = snapLine.left ? snapLine.left : 100 - snapLine.right!;
+							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH / 2) : 100 - snapLine.right! - pixToPercW(SNAPLINE_WIDTH / 2);
 							newBoxPos.shiftX = true;
 						} else if (config.vertical.right) {
 							const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
-							newBoxPos.right = snapLine.left ? 100 - snapLine.left! : snapLine.right!;
+							newBoxPos.right = snapLine.left ? 100 - snapLine.left! : snapLine.right! + pixToPercW(SNAPLINE_WIDTH);
 						}
 					}
 	
@@ -173,8 +173,14 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 			widgetsDb.setSnapConfiguration(props.id, snapConfig);
 		});
 
+		EventHandler.on("widgetmover:save", props.id, () => {
+			console.debug("Saving snap config for widget", props.id);
+			widgetsDb.setSnapConfiguration(props.id, snapConfig);
+		})
+
 		return () => {
 			EventHandler.off("widgetmover:disabled", props.id);
+			EventHandler.off("widgetmover:save", props.id);
 		}
 	}, [moverEnabled, snapConfig, props.id]);
 
