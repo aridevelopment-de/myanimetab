@@ -23,6 +23,7 @@ import EventHandler from "../../../utils/eventhandler";
 import { mergeRefs } from "../../../utils/reactutils";
 import snapstyles from "./snaplinelist.module.css";
 import styles from "./styles.module.css";
+import SaveIcon from '@mui/icons-material/Save';
 
 const MoverControlbar = () => {
 	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
@@ -52,6 +53,9 @@ const MoverControlbar = () => {
 			<div className={styles.actionbar}>
 				<ActionIcon onClick={() => setMoverEnabled(false)}>
 					<LogoutIcon />
+				</ActionIcon>
+				<ActionIcon onClick={() => EventHandler.emit("widgetmover:save")}>
+					<SaveIcon />
 				</ActionIcon>
 				<div className={styles.seperator} />
 				<ActionIcon
