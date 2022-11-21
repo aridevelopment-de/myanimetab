@@ -63,6 +63,7 @@ const MoverControlbar = () => {
 						metaDb.addSnapLine({
 							axis: "horizontal",
 							top: 50,
+							bottom: null,
 						} as IHorizontalSnapLine);
 					}}
 				>
@@ -73,6 +74,7 @@ const MoverControlbar = () => {
 						metaDb.addSnapLine({
 							axis: "vertical",
 							left: 50,
+							right: null,
 						} as IVerticalSnapLine);
 					}}
 				>
@@ -131,8 +133,6 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 		}
 	}, [hovered, props.snapLine.id, addGlow, removeGlow]);
 
-	console.log(props.snapLine.id + ": " + hovered)
-
 	return (
 		// @ts-ignore
 		<div className={snapstyles.snapline} key={props.snapLine.id} ref={ref}>
@@ -149,7 +149,7 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 
 					if (props.snapLine.axis === "horizontal") {
 						if (
-							props.snapLine.top !== undefined &&
+							props.snapLine.top !== null &&
 							props.snapLine.top !== value
 						) {
 							metaDb.snapLines.update(props.snapLine.id, {
@@ -162,7 +162,7 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 						}
 					} else {
 						if (
-							props.snapLine.left !== undefined &&
+							props.snapLine.left !== null &&
 							props.snapLine.left !== value
 						) {
 							metaDb.snapLines.update(props.snapLine.id, {
@@ -191,32 +191,31 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 			>
 				<ActionIcon
 					onClick={() => {
-						// toggle top/bottom or left/right depending on the axis
 						if (props.snapLine.axis === "horizontal") {
-							if (props.snapLine.top !== undefined) {
+							if (props.snapLine.top !== null) {
 								metaDb.snapLines.update(props.snapLine.id, {
-									top: undefined,
+									top: null,
 									bottom: 100 - props.snapLine.top!,
 								});
 								setPercentage(100 - props.snapLine.top!);
 							} else {
 								metaDb.snapLines.update(props.snapLine.id, {
 									top: 100 - props.snapLine.bottom!,
-									bottom: undefined,
+									bottom: null,
 								});
 								setPercentage(100 - props.snapLine.bottom!);
 							}
 						} else {
-							if (props.snapLine.left !== undefined) {
+							if (props.snapLine.left !== null) {
 								metaDb.snapLines.update(props.snapLine.id, {
-									left: undefined,
+									left: null,
 									right: 100 - props.snapLine.left!,
 								});
 								setPercentage(100 - props.snapLine.left!);
 							} else {
 								metaDb.snapLines.update(props.snapLine.id, {
 									left: 100 - props.snapLine.right!,
-									right: undefined,
+									right: null,
 								});
 								setPercentage(100 - props.snapLine.right!);
 							}
@@ -224,12 +223,12 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 					}}
 				>
 					{props.snapLine.axis === "horizontal" ? (
-						props.snapLine.top !== undefined ? (
+						props.snapLine.top !== null ? (
 							<ArrowDownwardIcon />
 						) : (
 							<ArrowUpwardIcon />
 						)
-					) : props.snapLine.left !== undefined ? (
+					) : props.snapLine.left !== null ? (
 						<ArrowForwardIcon />
 					) : (
 						<ArrowBackIcon />

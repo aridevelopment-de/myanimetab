@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMoverSettings, useMoverState } from "../../../hooks/widgetmover";
@@ -89,37 +90,41 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 					
 					const newBoxPos: any = {};
 	
-					if (config.horizontal.percentage) {
+					if (config.horizontal.percentage !== null) {
 						newBoxPos.top = config.horizontal.percentage;
 					} else {
-						if (config.horizontal.top) {
+						if (config.horizontal.top !== null) {
 							const snapLine = getSnapLine(config.horizontal.top, sn) as IHorizontalSnapLine;
 							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH) : 100 - snapLine.bottom!;
-						} else if (config.horizontal.mid) {
+						} else if (config.horizontal.mid !== null) {
 							const snapLine = getSnapLine(config.horizontal.mid, sn) as IHorizontalSnapLine;
 							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH / 2) : 100 - snapLine.bottom! - pixToPercH(SNAPLINE_WIDTH / 2);
 							newBoxPos.shiftY = true;
-						} else if (config.horizontal.bottom) {
+						} else if (config.horizontal.bottom !== null) {
 							const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
 							newBoxPos.bottom = snapLine.top ? 100 - snapLine.top : snapLine.bottom! + pixToPercH(SNAPLINE_WIDTH);
 						}
 					}
 	
-					if (config.vertical.percentage) {
+					if (config.vertical.percentage !== null) {
 						newBoxPos.left = config.vertical.percentage;
 					} else {
-						if (config.vertical.left) {
+						if (config.vertical.left !== null) {
 							const snapLine = getSnapLine(config.vertical.left, sn) as IVerticalSnapLine;
 							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH) : 100 - snapLine.right!;
-						} else if (config.vertical.mid) {
+						} else if (config.vertical.mid !== null) {
 							const snapLine = getSnapLine(config.vertical.mid, sn) as IVerticalSnapLine;
 							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH / 2) : 100 - snapLine.right! - pixToPercW(SNAPLINE_WIDTH / 2);
 							newBoxPos.shiftX = true;
-						} else if (config.vertical.right) {
+						} else if (config.vertical.right !== null) {
 							const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
 							newBoxPos.right = snapLine.left ? 100 - snapLine.left! : snapLine.right! + pixToPercW(SNAPLINE_WIDTH);
 						}
 					}
+
+					console.log("========")
+					console.log(newBoxPos);
+					console.log(config);
 	
 					setBoxPos(newBoxPos);
 				}
@@ -170,11 +175,13 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	useEffect(() => {
 		EventHandler.on("widgetmover:disabled", props.id, () => {
 			console.debug("Saving snap config for widget", props.id);
+			console.debug(snapConfig);
 			widgetsDb.setSnapConfiguration(props.id, snapConfig);
 		});
 
 		EventHandler.on("widgetmover:save", props.id, () => {
 			console.debug("Saving snap config for widget", props.id);
+			console.debug(snapConfig);
 			widgetsDb.setSnapConfiguration(props.id, snapConfig);
 		})
 
@@ -248,7 +255,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					top: undefined,
-					bottom: sn.bottom !== undefined ? sn.bottom! : 100 - pixToPercH(sn.top!),
+					bottom: sn.bottom !== null ? sn.bottom! : 100 - pixToPercH(sn.top!),
 					shiftY: false,
 				}));
 				break;
@@ -268,7 +275,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					right: undefined,
-					left: pixToPercW(sn.left! + (sn.right === undefined ? SNAPLINE_WIDTH : 0)),
+					left: pixToPercW(sn.left! + (sn.right === null ? SNAPLINE_WIDTH : 0)),
 					shiftX: false,
 				}));
 				break;
@@ -284,11 +291,10 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 						percentage: null,
 					},
 				}));
-				console.log(sn.right === undefined ? SNAPLINE_WIDTH / 2 : 0)
 				setBoxPos((prev) => ({
 					...prev,
 					right: undefined,
-					left: pixToPercW(sn.left! + (sn.right === undefined ? SNAPLINE_WIDTH / 2 : -SNAPLINE_WIDTH / 2)),
+					left: pixToPercW(sn.left! + (sn.right === null ? SNAPLINE_WIDTH / 2 : -SNAPLINE_WIDTH / 2)),
 					shiftX: true,
 				}));
 				break;
@@ -307,7 +313,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 				setBoxPos((prev) => ({
 					...prev,
 					left: undefined,
-					right: sn.right === undefined ? 100 - pixToPercW(sn.left!!) : sn.right!,
+					right: sn.right === null ? 100 - pixToPercW(sn.left!!) : sn.right!,
 					shiftX: false,
 				}));
 				break;
@@ -388,15 +394,15 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 					const mod = { ...s } as any;
 
 					if (s.axis === "horizontal") {
-						if (s.bottom !== undefined)
+						if (s.bottom !== null)
 							mod.top = percHToPix(100 - s.bottom);
-						if (s.top !== undefined) mod.top = percHToPix(s.top);
+						if (s.top !== null) mod.top = percHToPix(s.top);
 					}
 
 					if (s.axis === "vertical") {
-						if (s.right !== undefined)
+						if (s.right !== null)
 							mod.left = percWToPix(100 - s.right);
-						if (s.left !== undefined) mod.left = percWToPix(s.left);
+						if (s.left !== null) mod.left = percWToPix(s.left);
 					}
 
 					return mod;

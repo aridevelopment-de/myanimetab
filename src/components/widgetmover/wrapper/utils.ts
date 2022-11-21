@@ -11,13 +11,13 @@ export const applySnap = (
 	const snapLines: ISnapLine[] = availableSnapLines.filter((snapLine) => {
 		if (snapLine.axis === "horizontal") {
 			if (!snapLine.top)
-				throw new Error("Snapline wrong data!");
+				if (snapLine.top !== 0) throw new Error("Snapline wrong data!")
 			
 			let yDist = Math.abs(snapLine.top + SNAPLINE_WIDTH / 2 - snapYRel);
 			return yDist < THRESHHOLD;
 		} else if (snapLine.axis === "vertical") {
 			if (!snapLine.left)
-				throw new Error("Snapline wrong data!");
+				if (snapLine.left !== 0) throw new Error("Snapline wrong data!");
 
 			let xDist = Math.abs(snapLine.left + SNAPLINE_WIDTH / 2 - snapXRel);
 			return xDist <= THRESHHOLD;

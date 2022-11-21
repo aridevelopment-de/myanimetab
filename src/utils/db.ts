@@ -231,15 +231,15 @@ export const ROOT_FOLDER = {
 export type IVerticalSnapLine = {
 	id: number;
 	axis: "vertical";
-	left?: number;
-	right?: number;
+	left: number | null;
+	right: number | null;
 };
 
 export type IHorizontalSnapLine = {
 	id: number;
 	axis: "horizontal";
-	top?: number;
-	bottom?: number;
+	top: number | null;
+	bottom: number | null;
 };
 
 export type ISnapLine = IVerticalSnapLine | IHorizontalSnapLine;
@@ -299,6 +299,14 @@ class MetaDatabase extends Dexie {
 			queues: "++id, &name, images",
 			snapLines: "++id, axis, top, left, right, bottom",
 		});
+		
+		this.version(8).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
 	}
 
 	async initializeFirstTimers(): Promise<boolean> {
@@ -320,31 +328,37 @@ class MetaDatabase extends Dexie {
 						id: 0,
 						axis: "horizontal",
 						top: 5,
+						bottom: null,
 					},
 					{
 						id: 1,
 						axis: "horizontal",
 						bottom: 5,
+						top: null,
 					},
 					{
 						id: 2,
 						axis: "vertical",
 						left: 5,
+						right: null,
 					},
 					{
 						id: 3,
 						axis: "vertical",
 						right: 5,
+						left: null,
 					},
 					{
 						id: 4,
 						axis: "horizontal",
 						top: 50,
+						bottom: null,
 					},
 					{
 						id: 5,
 						axis: "vertical",
 						left: 50,
+						right: null,
 					}
 				]);
 			}

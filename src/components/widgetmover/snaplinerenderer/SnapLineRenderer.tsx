@@ -1,14 +1,28 @@
 import { useLiveQuery } from "dexie-react-hooks";
+import { useEffect, useState } from "react";
 import { useSnapLineState } from "../../../hooks/widgetmover";
-import { metaDb } from "../../../utils/db";
+import { ISnapLine, metaDb } from "../../../utils/db";
+import { useEvent } from "../../../utils/eventhooks";
 
 export const SNAPLINE_WIDTH = 3;
 
 export const SnapLineRenderer = () => {
-    const snapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
+    const queriedSnapLines = useLiveQuery(() => metaDb.snapLines.toArray(), []);
+    const [snapLines, setSnapLines] = useState<ISnapLine[]>([]);
     // do not remove glowLines as it serves for updating the component
     const [existsGlowSnapLine, glowLines] = useSnapLineState((state) => [state.exists, state.glown]);
     
+    useEvent("snapline:update", "snapline_renderer", null, (data: {snapId: number; axis: "horizontal" | "vertical"; percentage: number}) => {
+        // rerender this component
+        metaDb.snapLines.toArray().then(setSnapLines);
+    });
+
+    useEffect(() => {
+        if (queriedSnapLines) {
+            setSnapLines(queriedSnapLines);
+        }
+    }, [queriedSnapLines]);
+
     if (!snapLines) return <></>;
 
     return (
