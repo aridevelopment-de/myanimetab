@@ -370,7 +370,7 @@ class MetaDatabase extends Dexie {
 	}
 
 	/* Snapline table */
-	addSnapLine(snapLine: Omit<ISnapLine, "id">) {
+	addSnapLine(snapLine: Omit<ISnapLine, "id">): Promise<number> {
 		// @ts-ignore
 		return this.snapLines.add(snapLine);
 	}
@@ -687,3 +687,81 @@ export const useMeta = (key: string, mapFunction?: Function): any => {
 
 export const widgetsDb = new WidgetDatabase();
 export const metaDb = new MetaDatabase();
+
+interface Layout {
+	snapLines: ISnapLine[];
+	widgetSnaps: {
+		[widgetId: string]: ISnapConfiguration;
+	}
+}
+
+export const exportLayout = async (): Promise<Layout> => {
+	const snapLines = await metaDb.snapLines.toArray();
+	const widgets = await widgetsDb.widgets.toArray();
+
+	const layout: Layout = {
+		snapLines,
+		widgetSnaps: {},
+	};
+
+	widgets.forEach((widget: IWidget) => {
+		layout.widgetSnaps[widget.id] = widget.settings.snaps;
+	});
+
+	return layout;
+}
+
+export const importLayout = async (layout: {[key: string]: any}, clearSnaplines: boolean): Promise<boolean> => {
+	// check if layout is valid
+	if (!layout.snapLines || !layout.widgetSnaps) {
+		console.error("[Importing Layout] Layout does not contain snapLines or widgetSnaps as attributes")
+		return false;
+	}
+
+	const snapLines = layout.snapLines;
+	const widgetSnaps = layout.widgetSnaps;
+
+	for (const snapLine of snapLines) {
+		if (!snapLine.axis) {console.error("[Importing Layout] Snapline axis missing"); return false}
+		if (snapLine.axis === "vertical" && (snapLine.left === undefined || snapLine.right === undefined)) {console.error("[Importing Layout] Snapline is vertical but either left or right is missing"); return false}
+		if (snapLine.axis === "horizontal" && (snapLine.top === undefined || snapLine.bottom === undefined)) {console.error("[Importing Layout] Snapline is horizontal but either top or bottom is missing"); return false}
+	}
+
+	for (const widgetId in widgetSnaps) {
+		const widgetSnap = widgetSnaps[widgetId];
+		if (!widgetSnap.horizontal || !widgetSnap.vertical) {console.error("[Importing Layout] Widget does not have horizontal or vertical setting"); return false}
+		if (widgetSnap.horizontal.top === undefined || widgetSnap.horizontal.mid === undefined || widgetSnap.horizontal.bottom === undefined || widgetSnap.horizontal.percentage === undefined) {console.error("[Importing Layout] Either top, mid, bottom or percentage is missing in widget"); return false}
+		if (widgetSnap.vertical.left === undefined || widgetSnap.vertical.mid === undefined || widgetSnap.vertical.right === undefined || widgetSnap.vertical.percentage === undefined) {console.error("[Importing Layout] Either left, mid, right or percentage is missing in widget"); return false}
+	}
+
+	if (clearSnaplines) {
+		await metaDb.snapLines.clear();
+	}
+
+	const idMapping = {} as {[oldId: number]: number}
+
+	for (const snapLine of snapLines) {
+		const newId = await metaDb.addSnapLine(snapLine);
+		idMapping[snapLine.id] = newId;
+	}
+
+	for (const widgetId in widgetSnaps) {
+		if (await widgetsDb.getWidget(widgetId) !== undefined) {
+			let config: ISnapConfiguration = widgetSnaps[widgetId];
+
+			if (config.horizontal.top !== null) {if (idMapping[config.horizontal.top] === undefined) {continue;} else {config.horizontal.top = idMapping[config.horizontal.top];}}
+			if (config.horizontal.mid !== null) {if (idMapping[config.horizontal.mid] === undefined) {continue;} else {config.horizontal.mid = idMapping[config.horizontal.mid];}}
+			if (config.horizontal.bottom !== null) {if (idMapping[config.horizontal.bottom] === undefined) {continue;} else {config.horizontal.bottom = idMapping[config.horizontal.bottom];}}
+
+			if (config.vertical.left !== null) {if (idMapping[config.vertical.left] === undefined) {continue;} else {config.vertical.left = idMapping[config.vertical.left];}}
+			if (config.vertical.mid !== null) {if (idMapping[config.vertical.mid] === undefined) {continue;} else {config.vertical.mid = idMapping[config.vertical.mid];}}
+			if (config.vertical.right !== null) {if (idMapping[config.vertical.right] === undefined) {continue;} else {config.vertical.right = idMapping[config.vertical.right];}}
+
+			await widgetsDb.setSnapConfiguration(widgetId, config);
+		}
+	}
+
+	window.location.reload();
+
+	return true;
+}

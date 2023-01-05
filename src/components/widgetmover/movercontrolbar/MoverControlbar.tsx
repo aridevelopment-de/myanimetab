@@ -13,17 +13,22 @@ import { useEffect, useState } from "react";
 import { useDrag } from "../../../hooks/usedrag";
 import { useMoverState, useSnapLineState } from "../../../hooks/widgetmover";
 import {
+	exportLayout,
 	IHorizontalSnapLine,
+	importLayout,
 	ISnapLine,
 	IVerticalSnapLine,
 	metaDb,
 } from "../../../utils/db";
 import EventHandler from "../../../utils/eventhandler";
-import { mergeRefs } from "../../../utils/reactutils";
 import snapstyles from "./snaplinelist.module.css";
 import styles from "./styles.module.css";
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from "@mui/icons-material/Save";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useHover } from "../../../hooks/usehover";
+import { downloadContent } from "../../../utils/browserutils";
+import { openShowFilePicker } from "../../../utils/reactutils";
 
 const MoverControlbar = () => {
 	const [moverEnabled, setMoverEnabled] = useMoverState((state) => [
@@ -51,10 +56,13 @@ const MoverControlbar = () => {
 			ref={dragRef}
 		>
 			<div className={styles.actionbar}>
-				<ActionIcon onClick={() => setMoverEnabled(false)}>
+				<ActionIcon onClick={() => setMoverEnabled(false)} title="Exit & Save">
 					<LogoutIcon />
 				</ActionIcon>
-				<ActionIcon onClick={() => EventHandler.emit("widgetmover:save")}>
+				<ActionIcon
+					onClick={() => EventHandler.emit("widgetmover:save")}
+					title="Save the current layout"
+				>
 					<SaveIcon />
 				</ActionIcon>
 				<div className={styles.seperator} />
@@ -66,6 +74,7 @@ const MoverControlbar = () => {
 							bottom: null,
 						} as IHorizontalSnapLine);
 					}}
+					title="Add a new horizontal snap line"
 				>
 					<VerticalAlignCenterIcon />
 				</ActionIcon>
@@ -77,13 +86,41 @@ const MoverControlbar = () => {
 							right: null,
 						} as IVerticalSnapLine);
 					}}
+					title="Add a new vertical snap line"
 				>
 					<VerticalAlignCenterIcon sx={{ rotate: "90deg" }} />
 				</ActionIcon>
+				<div className={styles.seperator} />
+				<ActionIcon onClick={() => exportLayout().then((layout) => downloadContent("layout.json", JSON.stringify(layout)))} title="Download the layout">
+					<FileDownloadIcon />
+				</ActionIcon>
+				<ActionIcon onClick={async () => {
+					const files = await openShowFilePicker("application/json", false);
+					
+					if (files.length > 0) {
+						const layoutFile = files[0];
+						let layout;
+
+						try {
+							layout = JSON.parse(await layoutFile.text());
+						} catch (e) {
+							console.error(e);
+							return;
+						}
+
+						importLayout(layout, true).then((success: boolean) => {
+							if (!success) {
+								alert("Failed to import layout. It seems like the layout is invalid. Please check the console for more information.");
+							}
+						});
+					}
+				}} title="Upload a specific layout">
+					<FileUploadIcon />
+				</ActionIcon>
+				<div className={styles.seperator} />
 				<ActionIcon onClick={() => setShowLines(!showLines)}>
 					{showLines ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
 				</ActionIcon>
-				<div className={styles.seperator} />
 				<Badge variant="filled" color="red" size="xs">
 					Beta
 				</Badge>
@@ -237,13 +274,11 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 				</ActionIcon>
 				<ActionIcon
 					onClick={async () => {
-						metaDb
-							.deleteSnapLine(props.snapLine.id)
-							.then(() =>
-								EventHandler.emit("snapline:delete", {
-									snapId: props.snapLine.id,
-								})
-							);
+						metaDb.deleteSnapLine(props.snapLine.id).then(() =>
+							EventHandler.emit("snapline:delete", {
+								snapId: props.snapLine.id,
+							})
+						);
 					}}
 				>
 					<Delete />
