@@ -99,14 +99,15 @@ const TinyPercentageInput = (props: { value: number; setValue: Function }) => {
 			size="xs"
 			min={0}
 			max={100}
-			step={1}
+			step={0.1}
+			precision={1}
 			value={props.value}
 			onChange={(value) => {
 				if (value !== undefined) {
 					props.setValue(value);
 				}
 			}}
-			style={{ width: "50px" }}
+			style={{ width: "60px" }}
 			formatter={(value) => `${value?.replace("%", "")}%`}
 			hideControls
 		/>
