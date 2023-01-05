@@ -78,7 +78,7 @@ const App = (_) => {
 						) : (
 							<SettingsComponent />
 						)}
-						<Background>
+						<Background moverEnabled={moverEnabled}>
 							{(blur) => {
 								return installedComponents.map(
 									(component: Component) => {

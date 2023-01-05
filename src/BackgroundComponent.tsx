@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLiveQuery } from "dexie-react-hooks";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import AutoHideScheduler from "./components/AutoHideScheduler";
 import BackgroundScheduler from "./components/BackgroundScheduler";
-import { IImage, IQueue, metaDb, useMeta, widgetsDb } from "./utils/db";
-import EventHandler from "./utils/eventhandler";
-import { useSetting } from "./utils/eventhooks";
+import { metaDb } from "./utils/db";
 
-function Background(props: any) {
+function Background(props: {children: (blur: boolean) => JSX.Element, moverEnabled: boolean}) {
 	const [blur, setBlur] = useState(false);
 	const background = useLiveQuery(async () => {
 		const selectedImage = await metaDb.meta.get("selected_image");
@@ -23,6 +21,12 @@ function Background(props: any) {
 
 		return null;
 	});
+
+	useEffect(() => {
+		if (props.moverEnabled) {
+			setBlur(false);
+		}
+	}, [props, props.moverEnabled]);
 
 	return (
 		<div
