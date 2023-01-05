@@ -121,10 +121,6 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 						newBoxPos.right = snapLine.left && snapLine.left !== undefined ? 100 - snapLine.left! : snapLine.right! + pixToPercW(SNAPLINE_WIDTH);
 					}
 				}
-
-				console.log("========")
-				console.log(newBoxPos);
-				console.log(config);
 	
 				setBoxPos(newBoxPos);
 			}
