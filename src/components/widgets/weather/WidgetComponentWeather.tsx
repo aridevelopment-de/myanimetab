@@ -134,7 +134,7 @@ export default {
 		type: "weather",
 		option: {
 			type: "toggle",
-			default: false,
+			default: true,
 		},
 	},
 	contentSettings: [
