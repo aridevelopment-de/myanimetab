@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { ActionIcon, Button, Group, Menu, Stack } from "@mantine/core";
 import React, { useState } from "react";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
@@ -48,47 +48,34 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 					placeholder="Enter Keywords"
 					autoComplete="off"
 				/>
-				<div
-					style={{
-						display: "flex",
-						gap: "0.5em",
-					}}
-				>
-					<Menu shadow="md" width={200}>
-						<Menu.Target>
-							<ActionIcon variant="outline" color="gray">
-								<Add />
-							</ActionIcon>
-						</Menu.Target>
-						<Menu.Dropdown>
-							<Menu.Label>Widget Type</Menu.Label>
-							{registry.knownComponents.map(
-								(
-									knownComponent: KnownComponent,
-									index: number
-								) => {
-									if (
-										knownComponent.metadata
-											.installableComponent
-									) {
-										return (
-											<Menu.Item
-												onClick={() => {
-													registry.installComponent(
-														knownComponent
-													);
-													EventHandler.emit(
-														"rerenderAll"
-													);
-												}}
-												key={index}
-											>
-												{knownComponent.metadata.name}
-											</Menu.Item>
-										);
-									}
-
-									return null;
+				<Menu shadow="md" width={200}>
+					<Menu.Target>
+						<Button variant="outline" color="gray">
+							+
+						</Button>
+					</Menu.Target>
+					<Menu.Dropdown>
+						<Menu.Label>Widget Type</Menu.Label>
+						{registry.knownComponents.map(
+							(knownComponent: KnownComponent, index: number) => {
+								if (
+									knownComponent.metadata.installableComponent
+								) {
+									return (
+										<Menu.Item
+											onClick={() => {
+												registry.installComponent(
+													knownComponent
+												);
+												EventHandler.emit(
+													EventType.RERENDER_ALL
+												);
+											}}
+											key={index}
+										>
+											{knownComponent.metadata.name}
+										</Menu.Item>
+									);
 								}
 							)}
 						</Menu.Dropdown>

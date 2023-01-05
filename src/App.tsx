@@ -49,7 +49,7 @@ const App = (_) => {
 			});
 		});
 
-		EventHandler.on("rerenderAll", "app", () => {
+		EventHandler.on(EventType.RERENDER_ALL, "app", () => {
 			setTimeout(() => {
 				registry.loadInstalledComponents(() =>
 					filterEnabledComponents()

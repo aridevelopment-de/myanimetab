@@ -6,7 +6,8 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { useEffect, useState } from "react";
-import EventHandler from "../../../utils/eventhandler";
+import { widgetsDb } from "../../../utils/db";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { useSetting } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
@@ -29,27 +30,23 @@ function ControlBar(props: { blur: boolean; id: string }) {
 				<div className={styles.item__wrapper}>
 					<div
 						onClick={() =>
-							EventHandler.emit("settings_window_state", {
-								opened: true,
-							})
+							EventHandler.emit(EventType.SETTINGS_WINDOW_STATE, {
+                opened: true,
+              })
 						}
 					>
 						<SettingsIcon />
 					</div>
 				</div>
 
-				<div className={styles.item__wrapper}>
-					<div
-						onClick={() => {
-							EventHandler.emits([
-								"skip_image",
-								"playlist_refresh",
-							]);
-							setUnlocked(true);
-						}}
-					>
-						<SkipNextIcon />
-					</div>
+			<div className={styles.item__wrapper}>
+				<div
+					onClick={() => {
+						EventHandler.emits([EventType.SKIP_IMAGE, EventType.PLAYLIST_REFRESH]);
+						setUnlocked(true);
+					}}
+				>
+					<SkipNextIcon />
 				</div>
 
 				<div className={styles.item__wrapper}>

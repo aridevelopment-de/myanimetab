@@ -189,8 +189,6 @@ class WidgetDatabase extends Dexie {
 	}
 
 	setSetting(id: string, key: string, value: any) {
-		EventHandler.emit(`widget.${id}.${key}`, value);
-
 		key = `settings.${key}`;
 		this.widgets.update(id, { [key]: value });
 	}
@@ -797,3 +795,4 @@ export const actUponInitialLayout = async (layout: string) => {
 	console.log("Using layout: " + layout);
 	importLayout(initialLayouts[layout], true);
 }
+
