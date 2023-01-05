@@ -132,6 +132,10 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	}, [props.id]);
 
 	useEffect(() => {
+		EventHandler.on("snaplines:refresh", props.id, () => {
+			loadSnaplines();
+		});
+
 		EventHandler.on("snapline:update", props.id, (data: {snapId: number, axis: "horizontal" | "vertical", percentage: number}) => {
 			loadSnaplines(true);
 		});
@@ -167,6 +171,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 		});
 
 		return () => {
+			EventHandler.off("snaplines:refresh", props.id);
 			EventHandler.off("snapline:update", props.id);
 			EventHandler.off("snapline:delete", props.id);
 		}

@@ -309,10 +309,21 @@ class MetaDatabase extends Dexie {
 		});
 	}
 
+	async justInstalled(): Promise<boolean> {
+		return (await this.getMeta("justInstalled")) === true;
+	}
+
 	async initializeFirstTimers(): Promise<boolean> {
+		if ((await this.getMeta("justInstalled")) === false) {
+			this.setMeta("justInstalled", true);
+		} else if ((await this.getMeta("justInstalled")) === true) {
+			this.removeMeta("justInstalled");
+		}
+
 		// Check if this is the first time the app is opened
 		if ((await this.getMeta("exists")) === undefined) {
 			this.registerMeta("exists", true);
+			this.registerMeta("justInstalled", false);
 			await this.registerMeta("selected_image", 1);
 			await this.registerMeta("selected_queue", null);
 			await this.anyImagesOrInsert(
@@ -417,6 +428,10 @@ class MetaDatabase extends Dexie {
 		}
 
 		return false;
+	}
+
+	removeMeta(name: string) {
+		this.meta.delete(name);
 	}
 
 	/* Image table */
@@ -764,4 +779,21 @@ export const importLayout = async (layout: {[key: string]: any}, clearSnaplines:
 	window.location.reload();
 
 	return true;
+}
+
+export const initialLayouts = {
+	"/layouts/one.svg": {
+		"snapLines":[{"id":0,"axis":"horizontal","top":1,"bottom":null},{"id":1,"axis":"horizontal","bottom":1,"top":null},{"id":2,"axis":"vertical","left":1,"right":null},{"id":3,"axis":"vertical","right":1,"left":null},{"id":4,"axis":"horizontal","top":null,"bottom":60},{"id":5,"axis":"vertical","left":50,"right":null}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":null,"bottom":1,"percentage":null},"vertical":{"left":2,"mid":null,"right":null,"percentage":null}},"controlbar-0":{"horizontal":{"top":0,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":3,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":null,"bottom":4,"percentage":null},"vertical":{"left":null,"mid":5,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":null,"mid":null,"bottom":1,"percentage":null},"vertical":{"left":null,"mid":null,"right":3,"percentage":null}}}
+	},
+	"/layouts/two.svg": {
+		"snapLines":[{"id":4,"axis":"horizontal","top":50,"bottom":null},{"axis":"vertical","left":50,"right":null,"id":6},{"axis":"horizontal","top":1,"bottom":null,"id":7},{"axis":"vertical","left":null,"right":1,"id":8},{"axis":"horizontal","top":40,"bottom":null,"id":9},{"axis":"horizontal","top":null,"bottom":40,"id":10}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":10,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"controlbar-0":{"horizontal":{"top":7,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":8,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":4,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":null,"mid":9,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}}}
+	},
+	"/layouts/three.svg": {
+		"snapLines":[{"id":4,"axis":"horizontal","top":50,"bottom":null},{"axis":"vertical","left":50,"right":null,"id":6},{"axis":"horizontal","top":1,"bottom":null,"id":7},{"axis":"vertical","left":1,"right":null,"id":8},{"axis":"vertical","left":null,"right":1,"id":11},{"axis":"horizontal","top":13,"bottom":null,"id":12}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":null,"bottom":12,"percentage":null},"vertical":{"left":null,"mid":null,"right":11,"percentage":null}},"controlbar-0":{"horizontal":{"top":7,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":8,"mid":null,"right":null,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":4,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":12,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":11,"percentage":null}}}
+	},
+} as {[key: string]: Layout};
+
+export const actUponInitialLayout = async (layout: string) => {
+	console.log("Using layout: " + layout);
+	importLayout(initialLayouts[layout], true);
 }

@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from "react";
 import Background from "./BackgroundComponent";
 import SettingsComponent from "./components/settings/SettingsComponent";
-import { widgetsDb } from "./utils/db";
+import { actUponInitialLayout, metaDb, widgetsDb } from "./utils/db";
 import EventHandler from "./utils/eventhandler";
 import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
@@ -13,12 +12,18 @@ import { useState, useEffect } from "react";
 import { useMoverState } from "./hooks/widgetmover";
 import MoverControlbar from "./components/widgetmover/movercontrolbar/MoverControlbar";
 import { SnapLineRenderer } from "./components/widgetmover/snaplinerenderer/SnapLineRenderer";
+import WelcomeScreen from "./components/justInstalled/WelcomeScreen";
 
 const App = (_) => {
 	const [installedComponents, setInstalledComponents] = useState<Array<Component>>([]);
+	const [justInstalled, setJustInstalled] = useState<boolean>(false);
 	const moverEnabled = useMoverState((state) => state.enabled);
 
 	useEffect(() => {
+		metaDb.justInstalled().then((justInstalled) => {
+			setJustInstalled(justInstalled);
+		});
+
 		const filterEnabledComponents = () => {
 			(async () => {
 				let enabledComponents = [];
@@ -52,8 +57,19 @@ const App = (_) => {
 			}, 50);
 		});
 
+		EventHandler.on("initialLayoutSelect", "app", (url: string | null) => {
+			setJustInstalled(false);
+
+			if (url !== null) {
+				actUponInitialLayout(url);
+
+				EventHandler.emit("snaplines:refresh");
+			}
+		});
+
 		return () => {
 			EventHandler.off("rerenderAll", "app");
+			EventHandler.off("initialLayoutSelect", "app");
 		};
 	}, []);
 
@@ -70,6 +86,7 @@ const App = (_) => {
 			>
 				<NotificationsProvider>
 					<ModalsProvider>
+						{justInstalled && <WelcomeScreen />}
 						{moverEnabled ? (
 							<>
 							<MoverControlbar />
@@ -80,6 +97,8 @@ const App = (_) => {
 						)}
 						<Background moverEnabled={moverEnabled}>
 							{(blur) => {
+								if (justInstalled) return null;
+
 								return installedComponents.map(
 									(component: Component) => {
 										if (component.element === null) {
