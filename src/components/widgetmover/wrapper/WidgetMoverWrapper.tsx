@@ -77,58 +77,58 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 
 	const loadSnaplines = useCallback(async (useCurrent: boolean = false) => {
 		const sn = await metaDb.snapLines.toArray();
-			widgetsDb.getSetting(props.id, "snaps").then((config_: ISnapConfiguration) => {
-				let config: ISnapConfiguration = config_;
+		widgetsDb.getSetting(props.id, "snaps").then((config_: ISnapConfiguration) => {
+			let config: ISnapConfiguration = config_;
 
-				if (useCurrent) {
-					config = snapConfigRef.current!;
+			if (useCurrent) {
+				config = snapConfigRef.current!;
+			}
+
+			if (config) {
+				console.debug("Loading snap config for widget", props.id);
+				setSnapConfig(config);
+				
+				const newBoxPos: any = {};
+	
+				if (config.horizontal.percentage !== null) {
+					newBoxPos.top = config.horizontal.percentage;
+				} else {
+					if (config.horizontal.top !== null) {
+						const snapLine = getSnapLine(config.horizontal.top, sn) as IHorizontalSnapLine;
+						newBoxPos.top = snapLine.top !== null && snapLine.top !== undefined ? snapLine.top + pixToPercH(SNAPLINE_WIDTH) : 100 - snapLine.bottom!;
+					} else if (config.horizontal.mid !== null) {
+						const snapLine = getSnapLine(config.horizontal.mid, sn) as IHorizontalSnapLine;
+						newBoxPos.top = snapLine.top !== null && snapLine.top !== undefined ? snapLine.top + pixToPercH(SNAPLINE_WIDTH / 2) : 100 - snapLine.bottom! - pixToPercH(SNAPLINE_WIDTH / 2);
+						newBoxPos.shiftY = true;
+					} else if (config.horizontal.bottom !== null) {
+						const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
+						newBoxPos.bottom = snapLine.top !== null && snapLine.top !== undefined ? 100 - snapLine.top : snapLine.bottom! + pixToPercH(SNAPLINE_WIDTH);
+					}
+				}
+	
+				if (config.vertical.percentage !== null) {
+					newBoxPos.left = config.vertical.percentage;
+				} else {
+					if (config.vertical.left !== null) {
+						const snapLine = getSnapLine(config.vertical.left, sn) as IVerticalSnapLine;
+						newBoxPos.left = snapLine.left !== null && snapLine.left !== undefined ? snapLine.left + pixToPercW(SNAPLINE_WIDTH) : 100 - snapLine.right!;
+					} else if (config.vertical.mid !== null) {
+						const snapLine = getSnapLine(config.vertical.mid, sn) as IVerticalSnapLine;
+						newBoxPos.left = snapLine.left && snapLine.left !== undefined ? snapLine.left + pixToPercW(SNAPLINE_WIDTH / 2) : 100 - snapLine.right! - pixToPercW(SNAPLINE_WIDTH / 2);
+						newBoxPos.shiftX = true;
+					} else if (config.vertical.right !== null) {
+						const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
+						newBoxPos.right = snapLine.left && snapLine.left !== undefined ? 100 - snapLine.left! : snapLine.right! + pixToPercW(SNAPLINE_WIDTH);
+					}
 				}
 
-				if (config) {
-					console.debug("Loading snap config for widget", props.id);
-					setSnapConfig(config);
-					
-					const newBoxPos: any = {};
+				console.log("========")
+				console.log(newBoxPos);
+				console.log(config);
 	
-					if (config.horizontal.percentage !== null) {
-						newBoxPos.top = config.horizontal.percentage;
-					} else {
-						if (config.horizontal.top !== null) {
-							const snapLine = getSnapLine(config.horizontal.top, sn) as IHorizontalSnapLine;
-							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH) : 100 - snapLine.bottom!;
-						} else if (config.horizontal.mid !== null) {
-							const snapLine = getSnapLine(config.horizontal.mid, sn) as IHorizontalSnapLine;
-							newBoxPos.top = snapLine.top ? snapLine.top + pixToPercH(SNAPLINE_WIDTH / 2) : 100 - snapLine.bottom! - pixToPercH(SNAPLINE_WIDTH / 2);
-							newBoxPos.shiftY = true;
-						} else if (config.horizontal.bottom !== null) {
-							const snapLine = getSnapLine(config.horizontal.bottom, sn) as IHorizontalSnapLine;
-							newBoxPos.bottom = snapLine.top ? 100 - snapLine.top : snapLine.bottom! + pixToPercH(SNAPLINE_WIDTH);
-						}
-					}
-	
-					if (config.vertical.percentage !== null) {
-						newBoxPos.left = config.vertical.percentage;
-					} else {
-						if (config.vertical.left !== null) {
-							const snapLine = getSnapLine(config.vertical.left, sn) as IVerticalSnapLine;
-							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH) : 100 - snapLine.right!;
-						} else if (config.vertical.mid !== null) {
-							const snapLine = getSnapLine(config.vertical.mid, sn) as IVerticalSnapLine;
-							newBoxPos.left = snapLine.left ? snapLine.left + pixToPercW(SNAPLINE_WIDTH / 2) : 100 - snapLine.right! - pixToPercW(SNAPLINE_WIDTH / 2);
-							newBoxPos.shiftX = true;
-						} else if (config.vertical.right !== null) {
-							const snapLine = getSnapLine(config.vertical.right, sn) as IVerticalSnapLine;
-							newBoxPos.right = snapLine.left ? 100 - snapLine.left! : snapLine.right! + pixToPercW(SNAPLINE_WIDTH);
-						}
-					}
-
-					console.log("========")
-					console.log(newBoxPos);
-					console.log(config);
-	
-					setBoxPos(newBoxPos);
-				}
-			})
+				setBoxPos(newBoxPos);
+			}
+		})
 	}, [props.id]);
 
 	useEffect(() => {
