@@ -2,7 +2,7 @@
 import Background from "./BackgroundComponent";
 import SettingsComponent from "./components/settings/SettingsComponent";
 import { actUponInitialLayout, metaDb, widgetsDb } from "./utils/db";
-import EventHandler from "./utils/eventhandler";
+import EventHandler, { EventType } from "./utils/eventhandler";
 import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
@@ -57,19 +57,19 @@ const App = (_) => {
 			}, 50);
 		});
 
-		EventHandler.on("initialLayoutSelect", "app", (url: string | null) => {
+		EventHandler.on(EventType.INITIAL_LAYOUT_SELECT, "app", (url: string | null) => {
 			setJustInstalled(false);
 
 			if (url !== null) {
 				actUponInitialLayout(url);
 
-				EventHandler.emit("snaplines:refresh");
+				EventHandler.emit(EventType.REFRESH_SNAPLINES);
 			}
 		});
 
 		return () => {
 			EventHandler.off("rerenderAll", "app");
-			EventHandler.off("initialLayoutSelect", "app");
+			EventHandler.off(EventType.INITIAL_LAYOUT_SELECT, "app");
 		};
 	}, []);
 

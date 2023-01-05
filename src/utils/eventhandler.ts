@@ -4,6 +4,12 @@ export enum EventType {
     RERENDER_ALL = "RERENDER_ALL",
     SKIP_IMAGE = "SKIP_IMAGE",
     PLAYLIST_REFRESH = "PLAYLIST_REFRESH",
+    REFRESH_SNAPLINES = "snaplines:refresh",
+    INITIAL_LAYOUT_SELECT = "initialLayoutSelect",
+    WIDGETMOVER_SAVE = "widgetmover:save",
+    WIDGETMOVER_DISABLED = "widgetmover:disabled",
+    UPDATE_SNAPLINE = "snapline:update",
+    DELETE_SNAPLINE = "snapline:delete",
 }
 
 const EventHandler = {

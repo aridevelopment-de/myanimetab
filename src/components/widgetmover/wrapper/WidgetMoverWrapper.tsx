@@ -10,7 +10,7 @@ import {
 	metaDb,
 	widgetsDb
 } from "../../../utils/db";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { SNAPLINE_WIDTH } from "../snaplinerenderer/SnapLineRenderer";
 import styles from "./styles.module.css";
 import { applySnap } from "./utils";
@@ -128,15 +128,15 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 	}, [props.id]);
 
 	useEffect(() => {
-		EventHandler.on("snaplines:refresh", props.id, () => {
+		EventHandler.on(EventType.REFRESH_SNAPLINES, props.id, () => {
 			loadSnaplines();
 		});
 
-		EventHandler.on("snapline:update", props.id, (data: {snapId: number, axis: "horizontal" | "vertical", percentage: number}) => {
+		EventHandler.on(EventType.UPDATE_SNAPLINE, props.id, (data: {snapId: number, axis: "horizontal" | "vertical", percentage: number}) => {
 			loadSnaplines(true);
 		});
 
-		EventHandler.on("snapline:delete", props.id, (data: {snapId: number}) => {
+		EventHandler.on(EventType.DELETE_SNAPLINE, props.id, (data: {snapId: number}) => {
 			if (snapConfigRef.current) {
 				const newConfig = snapConfigRef.current;
 
@@ -167,28 +167,28 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 		});
 
 		return () => {
-			EventHandler.off("snaplines:refresh", props.id);
-			EventHandler.off("snapline:update", props.id);
-			EventHandler.off("snapline:delete", props.id);
+			EventHandler.off(EventType.REFRESH_SNAPLINES, props.id);
+			EventHandler.off(EventType.UPDATE_SNAPLINE, props.id);
+			EventHandler.off(EventType.DELETE_SNAPLINE, props.id);
 		}
 	}, [props.id, loadSnaplines]);
 
 	useEffect(() => {
-		EventHandler.on("widgetmover:disabled", props.id, () => {
+		EventHandler.on(EventType.WIDGETMOVER_DISABLED, props.id, () => {
 			console.debug("Saving snap config for widget", props.id);
 			console.debug(snapConfig);
 			widgetsDb.setSnapConfiguration(props.id, snapConfig);
 		});
 
-		EventHandler.on("widgetmover:save", props.id, () => {
+		EventHandler.on(EventType.WIDGETMOVER_SAVE, props.id, () => {
 			console.debug("Saving snap config for widget", props.id);
 			console.debug(snapConfig);
 			widgetsDb.setSnapConfiguration(props.id, snapConfig);
 		})
 
 		return () => {
-			EventHandler.off("widgetmover:disabled", props.id);
-			EventHandler.off("widgetmover:save", props.id);
+			EventHandler.off(EventType.WIDGETMOVER_DISABLED, props.id);
+			EventHandler.off(EventType.WIDGETMOVER_SAVE, props.id);
 		}
 	}, [moverEnabled, snapConfig, props.id]);
 

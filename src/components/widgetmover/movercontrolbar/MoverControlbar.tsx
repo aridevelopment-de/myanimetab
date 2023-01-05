@@ -20,7 +20,7 @@ import {
 	IVerticalSnapLine,
 	metaDb,
 } from "../../../utils/db";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import snapstyles from "./snaplinelist.module.css";
 import styles from "./styles.module.css";
 import SaveIcon from "@mui/icons-material/Save";
@@ -60,7 +60,7 @@ const MoverControlbar = () => {
 					<LogoutIcon />
 				</ActionIcon>
 				<ActionIcon
-					onClick={() => EventHandler.emit("widgetmover:save")}
+					onClick={() => EventHandler.emit(EventType.WIDGETMOVER_SAVE)}
 					title="Save the current layout"
 				>
 					<SaveIcon />
@@ -213,7 +213,7 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 						}
 					}
 
-					EventHandler.emit("snapline:update", {
+					EventHandler.emit(EventType.UPDATE_SNAPLINE, {
 						snapId: props.snapLine.id,
 						axis: props.snapLine.axis,
 						percentage: value,
@@ -275,7 +275,7 @@ const SnapLineListEntry = (props: { snapLine: ISnapLine }) => {
 				<ActionIcon
 					onClick={async () => {
 						metaDb.deleteSnapLine(props.snapLine.id).then(() =>
-							EventHandler.emit("snapline:delete", {
+							EventHandler.emit(EventType.DELETE_SNAPLINE, {
 								snapId: props.snapLine.id,
 							})
 						);

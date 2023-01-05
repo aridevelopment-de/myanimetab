@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { useState } from "react";
 import { initialLayouts } from "../../utils/db";
-import EventHandler from "../../utils/eventhandler";
+import EventHandler, { EventType } from "../../utils/eventhandler";
 import styles from "./styles.module.css";
 
 const WelcomeScreen = () => {
@@ -28,7 +28,7 @@ const WelcomeScreen = () => {
       <div className={styles.footer}>
         <span id={styles["skip"]}>Skip</span>
         <Button color="green" disabled={selected === null} onClick={() => {
-          EventHandler.emit("initialLayoutSelect", selected);
+          EventHandler.emit(EventType.INITIAL_LAYOUT_SELECT, selected);
         }}>Okay</Button>
       </div>
 		</div>
