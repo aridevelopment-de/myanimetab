@@ -1,7 +1,7 @@
 {
   "name": "client",
   "main": "src/index.tsx",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.0",
