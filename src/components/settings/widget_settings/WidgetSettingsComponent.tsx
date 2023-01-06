@@ -7,7 +7,7 @@ import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
 import OpenWithIcon from "@mui/icons-material/OpenWith";
-import Add from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 import { IWidgetMover, useMoverState } from "../../../hooks/widgetmover";
 
 const containsString = (string: string, component: Component) => {
@@ -48,11 +48,12 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 					placeholder="Enter Keywords"
 					autoComplete="off"
 				/>
+				<div className={styles.toolbar_buttons}>
 				<Menu shadow="md" width={200}>
 					<Menu.Target>
-						<Button variant="outline" color="gray">
-							+
-						</Button>
+						<ActionIcon variant="outline" color="gray">
+							<AddIcon />
+						</ActionIcon>
 					</Menu.Target>
 					<Menu.Dropdown>
 						<Menu.Label>Widget Type</Menu.Label>
@@ -91,6 +92,7 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 					}}>
 						<OpenWithIcon />
 					</ActionIcon>
+				</div>
 				</div>
 			<Stack>
 				{registry.installedComponents.map((component: Component) => {
