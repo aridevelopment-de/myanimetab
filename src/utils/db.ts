@@ -311,17 +311,19 @@ class MetaDatabase extends Dexie {
 		return (await this.getMeta("justInstalled")) === true;
 	}
 
+	async removeJustInstalled(): Promise<void> {
+		return this.setMeta("justInstalled", false);
+	}
+
 	async initializeFirstTimers(): Promise<boolean> {
-		if ((await this.getMeta("justInstalled")) === false) {
-			this.setMeta("justInstalled", true);
-		} else if ((await this.getMeta("justInstalled")) === true) {
-			this.removeMeta("justInstalled");
+		if ((await this.getMeta("justInstalled")) === undefined) {
+			this.registerMeta("justInstalled", true);
 		}
 
 		// Check if this is the first time the app is opened
 		if ((await this.getMeta("exists")) === undefined) {
 			this.registerMeta("exists", true);
-			this.registerMeta("justInstalled", false);
+			this.registerMeta("justInstalled", true);
 			await this.registerMeta("selected_image", 1);
 			await this.registerMeta("selected_queue", null);
 			await this.anyImagesOrInsert(
