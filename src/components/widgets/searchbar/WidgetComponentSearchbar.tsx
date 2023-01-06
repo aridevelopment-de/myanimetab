@@ -39,17 +39,13 @@ function SearchBar(props: { blur: boolean; id: string }) {
 				<div
 					className={`${styles.searchbar} widget`}
 					style={{
-						opacity: props.blur
-							? opacityValues[widget.auto_hide]
-							: 1,
+						opacity: props.blur ? opacityValues[widget.auto_hide] : 1,
 					}}
 				>
 					<div>
 						<div
 							className={styles.engine_icon__container}
-							onClick={() =>
-								setModalChooseEngine(!modalChooseEngine)
-							}
+							onClick={() => setModalChooseEngine(!modalChooseEngine)}
 						>
 							<img
 								className={styles.engine_icon}
@@ -69,98 +65,113 @@ function SearchBar(props: { blur: boolean; id: string }) {
 							/>
 						) : null}
 					</div>
-					{modalChooseEngine ? (
-						<SearchEngineChooser
-							searchEngine={searchEngine}
-							setSearchEngine={(idx: number) => {
-								setSearchEngine(idx);
-								setModalChooseEngine(false);
-							}}
-						/>
-					) : null}
-				</div>
-				<input
-					className={styles.input}
-					onKeyDown={(e) => {
-						if (e.keyCode === 38 || e.keyCode === 40) {
-							e.preventDefault();
+					<input
+						className={styles.input}
+						onKeyDown={(e) => {
+							if (e.keyCode === 38 || e.keyCode === 40) {
+								e.preventDefault();
+							}
+							
+							// up arrow
+							if (e.keyCode === 38) {
+								let r = null;
+
+								if (selectedIndex === null) {
+									r = suggestions.length - 1;
+								} else if (selectedIndex > 0) {
+									r = selectedIndex - 1;
+								}
+
+								setSelectedIndex(r);
+
+								if (r !== null) {
+									setContent(suggestions[r]);
+								} else {
+									setContent(suggestions[0]);
+								}
+							}
+							// down arrow
+							else if (e.keyCode === 40) {
+								let r = null;
+
+								if (selectedIndex === null) {
+									r = 0;
+								} else if (selectedIndex < suggestions.length - 1) {
+									r = selectedIndex + 1;
+								}
+
+								setSelectedIndex(r);
+
+								if (r !== null) {
+									setContent(suggestions[r]);
+								} else {
+									setContent(suggestions[0]);
+								}
+							}
+						}}
+						onKeyUp={(e) => {
+							if (e.keyCode === 13) {
+								SearchEngine.search(
+									// @ts-ignore
+									e.target.value,
+									searchEngine,
+									widget.open_with
+								);
+							}
+						}}
+						onInput={(event: any) => {
+							setContent(event.target.value);
+							if (selectedIndex !== null) setSelectedIndex(null);
+
+							if (event.target.value.length > 1) {
+								SuggestionCaller.fetchSearchSuggestions(
+									event.target.value,
+									(data: { suggestions: Array<string> }) => {
+										setSuggestions(
+											[
+												data.suggestions
+													.slice(0, 5)
+													.map((s) => s.toLowerCase())
+													.includes(
+														event.target.value.toLowerCase()
+													)
+													? null
+													: event.target.value,
+												...data.suggestions.slice(0, 5),
+											].filter((e) => e !== null)
+										);
+									}
+								);
+							}
+						}}
+						onBlur={(e) =>
+							e.target.setAttribute("readonly", "readonly")
 						}
-						
-						// up arrow
-						if (e.keyCode === 38) {
-							let r = null;
-
-							if (selectedIndex === null) {
-								r = suggestions.length - 1;
-							} else if (selectedIndex > 0) {
-								r = selectedIndex - 1;
-							}
-
-							setSelectedIndex(r);
-
-							if (r !== null) {
-								setContent(suggestions[r]);
-							} else {
-								setContent(suggestions[0]);
-							}
-						}
-						// down arrow
-						else if (e.keyCode === 40) {
-							let r = null;
-
-							if (selectedIndex === null) {
-								r = 0;
-							} else if (selectedIndex < suggestions.length - 1) {
-								r = selectedIndex + 1;
-							}
-
-							setSelectedIndex(r);
-
-							if (r !== null) {
-								setContent(suggestions[r]);
-							} else {
-								setContent(suggestions[0]);
-							}
-						}
-					}}
-					onKeyUp={(e) => {
-						if (e.keyCode === 13) {
+						onFocus={(e) => e.target.removeAttribute("readonly")}
+						value={content}
+						type="text"
+						spellCheck="false"
+						placeholder="Search"
+						autoComplete="off"
+						tabIndex={0}
+						readOnly
+						autoFocus
+					/>
+					<SearchIcon
+						className={styles.icon}
+						onClick={() =>
 							SearchEngine.search(
 								content,
 								searchEngine,
 								widget.open_with
-							);
-						}
-					}}
-					onInput={(event: any) => {
-						setContent(event.target.value);
-						if (selectedIndex !== null) setSelectedIndex(null);
-
-						if (event.target.value.length > 1) {
-							SuggestionCaller.fetchSearchSuggestions(
-								event.target.value,
-								(data: { suggestions: Array<string> }) => {
-									setSuggestions(
-										[
-											data.suggestions
-												.slice(0, 5)
-												.map((s) => s.toLowerCase())
-												.includes(
-													event.target.value.toLowerCase()
-												)
-												? null
-												: event.target.value,
-											...data.suggestions.slice(0, 5),
-										].filter((e) => e !== null)
-									);
-								}
-							);
+							)
 						}
 					/>
 				</div>
 				<SearchSuggestions
 					suggestions={suggestions}
 					showing={suggestions.length > 0 && content.length > 1}
+					selectedIndex={selectedIndex}
 				/>
 			</div>
 		</WidgetMoverWrapper>

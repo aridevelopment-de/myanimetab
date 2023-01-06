@@ -39,14 +39,15 @@ function ControlBar(props: { blur: boolean; id: string }) {
 					</div>
 				</div>
 
-			<div className={styles.item__wrapper}>
-				<div
-					onClick={() => {
-						EventHandler.emits([EventType.SKIP_IMAGE, EventType.PLAYLIST_REFRESH]);
-						setUnlocked(true);
-					}}
-				>
-					<SkipNextIcon />
+				<div className={styles.item__wrapper}>
+					<div
+						onClick={() => {
+							EventHandler.emits([EventType.SKIP_IMAGE, EventType.PLAYLIST_REFRESH]);
+							setUnlocked(true);
+						}}
+					>
+						<SkipNextIcon />
+					</div>
 				</div>
 
 				<div className={styles.item__wrapper}>

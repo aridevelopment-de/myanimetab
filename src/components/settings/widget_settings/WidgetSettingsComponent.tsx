@@ -77,7 +77,9 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 										</Menu.Item>
 									);
 								}
-							)}
+
+								return null;
+							})}
 						</Menu.Dropdown>
 					</Menu>
 					<ActionIcon variant="outline" color="gray" onClick={() => {
@@ -90,7 +92,6 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 						<OpenWithIcon />
 					</ActionIcon>
 				</div>
-			</div>
 			<Stack>
 				{registry.installedComponents.map((component: Component) => {
 					if (searchbarValue.trim() === "") {
