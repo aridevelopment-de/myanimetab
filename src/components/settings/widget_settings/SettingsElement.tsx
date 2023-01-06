@@ -3,7 +3,7 @@ import { useSetting, useWidget } from "../../../utils/eventhooks";
 import { Component } from "../../../utils/registry/types";
 import styles from "./settingselement.module.css";
 import SettingsFormItem, { SettingsItemLabel } from "./SettingsFormItem";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { registry } from "../../../utils/registry/customcomponentregistry";
@@ -78,18 +78,17 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 									}
 									onClick={() => {
 										EventHandler.emit(
-											"settings_window_state",
+											EventType.SETTINGS_WINDOW_STATE,
 											{
 												opened: false,
 											}
 										);
-
 										registry.uninstallComponent(props.data);
 
 										setTimeout(
 											() =>
 												EventHandler.emit(
-													"rerenderAll"
+													EventType.RERENDER_ALL
 												),
 											50
 										);
@@ -109,7 +108,7 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 									"state",
 									e.currentTarget.checked
 								);
-								EventHandler.emit("rerenderAll");
+								EventHandler.emit(EventType.RERENDER_ALL);
 							}}
 						/>
 					) : null}

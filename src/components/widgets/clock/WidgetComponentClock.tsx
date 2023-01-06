@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useWidget } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
 import TimeUtils from "../../../utils/timeutils";
+import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
 import styles from "./clock.module.css";
 
-const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const timeFormatValues = ["24h", "12h"]; // if these values changes,  also change the if conditions
 
@@ -34,10 +34,8 @@ function Clock(props: { blur: boolean; id: string }) {
 		return () => clearInterval(interval);
 	}, [currentTime, widget.timeFormat]);
 
-	if (widget.position === undefined) return <></>;
-
 	return (
-		<div className={`${styles.wrapper} ${positionValues[widget.position]}`}>
+		<WidgetMoverWrapper id={props.id}>
 			<div
 				className={`${styles.clock} widget`}
 				style={{
@@ -67,7 +65,7 @@ function Clock(props: { blur: boolean; id: string }) {
 					<span id={styles.year}>{currentTime.year}</span>
 				</div>
 			</div>
-		</div>
+		</WidgetMoverWrapper>
 	);
 }
 
@@ -123,18 +121,6 @@ export default {
 				"Opacity 0.5",
 				"Opacity 0.3",
 			],
-		},
-		{
-			name: "Positioning",
-			key: "position",
-			type: "dropdown",
-			values: positionValues,
-			displayedValues: [
-				"Left lower corner",
-				"Right lower corner",
-				"Right upper corner",
-				"Left upper corner",
-			],
-		},
+		}
 	],
 } as KnownComponent;

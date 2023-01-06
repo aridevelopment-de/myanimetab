@@ -1,11 +1,14 @@
 // @ts-nocheck
-import { Button, Menu, Stack } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack } from "@mantine/core";
 import React, { useState } from "react";
-import EventHandler from "../../../utils/eventhandler";
+import EventHandler, { EventType } from "../../../utils/eventhandler";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { Component, KnownComponent } from "../../../utils/registry/types";
 import SettingsElement from "./SettingsElement";
 import styles from "./widgetsettingscomponent.module.css";
+import OpenWithIcon from "@mui/icons-material/OpenWith";
+import AddIcon from '@mui/icons-material/Add';
+import { IWidgetMover, useMoverState } from "../../../hooks/widgetmover";
 
 const containsString = (string: string, component: Component) => {
 	string = string.toLowerCase();
@@ -31,6 +34,7 @@ const containsString = (string: string, component: Component) => {
 
 const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 	const [searchbarValue, setSearchbarValue] = useState("");
+	const setWidgetMoverState = useMoverState((state: IWidgetMover) => state.setEnabled);
 
 	return (
 		<React.Fragment>
@@ -44,11 +48,12 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 					placeholder="Enter Keywords"
 					autoComplete="off"
 				/>
+				<div className={styles.toolbar_buttons}>
 				<Menu shadow="md" width={200}>
 					<Menu.Target>
-						<Button variant="outline" color="gray">
-							+
-						</Button>
+						<ActionIcon variant="outline" color="gray">
+							<AddIcon />
+						</ActionIcon>
 					</Menu.Target>
 					<Menu.Dropdown>
 						<Menu.Label>Widget Type</Menu.Label>
@@ -64,7 +69,7 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 													knownComponent
 												);
 												EventHandler.emit(
-													"rerenderAll"
+													EventType.RERENDER_ALL
 												);
 											}}
 											key={index}
@@ -75,13 +80,24 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 								}
 
 								return null;
-							}
-						)}
-					</Menu.Dropdown>
-				</Menu>
-			</div>
+							})}
+						</Menu.Dropdown>
+					</Menu>
+					<ActionIcon variant="outline" color="gray" onClick={() => {
+						EventHandler.emit("settings_window_state", {
+							opened: false,
+						});
+
+						setWidgetMoverState(true);
+					}}>
+						<OpenWithIcon />
+					</ActionIcon>
+				</div>
+				</div>
 			<Stack>
 				{registry.installedComponents.map((component: Component) => {
+					if (component.contentSettings.length === 0) return null;
+					
 					if (searchbarValue.trim() === "") {
 						return (
 							<SettingsElement

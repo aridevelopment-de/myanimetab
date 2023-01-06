@@ -26,3 +26,6 @@ yarn-error.log*
 # stuff
 package-lock.json
 /build
+
+/.vscode
+/.vscode/*

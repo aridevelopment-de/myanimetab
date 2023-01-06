@@ -2,19 +2,9 @@
 
 .wrapper {
 	font-weight: 300;
-	position: absolute;
-	left: 50%;
 	z-index: 3;
-	transform: translateX(-50%);
 	transition: opacity 1.3s;
-}
-
-.wrapper.one {
-	top: calc(100% / 20);
-}
-
-.wrapper.two {
-	top: calc(100% / 12 * 2);
+	position: relative;
 }
 
 @media all and (max-width: 680px) {

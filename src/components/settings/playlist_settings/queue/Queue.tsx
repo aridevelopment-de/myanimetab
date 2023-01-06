@@ -3,25 +3,25 @@ import {
 	Button,
 	Drawer,
 	Group,
-	Modal,
 	Space,
 	Stack,
 	Text,
 	TextInput,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import AddIcon from "@mui/icons-material/Add";
-import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import FolderOpen from "@mui/icons-material/FolderOpen";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import MinimizeIcon from "@mui/icons-material/Minimize";
 import Settings from "@mui/icons-material/Settings";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
+import EventHandler, { EventType } from "../../../../utils/eventhandler";
 import styles from "./queue.module.css";
-import MinimizeIcon from "@mui/icons-material/Minimize";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import EventHandler from "../../../../utils/eventhandler";
-import { useForm } from "@mantine/form";
+import DownloadIcon from "@mui/icons-material/Download";
+import { downloadContent } from "../../../../utils/browserutils";
 
 const Queue = () => {
 	const qid = useMeta("selected_queue");
@@ -76,6 +76,28 @@ const Queue = () => {
 						<ActionIcon onClick={() => setQueueManagerOpened(true)}>
 							<FolderOpen />
 						</ActionIcon>
+						<ActionIcon
+							onClick={async () => {
+								// export metaDb.queues, metaDb.images and metaDb.folders
+								// to a json file
+								const data = {
+									copy_the_value_inside_the_quotation_marks_and_paste_it_into_the_image_add_menu:
+										(await metaDb.images.toArray())
+											.map((image: IImage) => image.url)
+											.join(", "),
+									queues: await metaDb.queues.toArray(),
+									images: await metaDb.images.toArray(),
+									folders: await metaDb.folders.toArray(),
+								};
+
+								downloadContent(
+									"export.json",
+									JSON.stringify(data)
+								);
+							}}
+						>
+							<DownloadIcon />
+						</ActionIcon>
 						{minimized ? (
 							<ActionIcon onClick={() => setMinimized(false)}>
 								<FullscreenIcon />
@@ -126,7 +148,7 @@ const Queue = () => {
 													);
 
 													EventHandler.emit(
-														"queue.removeImage",
+														EventType.QUEUE_REMOVE_IMAGE,
 														{ value: image.id }
 													);
 												}}
@@ -161,6 +183,9 @@ const Queue = () => {
 				title="Manage your image queues"
 				padding="xl"
 				size="xl"
+				styles={{
+					drawer: { overflowY: "auto" },
+				}}
 			>
 				<QueueList />
 			</Drawer>
@@ -188,11 +213,22 @@ const QueueList = () => {
 				</Button>
 			</div>
 			<Space h="lg" />
-			<Stack spacing="xs">
+			<Stack
+				spacing="xs"
+				style={{
+					overflowY: "auto",
+				}}
+			>
 				{queues &&
 					(queues as unknown as IQueue[]).map((queue: IQueue) => (
 						<QueueListEntry queue={queue} key={queue.id} />
 					))}
+				{queues && queues.length === 0 && (
+					<Text color="dimmed">
+						You don't have any queues yet. Create one by clicking
+						the button above.
+					</Text>
+				)}
 			</Stack>
 		</>
 	);
@@ -252,7 +288,21 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 					<ActionIcon
 						onClick={() => {
 							metaDb.deleteQueue(props.queue.id);
-							metaDb.setMeta("selected_queue", null);
+							// get amount of queues from metaDb.queues
+							// if 0, set selected_queue to null
+							// else, set selected_queue to first queue
+							metaDb.queues.count().then((count) => {
+								if (count === 0) {
+									metaDb.setMeta("selected_queue", null);
+								} else {
+									metaDb.queues.toArray().then((queues) => {
+										metaDb.setMeta(
+											"selected_queue",
+											queues[0].id
+										);
+									});
+								}
+							});
 						}}
 					>
 						<ClearIcon />

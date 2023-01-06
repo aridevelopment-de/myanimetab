@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { widgetsDb } from "../../../utils/db";
-import { useSetting, useWidget } from "../../../utils/eventhooks";
+import { useWidget } from "../../../utils/eventhooks";
 import { KnownComponent } from "../../../utils/registry/types";
+import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
 import errorstyles from "./error.module.css";
 import ErrorComponent from "./ErrorComponent";
 import NormalComponent from "./NormalComponent";
 import styles from "./weatherwidget.module.css";
 
-const positionValues = [styles.four, styles.three, styles.two, styles.one];
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const metricValues = ["metric", "standard", "imperial"];
 const refreshRate = 15 * 60 * 1000;
@@ -55,7 +55,8 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 
 				axios
 					.get(
-						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`
+						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`,
+						{ validateStatus: () => true }
 					)
 					.then((response) => {
 						if (response.status === 200) {
@@ -89,27 +90,33 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 		return () => clearInterval(interval);
 	}, [widget, widget.unit]);
 
-	if (widget.position === undefined) return <></>;
-
 	return (
-		<div className={`${styles.wrapper} ${positionValues[widget.position]}`}>
-			{data.statusCode === 200 ? (
-				<NormalComponent
-					data={data}
-					unit={widget.unit}
-					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
-				/>
-			) : data.statusCode !== -1 ? (
-				<ErrorComponent
-					status={data.statusCode}
-					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
-				/>
-			) : (
-				<LoadingComponent
-					opacity={props.blur ? opacityValues[widget.auto_hide] : 1}
-				/>
-			)}
-		</div>
+		<WidgetMoverWrapper id={props.id}>
+			<div className={styles.wrapper}>
+				{data.statusCode === 200 ? (
+					<NormalComponent
+						data={data}
+						unit={widget.unit}
+						opacity={
+							props.blur ? opacityValues[widget.auto_hide] : 1
+						}
+					/>
+				) : data.statusCode !== -1 ? (
+					<ErrorComponent
+						status={data.statusCode}
+						opacity={
+							props.blur ? opacityValues[widget.auto_hide] : 1
+						}
+					/>
+				) : (
+					<LoadingComponent
+						opacity={
+							props.blur ? opacityValues[widget.auto_hide] : 1
+						}
+					/>
+				)}
+			</div>
+		</WidgetMoverWrapper>
 	);
 }
 
@@ -128,7 +135,7 @@ export default {
 		type: "weather",
 		option: {
 			type: "toggle",
-			default: false,
+			default: true,
 		},
 	},
 	contentSettings: [
@@ -164,18 +171,6 @@ export default {
 				"Opacity 0.7",
 				"Opacity 0.5",
 				"Opacity 0.3",
-			],
-		},
-		{
-			name: "Positioning",
-			key: "position",
-			type: "dropdown",
-			values: positionValues,
-			displayedValues: [
-				"Left lower corner",
-				"Right lower corner",
-				"Right upper corner",
-				"Left upper corner",
 			],
 		},
 	],

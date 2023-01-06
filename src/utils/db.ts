@@ -4,9 +4,31 @@ import EventHandler from "./eventhandler";
 
 const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+export type ISnapConfiguration = {
+	horizontal: {
+		// snap line ids
+		top: number | null;
+		mid: number | null;
+		bottom: number | null;
+		// x percentage
+		percentage: number | null;
+	},
+	vertical: {
+		// snap line ids
+		left: number | null;
+		mid: number | null;
+		right: number | null;
+		// y percentage
+		percentage: number | null;
+	}
+}
+
 export interface IWidget {
 	id: string; // <type>-<number>
-	settings: any;
+	settings: {
+		snaps: ISnapConfiguration;
+		[key: string]: any;
+	};
 }
 
 class WidgetDatabase extends Dexie {
@@ -18,6 +40,18 @@ class WidgetDatabase extends Dexie {
 		this.version(1).stores({
 			widgets: "id, settings",
 		});
+
+		this.version(2).stores({
+			widgets: "id, settings",
+		});
+
+		this.version(3).stores({
+			widgets: "id, settings",
+		});
+		
+		this.version(4).stores({
+			widgets: "id, settings",
+		})
 	}
 
 	async toJson(): Promise<Array<IWidget>> {
@@ -67,7 +101,21 @@ class WidgetDatabase extends Dexie {
 
 			const widget: IWidget = {
 				id,
-				settings: settings || {},
+				// @ts-ignore
+				settings: settings || {
+					snaps: {
+						horizontal: {
+							top: null,
+							mid: 50,
+							bottom: null,
+						},
+						vertical: {
+							left: null,
+							mid: 50,
+							right: null,
+						},
+					},
+				},
 			};
 
 			return this.widgets.add(widget);
@@ -76,6 +124,47 @@ class WidgetDatabase extends Dexie {
 
 	getWidget(id: string): Promise<IWidget | undefined> {
 		return this.widgets.get(id);
+	}
+
+	async setSnapConfiguration(id: string, config: ISnapConfiguration) {
+		return this.setSetting(id, "snaps", config);
+	}
+
+	async unlinkSnapLine(snapId: number) {
+		const widgets = await this.widgets.toArray();
+
+		for (let i = 0; i < widgets.length; i++) {
+			const widget = widgets[i];
+			const settings = widget.settings;
+
+			if (!settings.snaps) continue;
+
+			if (settings.snaps.horizontal.top === snapId) {
+				settings.snaps.horizontal.top = 50;
+			}
+
+			if (settings.snaps.horizontal.mid === snapId) {
+				settings.snaps.horizontal.mid = 50;
+			}
+
+			if (settings.snaps.horizontal.bottom === snapId) {
+				settings.snaps.horizontal.bottom = 50;
+			}
+
+			if (settings.snaps.vertical.left === snapId) {
+				settings.snaps.vertical.left = 50;
+			}
+
+			if (settings.snaps.vertical.mid === snapId) {
+				settings.snaps.vertical.mid = 50;
+			}
+
+			if (settings.snaps.vertical.right === snapId) {
+				settings.snaps.vertical.right = 50;
+			}
+
+			this.widgets.update(widget.id, { settings });
+		}
 	}
 
 	async getIdentifiers(): Promise<Array<{ id: string; number: string }>> {
@@ -100,8 +189,6 @@ class WidgetDatabase extends Dexie {
 	}
 
 	setSetting(id: string, key: string, value: any) {
-		EventHandler.emit(`widget.${id}.${key}`, value);
-
 		key = `settings.${key}`;
 		this.widgets.update(id, { [key]: value });
 	}
@@ -139,11 +226,28 @@ export const ROOT_FOLDER = {
 	color: null,
 } as IFolder;
 
+export type IVerticalSnapLine = {
+	id: number;
+	axis: "vertical";
+	left: number | null;
+	right: number | null;
+};
+
+export type IHorizontalSnapLine = {
+	id: number;
+	axis: "horizontal";
+	top: number | null;
+	bottom: number | null;
+};
+
+export type ISnapLine = IVerticalSnapLine | IHorizontalSnapLine;
+
 class MetaDatabase extends Dexie {
 	meta!: Table<Meta>;
 	images!: Table<IImage>;
 	folders!: Table<IFolder>;
 	queues!: Table<IQueue>;
+	snapLines!: Table<ISnapLine>;
 	changes: { [key: string]: Array<Function> } = {};
 
 	constructor() {
@@ -177,12 +281,47 @@ class MetaDatabase extends Dexie {
 			folders: "++id, parent, name, color",
 			queues: "++id, &name, images",
 		});
+
+		this.version(6).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
+
+		this.version(7).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
+		
+		this.version(8).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images",
+			snapLines: "++id, axis, top, left, right, bottom",
+		});
+	}
+
+	async justInstalled(): Promise<boolean> {
+		return (await this.getMeta("justInstalled")) === true;
 	}
 
 	async initializeFirstTimers(): Promise<boolean> {
+		if ((await this.getMeta("justInstalled")) === false) {
+			this.setMeta("justInstalled", true);
+		} else if ((await this.getMeta("justInstalled")) === true) {
+			this.removeMeta("justInstalled");
+		}
+
 		// Check if this is the first time the app is opened
 		if ((await this.getMeta("exists")) === undefined) {
 			this.registerMeta("exists", true);
+			this.registerMeta("justInstalled", false);
 			await this.registerMeta("selected_image", 1);
 			await this.registerMeta("selected_queue", null);
 			await this.anyImagesOrInsert(
@@ -190,10 +329,64 @@ class MetaDatabase extends Dexie {
 				"love! live! drinking"
 			);
 
+			const snapLines = await this.snapLines.toArray();
+
+			if (snapLines.length === 0) {
+				await this.snapLines.bulkAdd([
+					{
+						id: 0,
+						axis: "horizontal",
+						top: 5,
+						bottom: null,
+					},
+					{
+						id: 1,
+						axis: "horizontal",
+						bottom: 5,
+						top: null,
+					},
+					{
+						id: 2,
+						axis: "vertical",
+						left: 5,
+						right: null,
+					},
+					{
+						id: 3,
+						axis: "vertical",
+						right: 5,
+						left: null,
+					},
+					{
+						id: 4,
+						axis: "horizontal",
+						top: 50,
+						bottom: null,
+					},
+					{
+						id: 5,
+						axis: "vertical",
+						left: 50,
+						right: null,
+					}
+				]);
+			}
+
 			return true;
 		}
 
 		return false;
+	}
+
+	/* Snapline table */
+	addSnapLine(snapLine: Omit<ISnapLine, "id">): Promise<number> {
+		// @ts-ignore
+		return this.snapLines.add(snapLine);
+	}
+
+	async deleteSnapLine(id: number) {;
+		// await widgetsDb.unlinkSnapLine(id);
+		return this.snapLines.delete(id);
 	}
 
 	/* Meta table */
@@ -233,6 +426,10 @@ class MetaDatabase extends Dexie {
 		}
 
 		return false;
+	}
+
+	removeMeta(name: string) {
+		this.meta.delete(name);
 	}
 
 	/* Image table */
@@ -503,3 +700,99 @@ export const useMeta = (key: string, mapFunction?: Function): any => {
 
 export const widgetsDb = new WidgetDatabase();
 export const metaDb = new MetaDatabase();
+
+interface Layout {
+	snapLines: ISnapLine[];
+	widgetSnaps: {
+		[widgetId: string]: ISnapConfiguration;
+	}
+}
+
+export const exportLayout = async (): Promise<Layout> => {
+	const snapLines = await metaDb.snapLines.toArray();
+	const widgets = await widgetsDb.widgets.toArray();
+
+	const layout: Layout = {
+		snapLines,
+		widgetSnaps: {},
+	};
+
+	widgets.forEach((widget: IWidget) => {
+		layout.widgetSnaps[widget.id] = widget.settings.snaps;
+	});
+
+	return layout;
+}
+
+export const importLayout = async (layout: {[key: string]: any}, clearSnaplines: boolean): Promise<boolean> => {
+	// check if layout is valid
+	if (!layout.snapLines || !layout.widgetSnaps) {
+		console.error("[Importing Layout] Layout does not contain snapLines or widgetSnaps as attributes")
+		return false;
+	}
+
+	const snapLines = layout.snapLines;
+	const widgetSnaps = layout.widgetSnaps;
+
+	for (const snapLine of snapLines) {
+		if (!snapLine.axis) {console.error("[Importing Layout] Snapline axis missing"); return false}
+		if (snapLine.axis === "vertical" && (snapLine.left === undefined || snapLine.right === undefined)) {console.error("[Importing Layout] Snapline is vertical but either left or right is missing"); return false}
+		if (snapLine.axis === "horizontal" && (snapLine.top === undefined || snapLine.bottom === undefined)) {console.error("[Importing Layout] Snapline is horizontal but either top or bottom is missing"); return false}
+	}
+
+	for (const widgetId in widgetSnaps) {
+		const widgetSnap = widgetSnaps[widgetId];
+		if (!widgetSnap.horizontal || !widgetSnap.vertical) {console.error("[Importing Layout] Widget does not have horizontal or vertical setting"); return false}
+		if (widgetSnap.horizontal.top === undefined || widgetSnap.horizontal.mid === undefined || widgetSnap.horizontal.bottom === undefined || widgetSnap.horizontal.percentage === undefined) {console.error("[Importing Layout] Either top, mid, bottom or percentage is missing in widget"); return false}
+		if (widgetSnap.vertical.left === undefined || widgetSnap.vertical.mid === undefined || widgetSnap.vertical.right === undefined || widgetSnap.vertical.percentage === undefined) {console.error("[Importing Layout] Either left, mid, right or percentage is missing in widget"); return false}
+	}
+
+	if (clearSnaplines) {
+		await metaDb.snapLines.clear();
+	}
+
+	const idMapping = {} as {[oldId: number]: number}
+
+	for (const snapLine of snapLines) {
+		const newId = await metaDb.addSnapLine(snapLine);
+		idMapping[snapLine.id] = newId;
+	}
+
+	for (const widgetId in widgetSnaps) {
+		if (await widgetsDb.getWidget(widgetId) !== undefined) {
+			let config: ISnapConfiguration = widgetSnaps[widgetId];
+
+			if (config.horizontal.top !== null) {if (idMapping[config.horizontal.top] === undefined) {continue;} else {config.horizontal.top = idMapping[config.horizontal.top];}}
+			if (config.horizontal.mid !== null) {if (idMapping[config.horizontal.mid] === undefined) {continue;} else {config.horizontal.mid = idMapping[config.horizontal.mid];}}
+			if (config.horizontal.bottom !== null) {if (idMapping[config.horizontal.bottom] === undefined) {continue;} else {config.horizontal.bottom = idMapping[config.horizontal.bottom];}}
+
+			if (config.vertical.left !== null) {if (idMapping[config.vertical.left] === undefined) {continue;} else {config.vertical.left = idMapping[config.vertical.left];}}
+			if (config.vertical.mid !== null) {if (idMapping[config.vertical.mid] === undefined) {continue;} else {config.vertical.mid = idMapping[config.vertical.mid];}}
+			if (config.vertical.right !== null) {if (idMapping[config.vertical.right] === undefined) {continue;} else {config.vertical.right = idMapping[config.vertical.right];}}
+
+			await widgetsDb.setSnapConfiguration(widgetId, config);
+		}
+	}
+
+	window.location.reload();
+
+	return true;
+}
+
+export const initialLayouts = {
+	"/layouts/one.svg": {
+		"snapLines":[{"id":0,"axis":"horizontal","top":1,"bottom":null},{"id":1,"axis":"horizontal","bottom":1,"top":null},{"id":2,"axis":"vertical","left":1,"right":null},{"id":3,"axis":"vertical","right":1,"left":null},{"id":4,"axis":"horizontal","top":null,"bottom":60},{"id":5,"axis":"vertical","left":50,"right":null}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":null,"bottom":1,"percentage":null},"vertical":{"left":2,"mid":null,"right":null,"percentage":null}},"controlbar-0":{"horizontal":{"top":0,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":3,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":null,"bottom":4,"percentage":null},"vertical":{"left":null,"mid":5,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":null,"mid":null,"bottom":1,"percentage":null},"vertical":{"left":null,"mid":null,"right":3,"percentage":null}}}
+	},
+	"/layouts/two.svg": {
+		"snapLines":[{"id":4,"axis":"horizontal","top":50,"bottom":null},{"axis":"vertical","left":50,"right":null,"id":6},{"axis":"horizontal","top":1,"bottom":null,"id":7},{"axis":"vertical","left":null,"right":1,"id":8},{"axis":"horizontal","top":40,"bottom":null,"id":9},{"axis":"horizontal","top":null,"bottom":40,"id":10}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":10,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"controlbar-0":{"horizontal":{"top":7,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":8,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":4,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":null,"mid":9,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}}}
+	},
+	"/layouts/three.svg": {
+		"snapLines":[{"id":4,"axis":"horizontal","top":50,"bottom":null},{"axis":"vertical","left":50,"right":null,"id":6},{"axis":"horizontal","top":1,"bottom":null,"id":7},{"axis":"vertical","left":1,"right":null,"id":8},{"axis":"vertical","left":null,"right":1,"id":11},{"axis":"horizontal","top":13,"bottom":null,"id":12}],"widgetSnaps":{"clock-0":{"horizontal":{"top":null,"mid":null,"bottom":12,"percentage":null},"vertical":{"left":null,"mid":null,"right":11,"percentage":null}},"controlbar-0":{"horizontal":{"top":7,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":8,"mid":null,"right":null,"percentage":null}},"searchbar-0":{"horizontal":{"top":null,"mid":4,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":6,"right":null,"percentage":null}},"weather-0":{"horizontal":{"top":12,"mid":null,"bottom":null,"percentage":null},"vertical":{"left":null,"mid":null,"right":11,"percentage":null}}}
+	},
+} as {[key: string]: Layout};
+
+export const actUponInitialLayout = async (layout: string) => {
+	console.log("Using layout: " + layout);
+	importLayout(initialLayouts[layout], true);
+}
+
