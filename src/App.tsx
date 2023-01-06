@@ -62,6 +62,12 @@ const App = (_) => {
 
 			if (url !== null) {
 				actUponInitialLayout(url);
+				
+				metaDb.getMeta("justInstalled").then((jI) => {
+					if (jI === true) {
+						metaDb.removeJustInstalled();
+					}
+				});
 
 				EventHandler.emit(EventType.REFRESH_SNAPLINES);
 			}

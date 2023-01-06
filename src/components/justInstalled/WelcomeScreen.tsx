@@ -26,8 +26,8 @@ const WelcomeScreen = () => {
         ))}
 			</div>
       <div className={styles.footer}>
-        <span id={styles["skip"]}>Skip</span>
-        <Button color="green" disabled={selected === null} onClick={() => {
+{/*         <span id={styles["skip"]}>Skip</span>
+ */}        <Button color="green" disabled={selected === null} onClick={() => {
           EventHandler.emit(EventType.INITIAL_LAYOUT_SELECT, selected);
         }}>Okay</Button>
       </div>
