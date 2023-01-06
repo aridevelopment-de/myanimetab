@@ -55,7 +55,8 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 
 				axios
 					.get(
-						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`
+						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`,
+						{ validateStatus: () => true }
 					)
 					.then((response) => {
 						if (response.status === 200) {
