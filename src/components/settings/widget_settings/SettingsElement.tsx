@@ -83,7 +83,6 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 												opened: false,
 											}
 										);
-
 										registry.uninstallComponent(props.data);
 
 										setTimeout(

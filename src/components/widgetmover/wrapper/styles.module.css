@@ -1,0 +1,24 @@
+.wrapper {
+    position: absolute;
+    width: max-content;
+    height: max-content;
+}
+
+.moverEnabled {
+    cursor: move;
+}
+
+.inner {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.wrapper:not(.moverEnabled) .overlay:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}

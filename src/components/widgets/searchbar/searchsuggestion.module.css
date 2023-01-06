@@ -5,6 +5,9 @@
 }
 
 .wrapper {
+	position: absolute;
+	top: 100%;
+	width: 100%;
 	font-weight: 300;
 	margin-top: 0.5em;
 	transition: opacity 2s;
