@@ -4,7 +4,7 @@
   "description": "A custom startpage for your browser!",
   "name": "MyAnimeTab",
   "short_name": "MyAnimeTab",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "icons": {
       "192": "icons/favicon.ico",
       "512": "icons/favicon.ico"
