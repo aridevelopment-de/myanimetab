@@ -96,6 +96,8 @@ const WidgetSettingsComponent = (props: { bodyRef: any }) => {
 				</div>
 			<Stack>
 				{registry.installedComponents.map((component: Component) => {
+					if (component.contentSettings.length === 0) return null;
+					
 					if (searchbarValue.trim() === "") {
 						return (
 							<SettingsElement
