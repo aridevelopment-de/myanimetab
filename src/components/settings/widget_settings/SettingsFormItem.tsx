@@ -106,7 +106,7 @@ function SettingsFormItem(props: {
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
-							value={data}
+							value={data ?? ""}
 							variant="filled"
 							disabled={props.disabled}
 							classNames={{
@@ -121,7 +121,7 @@ function SettingsFormItem(props: {
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
-							value={data}
+							value={data ?? ""}
 							variant="filled"
 							disabled={props.disabled}
 							classNames={{
