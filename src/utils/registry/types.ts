@@ -18,7 +18,7 @@ export interface HeaderSettings {
 export interface Setting {
 	name: string;
 	key: string;
-	type: "dropdown" | "input";
+	type: "dropdown" | "input" | "number";
 	[key: string]: any;
 }
 
