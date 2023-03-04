@@ -699,6 +699,30 @@ class MetaDatabase extends Dexie {
 			.filter(e => e.timed === true)
 			.toArray();
 
+		// sort queues by from
+		queues.sort((a, b) => {
+			if (a.from === null || b.from === null) {
+				return 0;
+			}
+
+			const aFrom = a.from.split(":").map(e => parseInt(e));
+			const bFrom = b.from.split(":").map(e => parseInt(e));
+
+			if (aFrom[0] < bFrom[0]) {
+				return -1;
+			} else if (aFrom[0] > bFrom[0]) {
+				return 1;
+			} else {
+				if (aFrom[1] < bFrom[1]) {
+					return -1;
+				} else if (aFrom[1] > bFrom[1]) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
 		for (const queue of queues) {
 			if (queue.from === null || queue.to === null) {
 				continue;
