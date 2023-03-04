@@ -1,27 +1,30 @@
 import {
 	ActionIcon,
 	Button,
+	Code,
 	Drawer,
 	Group,
 	Space,
 	Stack,
+	Switch,
 	Text,
 	TextInput,
 } from "@mantine/core";
+import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
+import DownloadIcon from "@mui/icons-material/Download";
 import FolderOpen from "@mui/icons-material/FolderOpen";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import Settings from "@mui/icons-material/Settings";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useRef, useState } from "react";
+import { downloadContent } from "../../../../utils/browserutils";
 import { IImage, IQueue, metaDb, useMeta } from "../../../../utils/db";
 import EventHandler, { EventType } from "../../../../utils/eventhandler";
 import styles from "./queue.module.css";
-import DownloadIcon from "@mui/icons-material/Download";
-import { downloadContent } from "../../../../utils/browserutils";
 
 const Queue = () => {
 	const qid = useMeta("selected_queue");
@@ -183,9 +186,6 @@ const Queue = () => {
 				title="Manage your image queues"
 				padding="xl"
 				size="xl"
-				styles={{
-					drawer: { overflowY: "auto" },
-				}}
 			>
 				<QueueList />
 			</Drawer>
@@ -239,15 +239,6 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 	const currentQid = useMeta("selected_queue");
 
 	const [editQueue, setEditQueue] = useState<IQueue | null>(null);
-	const editQueueForm = useForm({
-		initialValues: {
-			name: "",
-		},
-		validate: {
-			name: (value) =>
-				value.length > 0 ? null : "Queue name cannot be empty",
-		},
-	});
 
 	return (
 		<>
@@ -268,18 +259,20 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 				<span>
 					{props.queue.name} ({props.queue.images.length})
 				</span>
+				{props.queue.timed && (
+					<Code color="blue" style={{marginLeft: "1em"}}>
+						{props.queue.from} - {props.queue.to}
+					</Code>
+				)}
 				<Group
 					position="right"
 					spacing="xs"
 					onMouseEnter={() => (toolbarHovered.current = true)}
 					onMouseLeave={() => (toolbarHovered.current = false)}
+					style={{marginLeft: "auto"}}
 				>
 					<ActionIcon
 						onClick={() => {
-							editQueueForm.setFieldValue(
-								"name",
-								props.queue.name
-							);
 							setEditQueue(props.queue);
 						}}
 					>
@@ -319,28 +312,80 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 				size="xl"
 				title="Editing queue information"
 			>
-				<form
-					onSubmit={editQueueForm.onSubmit((values, event) => {
-						metaDb.editQueue(editQueue!.id, { name: values.name });
-						setEditQueue(null);
-					})}
-				>
-					<Stack>
-						<TextInput
-							placeholder="Enter name of queue"
-							label="Name of Queue"
-							withAsterisk
-							{...editQueueForm.getInputProps("name", {
-								type: "input",
-							})}
-						/>
-						<Group position="right">
-							<Button type="submit">Save</Button>
-						</Group>
-					</Stack>
-				</form>
+				<EditQueueDrawer
+					editQueue={editQueue}
+					setEditQueue={setEditQueue}
+				/>
 			</Drawer>
 		</>
+	);
+};
+
+const EditQueueDrawer = (props: {
+	editQueue: IQueue | null;
+	setEditQueue: Function;
+}) => {
+	const editQueueForm = useForm({
+		initialValues: {
+			name: props.editQueue?.name || "",
+			timed: props.editQueue?.timed || false,
+			startHour: props.editQueue?.from || null,
+			endHour: props.editQueue?.to || null,
+		},
+	});
+
+	return (
+		<form
+			onSubmit={editQueueForm.onSubmit((values, event) => {
+				metaDb.editQueue(props.editQueue!.id, {
+					name: values.name,
+					timed: values.timed,
+					from: values.startHour,
+					to: values.endHour,
+				});
+				props.setEditQueue(null);
+			})}
+		>
+			<Stack>
+				<TextInput
+					placeholder="Enter name of queue"
+					label="Name of Queue"
+					required
+					{...editQueueForm.getInputProps("name", {
+						type: "input",
+					})}
+				/>
+				<Switch
+					label="Active at certain hours"
+					{...editQueueForm.getInputProps("timed", {
+						type: "checkbox",
+					})}
+				/>
+				<TimeInput
+					label="Start hour"
+					min={0}
+					max={24}
+					disabled={!editQueueForm.values.timed}
+					required
+					{...editQueueForm.getInputProps("startHour", {
+						type: "input",
+					})}
+				/>
+				<TimeInput
+					label="End hour"
+					min={0}
+					max={24}
+					disabled={!editQueueForm.values.timed}
+					required
+					{...editQueueForm.getInputProps("endHour", {
+						type: "input",
+					})}
+				/>
+				<Group position="right">
+					<Button type="submit">Save</Button>
+				</Group>
+			</Stack>
+		</form>
 	);
 };
 
