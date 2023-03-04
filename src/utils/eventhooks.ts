@@ -53,7 +53,7 @@ export const useCachedSetting = (id: string, key: string): [any, Function] => {
 	return [state, changeData];
 };
 
-export const useSetting = (id: string, key: string): [any, Function] => {
+export const useSetting = (id: string, key: string, registerDefault: any = undefined): [any, Function] => {
 	const [state, setState] = useState();
 	const data = useLiveQuery(() =>
 		widgetsDb.widgets.where("id").equals(id).toArray()
@@ -67,10 +67,15 @@ export const useSetting = (id: string, key: string): [any, Function] => {
 	useEffect(() => {
 		if (data !== undefined) {
 			if (data[0] !== undefined) {
+				if (registerDefault !== undefined && data[0].settings[key] === undefined) {
+					widgetsDb.setSetting(id, key, registerDefault);
+					data[0].settings[key] = registerDefault;
+				}
+
 				setState(data[0].settings[key]);
 			}
 		}
-	}, [data, key]);
+	}, [data, key, registerDefault, id]);
 
 	return [state, changeData];
 };
