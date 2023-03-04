@@ -6,7 +6,7 @@ const QueueScheduler = () => {
   const queues = useLiveQuery(() => metaDb.queues.filter(q => q.timed === true).toArray(), []);
   
   const queueInterval = useCallback(async () => {
-    if (queues) {
+    if (queues && queues.length > 0) {
       const now = new Date();
       const hour = now.getHours();
       const minute = now.getMinutes();
