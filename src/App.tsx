@@ -6,16 +6,18 @@ import EventHandler, { EventType } from "./utils/eventhandler";
 import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { NotificationsProvider } from "@mantine/notifications";
 import "@fontsource/inter";
 import { useState, useEffect } from "react";
 import { useMoverState } from "./hooks/widgetmover";
 import MoverControlbar from "./components/widgetmover/movercontrolbar/MoverControlbar";
 import { SnapLineRenderer } from "./components/widgetmover/snaplinerenderer/SnapLineRenderer";
 import WelcomeScreen from "./components/justInstalled/WelcomeScreen";
+import { Notifications } from "@mantine/notifications";
 
 const App = (_) => {
-	const [installedComponents, setInstalledComponents] = useState<Array<Component>>([]);
+	const [installedComponents, setInstalledComponents] = useState<
+		Array<Component>
+	>([]);
 	const [justInstalled, setJustInstalled] = useState<boolean>(false);
 	const moverEnabled = useMoverState((state) => state.enabled);
 
@@ -39,7 +41,7 @@ const App = (_) => {
 					}
 				}
 
-				setInstalledComponents(enabledComponents)
+				setInstalledComponents(enabledComponents);
 			})();
 		};
 
@@ -57,21 +59,25 @@ const App = (_) => {
 			}, 50);
 		});
 
-		EventHandler.on(EventType.INITIAL_LAYOUT_SELECT, "app", (url: string | null) => {
-			setJustInstalled(false);
+		EventHandler.on(
+			EventType.INITIAL_LAYOUT_SELECT,
+			"app",
+			(url: string | null) => {
+				setJustInstalled(false);
 
-			if (url !== null) {
-				actUponInitialLayout(url);
-				
-				metaDb.getMeta("justInstalled").then((jI) => {
-					if (jI === true) {
-						metaDb.removeJustInstalled();
-					}
-				});
+				if (url !== null) {
+					actUponInitialLayout(url);
 
-				EventHandler.emit(EventType.REFRESH_SNAPLINES);
+					metaDb.getMeta("justInstalled").then((jI) => {
+						if (jI === true) {
+							metaDb.removeJustInstalled();
+						}
+					});
+
+					EventHandler.emit(EventType.REFRESH_SNAPLINES);
+				}
 			}
-		});
+		);
 
 		return () => {
 			EventHandler.off("rerenderAll", "app");
@@ -90,40 +96,39 @@ const App = (_) => {
 					colorScheme: "light",
 				}}
 			>
-				<NotificationsProvider>
-					<ModalsProvider>
-						{justInstalled && <WelcomeScreen />}
-						{moverEnabled ? (
-							<>
+				<Notifications />
+				<ModalsProvider>
+					{justInstalled && <WelcomeScreen />}
+					{moverEnabled ? (
+						<>
 							<MoverControlbar />
 							<SnapLineRenderer />
-							</>
-						) : (
-							<SettingsComponent />
-						)}
-						<Background moverEnabled={moverEnabled}>
-							{(blur) => {
-								if (justInstalled) return null;
+						</>
+					) : (
+						<SettingsComponent />
+					)}
+					<Background moverEnabled={moverEnabled}>
+						{(blur) => {
+							if (justInstalled) return null;
 
-								return installedComponents.map(
-									(component: Component) => {
-										if (component.element === null) {
-											return null;
-										}
-										
-										return (
-											<component.element
-												id={component.fullId}
-												key={component.fullId}
-												blur={blur}
-											/>
-										);
+							return installedComponents.map(
+								(component: Component) => {
+									if (component.element === null) {
+										return null;
 									}
-								);
-							}}
-						</Background>
-					</ModalsProvider>
-				</NotificationsProvider>
+
+									return (
+										<component.element
+											id={component.fullId}
+											key={component.fullId}
+											blur={blur}
+										/>
+									);
+								}
+							);
+						}}
+					</Background>
+				</ModalsProvider>
 			</MantineProvider>
 		</div>
 	);
