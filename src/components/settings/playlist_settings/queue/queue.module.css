@@ -81,7 +81,6 @@
 	padding: var(--mantine-spacing-sm);
 	border-radius: var(--mantine-radius-sm);
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
 	box-sizing: border-box;

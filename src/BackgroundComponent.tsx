@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import AutoHideScheduler from "./components/AutoHideScheduler";
 import BackgroundScheduler from "./components/BackgroundScheduler";
+import QueueScheduler from "./components/QueueScheduler";
 import { metaDb } from "./utils/db";
 
 function Background(props: {children: (blur: boolean) => JSX.Element, moverEnabled: boolean}) {
@@ -37,6 +38,7 @@ function Background(props: {children: (blur: boolean) => JSX.Element, moverEnabl
 		>
 			<AutoHideScheduler setBlur={setBlur} blur={blur} />
 			<BackgroundScheduler />
+			<QueueScheduler />
 			{props.children(blur)}
 		</div>
 	);

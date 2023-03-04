@@ -69,7 +69,7 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 		left?: number;
 		shiftX: boolean;
 		shiftY: boolean;
-	}>({ top: 0, left: 0, shiftX: false, shiftY: false });
+	}>({ top: undefined, left: undefined, shiftX: false, shiftY: false });
 
 	const getSnapLine = (id: number, sn: ISnapLine[]): ISnapLine | undefined => {
 		return sn.find((line) => line.id === id);
@@ -479,6 +479,10 @@ const WidgetMoverWrapper = (props: { id: string, children: JSX.Element }) => {
 			document.body.removeEventListener("mouseup", onMouseUp);
 		}
 	};
+
+	if (!moverEnabled && (boxPos.top === undefined && boxPos.bottom === undefined && boxPos.left === undefined && boxPos.right === undefined)) {
+		return null;
+	}
 
 	return (
 		<div

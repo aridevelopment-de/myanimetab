@@ -138,7 +138,7 @@ const TinyPercentageInput = (props: { value: number; setValue: Function }) => {
 			max={100}
 			step={0.1}
 			precision={1}
-			value={props.value}
+			value={props.value ?? ""}
 			onChange={(value) => {
 				if (value !== undefined) {
 					props.setValue(value);

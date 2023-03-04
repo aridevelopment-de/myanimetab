@@ -217,6 +217,9 @@ export interface IQueue {
 	id: number;
 	name: string;
 	images: Array<number>;
+	timed: boolean;
+	from: string | null; // 17:00
+	to: string | null; // 19:30
 }
 
 export const ROOT_FOLDER = {
@@ -305,6 +308,14 @@ class MetaDatabase extends Dexie {
 			queues: "++id, &name, images",
 			snapLines: "++id, axis, top, left, right, bottom",
 		});
+
+		this.version(9).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images, timed, from, to",
+			snapLines: "++id, axis, top, left, right, bottom",
+		})
 	}
 
 	async justInstalled(): Promise<boolean> {
@@ -606,6 +617,9 @@ class MetaDatabase extends Dexie {
 		const queue = {
 			name,
 			images: [],
+			from: null,
+			to: null,
+			timed: false,
 		} as unknown as IQueue;
 
 		// @ts-ignore Id is not required
@@ -678,6 +692,57 @@ class MetaDatabase extends Dexie {
 
 	async editQueue(qid: number, values: Omit<Partial<IQueue>, "id">) {
 		return this.queues.update(qid, values);
+	}
+
+	async getCurrentTimedQueue(hour: number, minute: number): Promise<IQueue | undefined> {
+		const queues = await this.queues
+			.filter(e => e.timed === true)
+			.toArray();
+
+		// sort queues by from
+		queues.sort((a, b) => {
+			if (a.from === null || b.from === null) {
+				return 0;
+			}
+
+			const aFrom = a.from.split(":").map(e => parseInt(e));
+			const bFrom = b.from.split(":").map(e => parseInt(e));
+
+			if (aFrom[0] < bFrom[0]) {
+				return -1;
+			} else if (aFrom[0] > bFrom[0]) {
+				return 1;
+			} else {
+				if (aFrom[1] < bFrom[1]) {
+					return -1;
+				} else if (aFrom[1] > bFrom[1]) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		for (const queue of queues) {
+			if (queue.from === null || queue.to === null) {
+				continue;
+			}
+
+			const from = queue.from.split(":").map(e => parseInt(e));
+			const to = queue.to.split(":").map(e => parseInt(e));
+
+			if (from[0] <= hour && hour <= to[0]) {
+				if (from[0] === to[0]) {
+					if (from[1] <= minute && minute <= to[1]) {
+						return queue;
+					}
+				} else {
+					return queue;
+				}
+			}
+		}
+
+		return undefined;
 	}
 }
 

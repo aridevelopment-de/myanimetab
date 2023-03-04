@@ -1,4 +1,4 @@
-import { NativeSelect, PasswordInput, TextInput } from "@mantine/core";
+import { NativeSelect, NumberInput, PasswordInput, TextInput } from "@mantine/core";
 import { useCachedSetting, useSetting } from "../../../utils/eventhooks";
 import { Setting } from "../../../utils/registry/types";
 import styles from "./settingsformitem.module.css";
@@ -106,7 +106,7 @@ function SettingsFormItem(props: {
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
-							value={data}
+							value={data ?? ""}
 							variant="filled"
 							disabled={props.disabled}
 							classNames={{
@@ -121,7 +121,7 @@ function SettingsFormItem(props: {
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
-							value={data}
+							value={data ?? ""}
 							variant="filled"
 							disabled={props.disabled}
 							classNames={{
@@ -134,6 +134,42 @@ function SettingsFormItem(props: {
 				</div>
 			</div>
 		);
+	} else if (props.componentSetting.type === "number") {
+		if (data === null) {
+			setData(props.componentSetting.default, true);
+		}
+
+		return (
+			<div>
+				<SettingsItemLabel
+					name={props.componentSetting.name}
+					searchValue={props.searchValue}
+					className={`${styles.item_label} ${
+						props.disabled ? styles.item_label__disabled : undefined
+					}`}
+				/>
+				<div>
+					<NumberInput
+						onChange={(v) =>
+							setData(v, true)
+						}
+						value={data ?? ""}
+						variant="filled"
+						disabled={props.disabled}
+						classNames={{
+							input: styles.element,
+							icon: styles.element,
+							rightSection: styles.element,
+						}}
+						min={props.componentSetting.min ?? 0}
+						max={props.componentSetting.max ?? 100}
+						step={props.componentSetting.step ?? 1}
+						stepHoldDelay={500}
+        		stepHoldInterval={100}
+						/>
+				</div>
+			</div>
+		)
 	}
 
 	return null;

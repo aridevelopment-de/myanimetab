@@ -11,15 +11,14 @@ const timeFormatValues = ["24h", "12h"]; // if these values changes,  also chang
 function Clock(props: { blur: boolean; id: string }) {
 	const widget = useWidget(props.id);
 	const [currentTime, setCurrentTime] = useState(
-		TimeUtils.convertTimeToClockFormat(new Date(), widget.timeFormat === 1)
+		TimeUtils.convertTimeToClockFormat(new Date(), widget.time_format === 1)
 	);
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			let currentDate = new Date();
+	const updateClock = () => {
+		let currentDate = new Date();
 			let currentFmtDate = TimeUtils.convertTimeToClockFormat(
 				currentDate,
-				widget.timeFormat === 1
+				widget.time_format === 1
 			);
 			let lastFmtDate = currentTime;
 
@@ -29,10 +28,13 @@ function Clock(props: { blur: boolean; id: string }) {
 			) {
 				setCurrentTime(currentFmtDate);
 			}
-		}, 10000);
+	}
 
+	useEffect(() => {
+		const interval = setInterval(updateClock, 10000);
+		updateClock();
 		return () => clearInterval(interval);
-	}, [currentTime, widget.timeFormat]);
+	}, [currentTime, widget.time_format]);
 
 	return (
 		<WidgetMoverWrapper id={props.id}>
@@ -40,14 +42,14 @@ function Clock(props: { blur: boolean; id: string }) {
 				className={`${styles.clock} widget`}
 				style={{
 					opacity: props.blur
-						? opacityValues[widget.autoHideValue]
+						? opacityValues[widget.auto_hide]
 						: 1,
 				}}
 			>
 				<div>
 					<span
 						id={
-							widget.timeFormat === 0
+							widget.time_format === 0
 								? styles.time_12hr
 								: styles.time
 						}
@@ -55,7 +57,7 @@ function Clock(props: { blur: boolean; id: string }) {
 						{" "}
 						{currentTime.time}{" "}
 					</span>
-					{widget.timeFormat === 1 ? (
+					{widget.time_format === 1 ? (
 						<span id={styles.period}>{currentTime.timePeriod}</span>
 					) : null}
 				</div>

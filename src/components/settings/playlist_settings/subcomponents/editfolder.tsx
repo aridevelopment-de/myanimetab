@@ -31,8 +31,9 @@ const EditFolderDialog = (props: {
 					.color || theme.colors.blue[5],
 		},
 		validate: {
+			// @ts-ignore
 			name: (value: string) =>
-				value.trim() !== "" && value.trim().indexOf("/") === -1
+				(value.trim() !== "" && value.trim().indexOf("/") === -1)
 					? null
 					: "Name cannot be empty and cannot contain slashes",
 			color: (value: string) =>
