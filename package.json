@@ -1,7 +1,7 @@
 {
   "name": "client",
   "main": "src/index.tsx",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.10.6",
