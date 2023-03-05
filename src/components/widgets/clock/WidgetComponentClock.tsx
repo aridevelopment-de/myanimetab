@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useWidget } from "../../../utils/eventhooks";
-import { KnownComponent } from "../../../utils/registry/types";
+import {
+	IDropdownOptions,
+	KnownComponent,
+} from "../../../utils/registry/types";
 import TimeUtils from "../../../utils/timeutils";
 import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
 import styles from "./clock.module.css";
@@ -16,19 +19,17 @@ function Clock(props: { blur: boolean; id: string }) {
 
 	const updateClock = () => {
 		let currentDate = new Date();
-			let currentFmtDate = TimeUtils.convertTimeToClockFormat(
-				currentDate,
-				widget.time_format === 1
-			);
-			let lastFmtDate = currentTime;
+		let currentFmtDate = TimeUtils.convertTimeToClockFormat(
+			currentDate,
+			widget.time_format === 1
+		);
+		let lastFmtDate = currentTime;
 
-			// Only update if old date and new date are not equal
-			if (
-				JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)
-			) {
-				setCurrentTime(currentFmtDate);
-			}
-	}
+		// Only update if old date and new date are not equal
+		if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
+			setCurrentTime(currentFmtDate);
+		}
+	};
 
 	useEffect(() => {
 		const interval = setInterval(updateClock, 10000);
@@ -41,9 +42,7 @@ function Clock(props: { blur: boolean; id: string }) {
 			<div
 				className={`${styles.clock} widget`}
 				style={{
-					opacity: props.blur
-						? opacityValues[widget.auto_hide]
-						: 1,
+					opacity: props.blur ? opacityValues[widget.auto_hide] : 1,
 				}}
 			>
 				<div>
@@ -94,35 +93,41 @@ export default {
 			name: "Time Zone",
 			key: "time_zone",
 			type: "dropdown",
-			values: ["auto", 0, 1, 2, -1, -2],
-			displayedValues: [
-				"Auto",
-				"UTC",
-				"UTC+01",
-				"UTC+02",
-				"UTC-01",
-				"UTC-02",
-			],
+			options: {
+				values: ["auto", 0, 1, 2, -1, -2],
+				displayedValues: [
+					"Auto",
+					"UTC",
+					"UTC+01",
+					"UTC+02",
+					"UTC-01",
+					"UTC-02",
+				],
+			} as IDropdownOptions,
 		},
 		{
 			name: "Time Format",
 			key: "time_format",
 			type: "dropdown",
-			values: timeFormatValues,
-			displayedValues: ["24h", "12h"],
+			options: {
+				values: timeFormatValues,
+				displayedValues: ["24h", "12h"],
+			} as IDropdownOptions,
 		},
 		{
 			name: "When Autohiding",
 			key: "auto_hide",
 			type: "dropdown",
-			values: opacityValues,
-			displayedValues: [
-				"Show",
-				"Hide",
-				"Opacity 0.7",
-				"Opacity 0.5",
-				"Opacity 0.3",
-			],
-		}
+			options: {
+				values: opacityValues,
+				displayedValues: [
+					"Show",
+					"Hide",
+					"Opacity 0.7",
+					"Opacity 0.5",
+					"Opacity 0.3",
+				],
+			} as IDropdownOptions,
+		},
 	],
 } as KnownComponent;

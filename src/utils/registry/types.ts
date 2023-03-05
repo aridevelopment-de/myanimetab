@@ -15,12 +15,41 @@ export interface HeaderSettings {
 	};
 }
 
-export interface Setting {
+export interface IDropdownOptions {
+	values: Array<any>;
+	displayedValues: Array<string>;
+	// TODO: add default value
+}
+
+export interface IInputOptions {
+	tooltip: string;
+	hidden: boolean; /* hidden => password input */
+	// TODO: add default value
+}
+
+export interface INumberInputOptions {
+	min: number;
+	max: number;
+	step: number;
+	default: number;
+}
+
+type ParentSetting = {
 	name: string;
 	key: string;
-	type: "dropdown" | "input" | "number";
-	[key: string]: any;
 }
+
+export type Setting = ParentSetting & ({
+	type: "dropdown";
+	options: IDropdownOptions;
+} | {
+	type: "input";
+	options: IInputOptions;
+} | {
+	type: "number";
+	options: INumberInputOptions;
+})
+
 
 export interface Component {
 	fullId: string;

@@ -1,6 +1,6 @@
 import { NativeSelect, NumberInput, PasswordInput, TextInput } from "@mantine/core";
-import { useCachedSetting, useSetting } from "../../../utils/eventhooks";
-import { Setting } from "../../../utils/registry/types";
+import { useCachedSetting } from "../../../utils/eventhooks";
+import { IDropdownOptions, Setting } from "../../../utils/registry/types";
 import styles from "./settingsformitem.module.css";
 
 export const SettingsItemLabel = (props: {
@@ -72,11 +72,11 @@ function SettingsFormItem(props: {
 				/>
 				<div>
 					<NativeSelect
-						data={props.componentSetting.displayedValues}
-						value={props.componentSetting.displayedValues[data]}
+						data={props.componentSetting.options.displayedValues}
+						value={props.componentSetting.options.displayedValues[data]}
 						onChange={(e) => {
 							setData(
-								props.componentSetting.displayedValues.indexOf(
+								(props.componentSetting.options as IDropdownOptions).displayedValues.indexOf(
 									e.currentTarget.value
 								),
 								true
@@ -100,9 +100,9 @@ function SettingsFormItem(props: {
 					}`}
 				/>
 				<div>
-					{props.componentSetting.hidden ? (
+					{props.componentSetting.options.hidden ? (
 						<PasswordInput
-							placeholder={props.componentSetting.tooltip}
+							placeholder={props.componentSetting.options.tooltip}
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
@@ -117,7 +117,7 @@ function SettingsFormItem(props: {
 						/>
 					) : (
 						<TextInput
-							placeholder={props.componentSetting.tooltip}
+							placeholder={props.componentSetting.options.tooltip}
 							onChange={(e) =>
 								setData(e.currentTarget.value, true)
 							}
@@ -136,7 +136,7 @@ function SettingsFormItem(props: {
 		);
 	} else if (props.componentSetting.type === "number") {
 		if (data === null) {
-			setData(props.componentSetting.default, true);
+			setData(props.componentSetting.options.default, true);
 		}
 
 		return (
@@ -161,9 +161,9 @@ function SettingsFormItem(props: {
 							icon: styles.element,
 							rightSection: styles.element,
 						}}
-						min={props.componentSetting.min ?? 0}
-						max={props.componentSetting.max ?? 100}
-						step={props.componentSetting.step ?? 1}
+						min={props.componentSetting.options.min ?? 0}
+						max={props.componentSetting.options.max ?? 100}
+						step={props.componentSetting.options.step ?? 1}
 						stepHoldDelay={500}
         		stepHoldInterval={100}
 						/>

@@ -1,5 +1,6 @@
 import { widgetsDb } from "../db";
 import { registry } from "./customcomponentregistry";
+import { IDropdownOptions } from "./types";
 
 export const addMissing = () => {
 	// register known component in registry
@@ -24,24 +25,28 @@ export const addMissing = () => {
 				name: "When to Switch",
 				key: "when_switch",
 				type: "dropdown",
-				values: [null, 10, 60, 120, 300, 600, 1800, 3600],
-				displayedValues: [
-					"Only on Page Visit",
-					"Every 10 seconds",
-					"Every minute",
-					"Every 2 minutes",
-					"Every 5 minutes",
-					"Every 10 minutes",
-					"Every 30 minutes",
-					"Every hour",
-				],
+				options: {
+					values: [null, 10, 60, 120, 300, 600, 1800, 3600],
+					displayedValues: [
+						"Only on Page Visit",
+						"Every 10 seconds",
+						"Every minute",
+						"Every 2 minutes",
+						"Every 5 minutes",
+						"Every 10 minutes",
+						"Every 30 minutes",
+						"Every hour",
+					],
+				} as IDropdownOptions,
 			},
 			{
 				name: "Playlist Order",
 				key: "playlist_order",
 				type: "dropdown",
-				values: [0, 1],
-				displayedValues: ["Ordered", "Shuffled"],
+				options: {
+					values: [0, 1],
+					displayedValues: ["Ordered", "Shuffled"],
+				} as IDropdownOptions,
 			},
 		],
 	});
@@ -67,8 +72,10 @@ export const addMissing = () => {
 				name: "Time Lapse",
 				key: "time_lapse",
 				type: "dropdown",
-				values: [5, 10, 30, 60, 300],
-				displayedValues: ["5 s", "10 s", "30 s", "1 min", "5 min"],
+				options: {
+					values: [5, 10, 30, 60, 300],
+					displayedValues: ["5 s", "10 s", "30 s", "1 min", "5 min"],
+				} as IDropdownOptions,
 			},
 		],
 	});

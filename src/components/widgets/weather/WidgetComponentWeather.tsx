@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { widgetsDb } from "../../../utils/db";
 import { useWidget } from "../../../utils/eventhooks";
-import { KnownComponent } from "../../../utils/registry/types";
+import { IDropdownOptions, IInputOptions, KnownComponent } from "../../../utils/registry/types";
 import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
 import errorstyles from "./error.module.css";
 import ErrorComponent from "./ErrorComponent";
@@ -143,35 +143,43 @@ export default {
 			name: "API Key",
 			key: "api_key",
 			type: "input",
-			tooltip: "An api key from openweathermap.org",
-			hidden: true,
+			options: {
+				tooltip: "An api key from openweathermap.org",
+				hidden: true,
+			} as IInputOptions,
 		},
 		{
 			name: "Default City (refresh page)",
 			key: "city",
 			type: "input",
-			tooltip: "The default location (e.g. Frankfurt)",
-			hidden: false,
+			options: {
+				tooltip: "The default location (e.g. Frankfurt)",
+				hidden: false,
+			} as IInputOptions,
 		},
 		{
 			name: "Temperature Unit",
 			key: "unit",
 			type: "dropdown",
-			values: metricValues,
-			displayedValues: ["Celsius", "Kelvin", "Fahrenheit"],
+			options: {
+				values: metricValues,
+				displayedValues: ["Celsius", "Kelvin", "Fahrenheit"],
+			} as IDropdownOptions,
 		},
 		{
 			name: "When Autohiding",
 			key: "auto_hide",
 			type: "dropdown",
-			values: opacityValues,
-			displayedValues: [
-				"Show",
-				"Hide",
-				"Opacity 0.7",
-				"Opacity 0.5",
-				"Opacity 0.3",
-			],
+			options: {
+				values: opacityValues,
+				displayedValues: [
+					"Show",
+					"Hide",
+					"Opacity 0.7",
+					"Opacity 0.5",
+					"Opacity 0.3",
+				],
+			} as IDropdownOptions,
 		},
 	],
 } as KnownComponent;

@@ -2,7 +2,7 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import { useSetting, useWidget } from "../../../utils/eventhooks";
-import { KnownComponent } from "../../../utils/registry/types";
+import { IDropdownOptions, KnownComponent } from "../../../utils/registry/types";
 import SearchEngine from "../../../utils/searchengine";
 import SuggestionCaller from "../../../utils/searchsuggestioncaller";
 import WidgetMoverWrapper from "../../widgetmover/wrapper/WidgetMoverWrapper";
@@ -202,37 +202,43 @@ export default {
 			name: "Search Engine",
 			key: "search_engine",
 			type: "dropdown",
-			values: searchEngines,
-			displayedValues: [
-				"Google",
-				"Bing",
-				"Ecosia",
-				"Yahoo",
-				"DuckDuckGo",
-				"Baidu",
-				"Ask",
-				"WolframAlpha",
-			],
+			options: {
+				values: searchEngines,
+				displayedValues: [
+					"Google",
+					"Bing",
+					"Ecosia",
+					"Yahoo",
+					"DuckDuckGo",
+					"Baidu",
+					"Ask",
+					"WolframAlpha",
+				],
+			} as IDropdownOptions,
 		},
 		{
 			name: "Open With",
 			key: "open_with",
 			type: "dropdown",
-			values: ["Current Tab", "New Tab"],
-			displayedValues: ["Current Tab", "New Tab"],
+			options: {
+				values: ["Current Tab", "New Tab"],
+				displayedValues: ["Current Tab", "New Tab"],
+			} as IDropdownOptions,
 		},
 		{
 			name: "When Autohiding",
 			key: "auto_hide",
 			type: "dropdown",
-			values: opacityValues,
-			displayedValues: [
-				"Show",
-				"Hide",
-				"Opacity 0.7",
-				"Opacity 0.5",
-				"Opacity 0.3",
-			],
+			options: {
+				values: opacityValues,
+				displayedValues: [
+					"Show",
+					"Hide",
+					"Opacity 0.7",
+					"Opacity 0.5",
+					"Opacity 0.3",
+				],
+			} as IDropdownOptions,
 		},
 	],
 } as KnownComponent;
