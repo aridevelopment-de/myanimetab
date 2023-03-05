@@ -4,6 +4,7 @@ import {
 	Code,
 	Drawer,
 	Group,
+	NativeSelect,
 	Space,
 	Stack,
 	Switch,
@@ -27,8 +28,8 @@ import EventHandler, { EventType } from "../../../../utils/eventhandler";
 import styles from "./queue.module.css";
 
 const Queue = () => {
-	const qid = useMeta("selected_queue");
-	const cImage = useMeta("selected_image");
+	const [qid, _1] = useMeta("selected_queue");
+	const [cImage, _2] = useMeta("selected_image");
 
 	const currentQueue = useLiveQuery(async () => {
 		const currentQueue = await metaDb.meta.get("selected_queue");
@@ -195,22 +196,45 @@ const Queue = () => {
 
 const QueueList = () => {
 	const queues = useLiveQuery(() => metaDb.queues.toArray() || []);
-
+	const [timedQueuesActive, setTimedQueuesActive] = useMeta("should_switch_queue");
+	const [defaultQueue, setDefaultQueue] = useMeta("default_queue");
+	
 	return (
 		<>
 			<Space h="md" />
 			<div
 				style={{
 					display: "flex",
-					justifyContent: "flex-end",
+					alignItems: "center",
 				}}
 			>
-				<Button
-					leftIcon={<AddIcon />}
-					onClick={() => metaDb.addQueue()}
-				>
-					Create Queue
-				</Button>
+				<Stack spacing="xs" style={{width: "100%"}}>
+					<Switch
+						label="Activate timed queues"
+						checked={timedQueuesActive}
+						onChange={(event) => setTimedQueuesActive(event.currentTarget.checked)}
+					/>
+					<div style={{
+						display: "flex",
+						alignItems: "flex-end",
+						justifyContent: "space-between",
+						width: "100%"
+					}}>
+						<NativeSelect
+							data={queues ? queues.map(q => ({value: String(q.id), label: q.name})) : []}
+							label="Default queue when no other is active"
+							value={String(defaultQueue)}
+							onChange={(event) => setDefaultQueue(Number(event.currentTarget.value))}
+							disabled={!timedQueuesActive}
+						/>
+					<Button
+						leftIcon={<AddIcon />}
+						onClick={() => metaDb.addQueue()}
+					>
+						Create Queue
+					</Button>
+					</div>
+				</Stack>
 			</div>
 			<Space h="lg" />
 			<Stack
@@ -236,7 +260,7 @@ const QueueList = () => {
 
 const QueueListEntry = (props: { queue: IQueue }) => {
 	const toolbarHovered = useRef<boolean>(false);
-	const currentQid = useMeta("selected_queue");
+	const [currentQid, _1] = useMeta("selected_queue");
 
 	const [editQueue, setEditQueue] = useState<IQueue | null>(null);
 
@@ -287,10 +311,16 @@ const QueueListEntry = (props: { queue: IQueue }) => {
 							metaDb.queues.count().then((count) => {
 								if (count === 0) {
 									metaDb.setMeta("selected_queue", null);
+									metaDb.setMeta("default_queue", null);
 								} else {
 									metaDb.queues.toArray().then((queues) => {
 										metaDb.setMeta(
 											"selected_queue",
+											queues[0].id
+										);
+
+										metaDb.setMeta(
+											"default_queue",
 											queues[0].id
 										);
 									});

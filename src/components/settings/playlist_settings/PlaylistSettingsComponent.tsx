@@ -35,7 +35,7 @@ function PlaylistSettingsComponent(props: { bodyRef: any }) {
 
 	const [images, setImages] = useState<IImage[]>([]);
 
-	const currentImageId = useMeta("selected_image");
+	const [currentImageId, _1] = useMeta("selected_image");
 	const [currentFolder, setCurrentFolder] = useState<IFolder>(ROOT_FOLDER);
 	const [subFolders, setSubFolders] = useState<IFolder[]>([]);
 

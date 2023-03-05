@@ -316,6 +316,14 @@ class MetaDatabase extends Dexie {
 			queues: "++id, &name, images, timed, from, to",
 			snapLines: "++id, axis, top, left, right, bottom",
 		})
+
+		this.version(10).stores({
+			meta: "&name, value",
+			images: "++id, folder, url, name",
+			folders: "++id, parent, name, color",
+			queues: "++id, &name, images, timed, from, to",
+			snapLines: "++id, axis, top, left, right, bottom",
+		})
 	}
 
 	async justInstalled(): Promise<boolean> {
@@ -731,36 +739,38 @@ class MetaDatabase extends Dexie {
 			const [fromHour, fromMinute] = queue.from.split(":").map(e => parseInt(e));
 			const [toHour, toMinute] = queue.to.split(":").map(e => parseInt(e));
 
-			if (fromHour === toHour && fromMinute === toMinute) {
-				continue;
-			}
+			// construct a date object
+			// for from and to and the current time
+			// and check if the current time is between from and to
+			const from = new Date();
+			from.setHours(fromHour);
+			from.setMinutes(fromMinute);
+			from.setSeconds(0);
+			from.setMilliseconds(0);
 
-			if (fromHour === toHour && fromHour === hour && fromMinute <= minute && toMinute >= minute) {
+			const to = new Date();
+			to.setHours(toHour);
+			to.setMinutes(toMinute);
+			to.setSeconds(0);
+			to.setMilliseconds(0);
+
+			const now = new Date();
+			now.setHours(hour);
+			now.setMinutes(minute);
+			now.setSeconds(0);
+			now.setMilliseconds(0);
+
+			if (now >= from && now <= to) {
 				return queue;
 			}
 
-			if (fromHour < toHour && fromHour <= hour && toHour >= hour) {
-				if (fromHour === hour && fromMinute > minute) {
-					continue;
+			// if the from time is greater than the to time
+			// then the queue is active from 00:00 to to
+			// and from from to 23:59
+			if (from > to) {
+				if (now >= from || now <= to) {
+					return queue;
 				}
-
-				if (toHour === hour && toMinute < minute) {
-					continue;
-				}
-
-				return queue;
-			}
-
-			if (fromHour > toHour && (fromHour <= hour || toHour >= hour)) {
-				if (fromHour === hour && fromMinute > minute) {
-					continue;
-				}
-
-				if (toHour === hour && toMinute < minute) {
-					continue;
-				}
-
-				return queue;
 			}
 		}
 
@@ -768,14 +778,22 @@ class MetaDatabase extends Dexie {
 	}
 }
 
-export const useMeta = (key: string, mapFunction?: Function): any => {
+export const useMeta = (key: string, mapFunction?: Function, registerDefault?: any): any => {
 	const [status, setStatus] = useState();
 	useEffect(() => {
 		metaDb.getMeta(key).then((result) => {
+			if (result === undefined) {
+				if (registerDefault !== undefined) {
+					metaDb.registerMeta(key, registerDefault);
+					setStatus(registerDefault);
+				}
+				return;
+			}
+
 			const newData = (mapFunction || ((d: any) => d))(result) || result;
 			setStatus(newData);
 		});
-	}, [key, mapFunction]);
+	}, [key, mapFunction, registerDefault]);
 
 	useEffect(() => {
 		metaDb.onMetaChange(key, (data: any) => {
@@ -784,7 +802,11 @@ export const useMeta = (key: string, mapFunction?: Function): any => {
 		});
 	}, [key, mapFunction]);
 
-	return status;
+	const update = (value: any) => {
+		metaDb.setMeta(key, value);
+	};
+
+	return [status, update];
 };
 
 export const widgetsDb = new WidgetDatabase();
