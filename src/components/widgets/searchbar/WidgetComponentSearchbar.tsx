@@ -62,6 +62,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 									setSearchEngine(idx);
 									setModalChooseEngine(false);
 								}}
+								onClose={() => setModalChooseEngine(false)}
 							/>
 						) : null}
 					</div>

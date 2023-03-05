@@ -1,3 +1,4 @@
+import { useClickOutside } from "@mantine/hooks";
 import styles from "./searchenginechooser.module.css";
 
 const searchEngines = [
@@ -14,9 +15,12 @@ const searchEngines = [
 function SearchEngineChooser(props: {
 	searchEngine: number;
 	setSearchEngine: Function;
+	onClose: Function;
 }) {
+	const ref = useClickOutside(() => props.onClose());
+
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} ref={ref}>
 			{searchEngines.map((searchEngine, index) => {
 				return (
 					<div
