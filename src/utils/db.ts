@@ -728,17 +728,39 @@ class MetaDatabase extends Dexie {
 				continue;
 			}
 
-			const from = queue.from.split(":").map(e => parseInt(e));
-			const to = queue.to.split(":").map(e => parseInt(e));
+			const [fromHour, fromMinute] = queue.from.split(":").map(e => parseInt(e));
+			const [toHour, toMinute] = queue.to.split(":").map(e => parseInt(e));
 
-			if (from[0] <= hour && hour <= to[0]) {
-				if (from[0] === to[0]) {
-					if (from[1] <= minute && minute <= to[1]) {
-						return queue;
-					}
-				} else {
-					return queue;
+			if (fromHour === toHour && fromMinute === toMinute) {
+				continue;
+			}
+
+			if (fromHour === toHour && fromHour === hour && fromMinute <= minute && toMinute >= minute) {
+				return queue;
+			}
+
+			if (fromHour < toHour && fromHour <= hour && toHour >= hour) {
+				if (fromHour === hour && fromMinute > minute) {
+					continue;
 				}
+
+				if (toHour === hour && toMinute < minute) {
+					continue;
+				}
+
+				return queue;
+			}
+
+			if (fromHour > toHour && (fromHour <= hour || toHour >= hour)) {
+				if (fromHour === hour && fromMinute > minute) {
+					continue;
+				}
+
+				if (toHour === hour && toMinute < minute) {
+					continue;
+				}
+
+				return queue;
 			}
 		}
 
