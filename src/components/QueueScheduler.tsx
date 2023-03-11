@@ -35,7 +35,7 @@ const QueueScheduler = () => {
   }, [queueInterval, shouldSwitchQueue]);
 
   useEffect(() => {
-    if (queues !== undefined) {
+    if (queues !== undefined && queues.length > 0) {
       metaDb.registerMeta("default_queue", queues[0].id);
     }
   }, [queues])
