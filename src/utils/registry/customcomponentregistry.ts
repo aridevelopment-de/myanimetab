@@ -30,6 +30,18 @@ class CustomComponentRegistry {
 		});
 	}
 
+	_getDefaultSetting(element: Setting): any {
+		if (element.type === "dropdown") {
+			return 0;
+		} else if (element.type === "input") {
+			return "";
+		} else if (element.type === "number") {
+			return 0;
+		}
+
+		return null;
+	}
+
 	_prepareSettings(component: KnownComponent) {
 		const settings = {};
 
@@ -39,11 +51,7 @@ class CustomComponentRegistry {
 
 		if (component.contentSettings) {
 			for (let element of component.contentSettings) {
-				if (element.type === "dropdown") {
-					settings[element.key] = 0;
-				} else if (element.type === "input") {
-					settings[element.key] = "";
-				}
+				settings[element.key] = this._getDefaultSetting(element);
 			}
 		}
 
