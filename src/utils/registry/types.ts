@@ -34,6 +34,24 @@ export interface INumberInputOptions {
 	default: number;
 }
 
+export type IAccordionAddable = {
+	addable: true;
+	description: Array<Setting>;
+	// There has to be at least one input element with the key "title"
+	// key will be a string number starting from 0 (i-0, i-1, ...)
+}
+
+export type IAccordionNotAddable = {
+	addable: false;
+	elements: Array<{
+		title: string;
+		key: string;
+		content: Array<Setting>;
+	}>
+}
+
+export type IAccordionOptions = IAccordionAddable | IAccordionNotAddable;
+
 type ParentSetting = {
 	name: string;
 	key: string;
@@ -48,8 +66,12 @@ export type Setting = ParentSetting & ({
 } | {
 	type: "number";
 	options: INumberInputOptions;
+} | {
+	type: "accordion";
+	options: IAccordionOptions;
 })
 
+export type SettingType = Setting["type"]
 
 export interface Component {
 	fullId: string;

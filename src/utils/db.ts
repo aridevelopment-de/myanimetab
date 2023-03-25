@@ -184,7 +184,24 @@ class WidgetDatabase extends Dexie {
 				return undefined;
 			}
 
-			return widget.settings[key];
+			if (!key.includes(".")) {
+				return widget.settings[key];
+			} else {
+				const keys = key.split(".");
+				let value = widget.settings[keys[0]];
+
+				for (let i = 1; i < keys.length; i++) {
+					try {
+						value = value[keys[i]];
+					} catch {
+						// TODO: Temporary solution
+						// Try to reproduce
+						return undefined;
+					}
+				}
+
+				return value;
+			}
 		});
 	}
 

@@ -11,27 +11,29 @@ import SearchEngineChooser from "./searchenginechooser";
 import SearchSuggestions from "./searchsuggestions";
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
-const searchEngines = [
-	"Google",
-	"Bing",
-	"Ecosia",
-	"Yahoo",
-	"DuckDuckGo",
-	"Baidu",
-	"Ask",
-	"WolframAlpha",
-];
+
 
 function SearchBar(props: { blur: boolean; id: string }) {
 	const widget = useWidget(props.id);
-	const [searchEngine, setSearchEngine] = useSetting(
+	const [searchEngine, setSearchEngine] = useSetting(props.id, "search_engine", 0);
+	const [searchEngines, _1] = useSetting(
 		props.id,
-		"search_engine"
+		"search_engines",
+		{"i-0": {
+			title: "Google.com",
+			url: "https://www.google.com/search?client=firefox-b-d&q=",
+			icon_url: "https://www.google.com/favicon.ico",
+		}}
 	);
+
 	const [modalChooseEngine, setModalChooseEngine] = useState<boolean>(false);
 	const [suggestions, setSuggestions] = useState<Array<string>>([]);
 	const [content, setContent] = useState<string>("");
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+	if (searchEngines === undefined) {
+		return null;
+	}
 
 	return (
 		<WidgetMoverWrapper id={props.id}>
@@ -49,14 +51,13 @@ function SearchBar(props: { blur: boolean; id: string }) {
 						>
 							<img
 								className={styles.engine_icon}
-								src={`/icons/engines/${searchEngines[
-									searchEngine
-								]?.toLowerCase()}.png`}
-								alt={searchEngines[searchEngine]}
+								src={searchEngines[`i-${searchEngine}`].icon_url}
+								alt={searchEngines[`i-${searchEngine}`].title}
 							/>
 						</div>
 						{modalChooseEngine ? (
 							<SearchEngineChooser
+								searchEngines={searchEngines}
 								searchEngine={searchEngine}
 								setSearchEngine={(idx: number) => {
 									setSearchEngine(idx);
@@ -115,7 +116,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 								SearchEngine.search(
 									// @ts-ignore
 									e.target.value,
-									searchEngine,
+									searchEngines[`i-${searchEngine}`].url,
 									widget.open_with
 								);
 							}
@@ -163,7 +164,7 @@ function SearchBar(props: { blur: boolean; id: string }) {
 						onClick={() =>
 							SearchEngine.search(
 								content,
-								searchEngine,
+								searchEngines[`i-${searchEngine}`].url,
 								widget.open_with
 							)
 						}
@@ -199,22 +200,41 @@ export default {
 	},
 	contentSettings: [
 		{
-			name: "Search Engine",
-			key: "search_engine",
-			type: "dropdown",
+			name: "Search Engines",
+			key: "search_engines",
+			type: "accordion",
 			options: {
-				values: searchEngines,
-				displayedValues: [
-					"Google",
-					"Bing",
-					"Ecosia",
-					"Yahoo",
-					"DuckDuckGo",
-					"Baidu",
-					"Ask",
-					"WolframAlpha",
-				],
-			} as IDropdownOptions,
+				addable: true,
+				description: [
+					{
+						key: "title",
+						name: "Name",
+						type: "input",
+						options: {
+							hidden: false,
+							tooltip: "e.g. Google"
+						}
+					},
+					{
+						key: "url",
+						name: "Search Engine URL",
+						type: "input",
+						options: {
+							hidden: false,
+							tooltip: "e.g. https://google.com/search?q="
+						}
+					},
+					{
+						key: "icon_url",
+						name: "Icon URL",
+						type: "input",
+						options: {
+							hidden: false,
+							tooltip: "Preferably the favicon url"
+						}
+					}
+				]
+			}
 		},
 		{
 			name: "Open With",

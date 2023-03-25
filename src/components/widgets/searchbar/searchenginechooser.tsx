@@ -1,19 +1,10 @@
 import { useClickOutside } from "@mantine/hooks";
 import styles from "./searchenginechooser.module.css";
 
-const searchEngines = [
-	"Google",
-	"Bing",
-	"Ecosia",
-	"Yahoo",
-	"DuckDuckGo",
-	"Baidu",
-	"Ask",
-	"WolframAlpha",
-];
 
 function SearchEngineChooser(props: {
 	searchEngine: number;
+	searchEngines: {[id: string]: {title: string, url: string, icon_url: string}};
 	setSearchEngine: Function;
 	onClose: Function;
 }) {
@@ -21,22 +12,22 @@ function SearchEngineChooser(props: {
 
 	return (
 		<div className={styles.container} ref={ref}>
-			{searchEngines.map((searchEngine, index) => {
+			{Object.keys(props.searchEngines).map((id: string) => {
 				return (
 					<div
 						className={`${styles.item} ${
-							index === props.searchEngine ? styles.active : ""
+							id === "i-" + props.searchEngine ? styles.active : ""
 						}`}
-						key={index}
-						onClick={() => props.setSearchEngine(index)}
+						key={id}
+						onClick={() => props.setSearchEngine(id.split("-")[1])}
 					>
 						<div className={styles.icon}>
 							<img
-								src={`/icons/engines/${searchEngine?.toLowerCase()}.png`}
-								alt={searchEngine}
+								src={props.searchEngines[id].icon_url}
+								alt={props.searchEngines[id].title}
 							/>
 						</div>
-						<div>{searchEngine}</div>
+						<div>{props.searchEngines[id].title}</div>
 					</div>
 				);
 			})}

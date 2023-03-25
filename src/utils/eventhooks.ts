@@ -7,11 +7,15 @@ import { EventType } from './eventhandler';
 let SETTINGS_CACHE: { [key: string]: { [key: string]: any } } = {};
 
 export const useCachedSetting = (id: string, key: string): [any, Function] => {
+	/* 
+		undefined means: not loaded yet
+		null means: no value
+	*/
 	const [state, setState] = useState(
 		SETTINGS_CACHE[id] !== undefined &&
 			SETTINGS_CACHE[id][key] !== undefined
 			? SETTINGS_CACHE[id][key]
-			: null
+			: undefined
 	);
 
 	const changeData = (newValue: any, update_database?: boolean) => {
@@ -21,7 +25,23 @@ export const useCachedSetting = (id: string, key: string): [any, Function] => {
 			SETTINGS_CACHE[id] = {};
 		}
 
-		SETTINGS_CACHE[id][key] = newValue;
+		let key_split = key.split(".");
+		let current = SETTINGS_CACHE[id];
+
+		for (let i = 0; i < key_split.length; i++) {
+			if (i === key_split.length - 1) {
+				current[key_split[i]] = newValue;
+				break;
+			}
+
+			if (current[key_split[i]] === undefined) {
+				current[key_split[i]] = {};
+			}
+
+			current = current[key_split[i]];
+		}
+
+		SETTINGS_CACHE[id] = current;
 		SETTINGS_CACHE = { ...SETTINGS_CACHE };
 
 		if (update_database) {
@@ -31,20 +51,36 @@ export const useCachedSetting = (id: string, key: string): [any, Function] => {
 
 	useEffect(() => {
 		if (SETTINGS_CACHE[id] !== undefined) {
-			if (SETTINGS_CACHE[id][key] !== undefined) {
-				setState(SETTINGS_CACHE[id][key]);
-				return;
-			} else {
-				widgetsDb.getSetting(id, key).then((value) => {
-					if (value) {
-						changeData(value, false);
-					}
-				});
+			// key will contain "."
+			let key_split = key.split(".");
+			let current = SETTINGS_CACHE[id];
+
+			for (let i = 0; i < key_split.length; i++) {
+				if (current[key_split[i]] === undefined) {
+					break;
+				}
+
+				if (i === key_split.length - 1) {
+					setState(current[key_split[i]]);
+					return;
+				}
+
+				current = current[key_split[i]];
 			}
+
+			widgetsDb.getSetting(id, key).then((value) => {
+				if (value !== undefined) {
+					changeData(value, false);
+				} else {
+					changeData(null, false);
+				}
+			});
 		} else {
 			widgetsDb.getSetting(id, key).then((value) => {
-				if (value) {
+				if (value !== undefined) {
 					changeData(value, false);
+				} else {
+					changeData(null, false);
 				}
 			});
 		}
@@ -67,12 +103,31 @@ export const useSetting = (id: string, key: string, registerDefault: any = undef
 	useEffect(() => {
 		if (data !== undefined) {
 			if (data[0] !== undefined) {
-				if (registerDefault !== undefined && data[0].settings[key] === undefined) {
-					widgetsDb.setSetting(id, key, registerDefault);
-					data[0].settings[key] = registerDefault;
-				}
+				let key_split = key.split(".");
+				let current = data[0].settings;
 
-				setState(data[0].settings[key]);
+				for (let i = 0; i < key_split.length; i++) {
+					if (current[key_split[i]] === undefined) {
+						if (registerDefault !== undefined) {
+							if (i === key_split.length - 1) {
+								setState(registerDefault);
+								widgetsDb.setSetting(id, key, registerDefault);
+								return;
+							} else {
+								current[key_split[i]] = {};
+							}
+						} else {
+							break;
+						}
+					}
+
+					if (i === key_split.length - 1) {
+						setState(current[key_split[i]]);
+						return;
+					}
+
+					current = current[key_split[i]];
+				}
 			}
 		}
 	}, [data, key, registerDefault, id]);
