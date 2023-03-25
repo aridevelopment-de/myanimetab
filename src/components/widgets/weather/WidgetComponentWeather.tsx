@@ -10,7 +10,7 @@ import NormalComponent from "./NormalComponent";
 import styles from "./weatherwidget.module.css";
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
-const metricValues = ["metric", "standard", "imperial"];
+export const metricValues = ["metric", "standard", "imperial"];
 const refreshRate = 15 * 60 * 1000;
 
 function LoadingComponent(props: { opacity: number }) {
@@ -43,7 +43,7 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 		statusCode: -1,
 		fullCityName: "Frankfurt am Main",
 		temperature: 2,
-		icon: "http://openweathermap.org/img/wn/02d@4x.png",
+		icon: "https://openweathermap.org/img/wn/02d@4x.png",
 	});
 
 	useEffect(() => {
@@ -55,7 +55,7 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 
 				axios
 					.get(
-						`http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`,
+						`https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=${UNIT}&lang=EN`,
 						{ validateStatus: () => true }
 					)
 					.then((response) => {
@@ -96,6 +96,7 @@ function WeatherWidget(props: { blur: boolean; id: string }) {
 				{data.statusCode === 200 ? (
 					<NormalComponent
 						data={data}
+						api_key={widget.api_key}
 						unit={widget.unit}
 						opacity={
 							props.blur ? opacityValues[widget.auto_hide] : 1
