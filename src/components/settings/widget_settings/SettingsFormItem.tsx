@@ -61,6 +61,10 @@ function SettingsFormItem(props: {
 	);
 
 	if (props.componentSetting.type === "dropdown") {
+		if (data === null) {
+			setData(0, true); // TODO: Use default value
+		}
+
 		return (
 			<div>
 				<SettingsItemLabel
@@ -90,6 +94,10 @@ function SettingsFormItem(props: {
 			</div>
 		);
 	} else if (props.componentSetting.type === "input") {
+		if (data === null) {
+			setData("", true); // TODO: Use default value
+		}
+		
 		return (
 			<div>
 				<SettingsItemLabel
