@@ -7,11 +7,15 @@ import { EventType } from './eventhandler';
 let SETTINGS_CACHE: { [key: string]: { [key: string]: any } } = {};
 
 export const useCachedSetting = (id: string, key: string): [any, Function] => {
+	/*
+		undefined: not loaded
+		null: not existing
+	*/
 	const [state, setState] = useState(
 		SETTINGS_CACHE[id] !== undefined &&
 			SETTINGS_CACHE[id][key] !== undefined
 			? SETTINGS_CACHE[id][key]
-			: null
+			: undefined
 	);
 
 	const changeData = (newValue: any, update_database?: boolean) => {
@@ -36,15 +40,19 @@ export const useCachedSetting = (id: string, key: string): [any, Function] => {
 				return;
 			} else {
 				widgetsDb.getSetting(id, key).then((value) => {
-					if (value) {
+					if (value !== undefined) {
 						changeData(value, false);
+					} else {
+						changeData(null, false);
 					}
 				});
 			}
 		} else {
 			widgetsDb.getSetting(id, key).then((value) => {
-				if (value) {
+				if (value !== undefined) {
 					changeData(value, false);
+				} else {
+					changeData(null, false);
 				}
 			});
 		}
