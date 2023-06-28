@@ -23,9 +23,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# stuff
-package-lock.json
-/build
-
 /.vscode
 /.vscode/*
+
+# Lock files from other package managers
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
