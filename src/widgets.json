@@ -14,5 +14,9 @@
     {
         "name": "weather", 
         "entryPoint": "weather/WidgetComponentWeather"
+    },
+    {
+        "name": "website_linkage",
+        "entryPoint": "website_linkage/WidgetComponentWebsiteLinkage"
     }
 ]

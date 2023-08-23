@@ -9,6 +9,9 @@
       "192": "icons/favicon.ico",
       "512": "icons/favicon.ico"
   },
+  "permissions": [
+    "topSites"
+  ],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

@@ -1,0 +1,31 @@
+.container {
+    --_cell-size: 2.9rem;
+    --_gap: 0.4rem;
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-rows: var(--_cell-size);
+    grid-auto-columns: var(--_cell-size);
+    gap: var(--_gap);
+    padding: var(--_gap);
+}
+
+.site {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 13px;
+    background-color: var(--mantine-color-dark-4);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.site > img {
+    width: 100%;
+    aspect-ratio: 1;
+}
