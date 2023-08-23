@@ -28,9 +28,6 @@
 	overflow: hidden;
 	opacity: 1;
 	transform: translateX(0%);
-	transition-property: all;
-	transition-duration: 750ms;
-	transition-timing-function: ease;
 }
 
 .content__minimized {

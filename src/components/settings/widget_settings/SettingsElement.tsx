@@ -9,16 +9,37 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { registry } from "../../../utils/registry/customcomponentregistry";
 import { useEffect, useRef, useState } from "react";
 import { widgetsDb } from "../../../utils/db";
+import { useLiveQuery } from "dexie-react-hooks";
 
 const MAX_HEIGHT = 1200; // about 6 dropdowns
 
 function SettingsElement(props: { data: Component; searchValue: string }) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const widget = useWidget(props.data.fullId);
-	const [minimized, setMinimized] = useState<boolean>(false);
+	const minimized = useLiveQuery(async () => {
+		const widget = (await widgetsDb.widgets.where("id").equals(props.data.fullId).toArray())[0];
+
+		if (widget === undefined) {
+			return false;
+		}
+
+		return widget.menuHidden;
+	}, [props.data.fullId], false);
 	const contentRef = useRef<HTMLDivElement>();
 	const toolbarHovered = useRef<boolean>(false);
 	const initialHeight = useRef<number>();
+
+	useEffect(() => {
+		// This may be a dirty fix to skip the initial transition
+		// But it's too late and I couldn't think of a better one
+		if (contentRef.current) {
+			setTimeout(() => {
+				contentRef.current!.style.transitionProperty = "all";
+				contentRef.current!.style.transitionDuration = "750ms";
+				contentRef.current!.style.transitionTimingFunction = "ease";
+			}, 150);
+		}
+	}, [contentRef]);
 
 	useEffect(() => {
 		if (
@@ -39,8 +60,8 @@ function SettingsElement(props: { data: Component; searchValue: string }) {
 			<div
 				className={styles.title}
 				onClick={() =>
-					toolbarHovered.current === false
-						? setMinimized(!minimized)
+					!toolbarHovered.current
+						? widgetsDb.setMenuHidden(props.data.fullId, !minimized)
 						: void 0
 				}
 			>

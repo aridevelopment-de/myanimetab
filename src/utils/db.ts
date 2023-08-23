@@ -27,6 +27,7 @@ export interface IWidget {
 		snaps: ISnapConfiguration;
 		[key: string]: any;
 	};
+	menuHidden: boolean;
 }
 
 class WidgetDatabase extends Dexie {
@@ -49,6 +50,10 @@ class WidgetDatabase extends Dexie {
 		
 		this.version(4).stores({
 			widgets: "id, settings",
+		});
+
+		this.version(5).stores({
+			widgets: "id, settings, menuHidden"
 		})
 	}
 
@@ -114,6 +119,7 @@ class WidgetDatabase extends Dexie {
 						},
 					},
 				},
+				menuHidden: false,
 			};
 
 			return this.widgets.add(widget);
@@ -189,6 +195,25 @@ class WidgetDatabase extends Dexie {
 	setSetting(id: string, key: string, value: any) {
 		key = `settings.${key}`;
 		this.widgets.update(id, { [key]: value });
+	}
+
+	setMenuHidden(id: string, state: boolean) {
+		this.widgets.update(id, { menuHidden: state });
+	}
+
+	async isMenuHidden(id: string): Promise<boolean | undefined> {
+		const widget = await this.widgets.get(id);
+
+		if (widget === undefined) {
+			return undefined;
+		}
+
+		if (widget.menuHidden === undefined || widget.menuHidden === null) {
+			this.setMenuHidden(id, false);
+			return false;
+		}
+
+		return widget.menuHidden;
 	}
 }
 
