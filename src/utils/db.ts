@@ -1,8 +1,6 @@
 import Dexie, { Table } from "dexie";
 import { useEffect, useState } from "react";
-import EventHandler from "./eventhandler";
 
-const asyncSleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export type ISnapConfiguration = {
 	horizontal: {
@@ -405,7 +403,7 @@ class MetaDatabase extends Dexie {
 		return this.snapLines.add(snapLine);
 	}
 
-	async deleteSnapLine(id: number) {;
+	async deleteSnapLine(id: number) {
 		// await widgetsDb.unlinkSnapLine(id);
 		return this.snapLines.delete(id);
 	}
@@ -562,7 +560,7 @@ class MetaDatabase extends Dexie {
 			.equals(folder.id)
 			.modify({ folder: folder.parent });
 
-		return await this.folders.delete(folder.id);
+		return this.folders.delete(folder.id);
 	}
 
 	async editFolder(id: number, values: Omit<Partial<IFolder>, "id">) {
@@ -704,7 +702,7 @@ class MetaDatabase extends Dexie {
 
 	async getCurrentTimedQueue(hour: number, minute: number): Promise<IQueue | undefined> {
 		const queues = await this.queues
-			.filter(e => e.timed === true)
+			.filter(e => e.timed)
 			.toArray();
 
 		// sort queues by from
@@ -865,8 +863,7 @@ export const importLayout = async (layout: {[key: string]: any}, clearSnaplines:
 	const idMapping = {} as {[oldId: number]: number}
 
 	for (const snapLine of snapLines) {
-		const newId = await metaDb.addSnapLine(snapLine);
-		idMapping[snapLine.id] = newId;
+		idMapping[snapLine.id] = await metaDb.addSnapLine(snapLine);
 	}
 
 	for (const widgetId in widgetSnaps) {

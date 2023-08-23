@@ -99,7 +99,7 @@ class CustomComponentRegistry {
 	}
 
 	installComponent(knownComponent: KnownComponent) {
-		if (knownComponent.metadata.installableComponent === true) {
+		if (knownComponent.metadata.installableComponent) {
 			// add the component to the database
 			widgetsDb.addWidget(
 				knownComponent.type,

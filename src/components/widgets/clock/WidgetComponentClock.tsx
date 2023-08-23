@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWidget } from "../../../utils/eventhooks";
 import {
 	IDropdownOptions,
@@ -19,26 +19,25 @@ function Clock(props: { blur: boolean; id: string }) {
 		TimeUtils.convertTimeToClockFormat(new Date(), widget.time_format === 1, supportedTimezones[widget.time_zone])
 	);
 
-	const updateClock = () => {
+	const updateClock = useCallback(() => {
 		let currentDate = new Date();
 		let currentFmtDate = TimeUtils.convertTimeToClockFormat(
 			currentDate,
 			widget.time_format === 1,
 			supportedTimezones[widget.time_zone]
 		);
-		let lastFmtDate = currentTime;
 
 		// Only update if old date and new date are not equal
-		if (JSON.stringify(currentFmtDate) !== JSON.stringify(lastFmtDate)) {
+		if (JSON.stringify(currentFmtDate) !== JSON.stringify(currentTime)) {
 			setCurrentTime(currentFmtDate);
 		}
-	};
+	}, [widget.time_format, widget.time_zone, currentTime]);
 
 	useEffect(() => {
 		const interval = setInterval(updateClock, 10000);
 		updateClock();
 		return () => clearInterval(interval);
-	}, [currentTime, widget.time_format, widget.time_zone]);
+	}, [currentTime, widget.time_format, widget.time_zone, updateClock]);
 
 	return (
 		<WidgetMoverWrapper id={props.id}>
