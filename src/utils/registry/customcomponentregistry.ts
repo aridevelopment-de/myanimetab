@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { widgetsDb } from "../db";
+import { metaDb, widgetsDb } from "../db";
 import { Component, KnownComponent } from "./types";
 
 const asyncFilter = async (arr, predicate) => {
@@ -74,24 +74,28 @@ class CustomComponentRegistry {
 	}
 
 	async setupDefaultComponents() {
-		await asyncFilter(
-			this.knownComponents,
-			async (component: KnownComponent) => {
-				if (component.metadata.defaultComponent === true) {
-					const identifiers = await widgetsDb.getIdentifiers();
-					let amt = identifiers.filter(
-						(identifier) => identifier.id === component.type
-					).length;
+		const justInstalled = await metaDb.getMeta("justInstalled");
 
-					if (amt === 0) {
-						await widgetsDb.addWidget(
-							component.type,
-							this._prepareSettings(component)
-						);
+		if (justInstalled) {
+			await asyncFilter(
+				this.knownComponents,
+				async (component: KnownComponent) => {
+					if (component.metadata.defaultComponent === true) {
+						const identifiers = await widgetsDb.getIdentifiers();
+						let amt = identifiers.filter(
+							(identifier) => identifier.id === component.type
+						).length;
+
+						if (amt === 0) {
+							widgetsDb.addWidget(
+								component.type,
+								this._prepareSettings(component)
+							);
+						}
 					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	installComponent(knownComponent: KnownComponent) {

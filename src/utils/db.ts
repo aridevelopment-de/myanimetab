@@ -341,8 +341,8 @@ class MetaDatabase extends Dexie {
 
 		// Check if this is the first time the app is opened
 		if ((await this.getMeta("exists")) === undefined) {
-			this.registerMeta("exists", true);
-			this.registerMeta("justInstalled", true);
+			await this.registerMeta("exists", true);
+			await this.registerMeta("justInstalled", true);
 			await this.registerMeta("selected_image", 1);
 			await this.registerMeta("selected_queue", null);
 			await this.anyImagesOrInsert(
@@ -904,6 +904,6 @@ export const initialLayouts = {
 
 export const actUponInitialLayout = async (layout: string) => {
 	console.log("Using layout: " + layout);
-	importLayout(initialLayouts[layout], true);
+	await importLayout(initialLayouts[layout], true);
 }
 
