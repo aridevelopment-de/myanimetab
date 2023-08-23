@@ -7,7 +7,7 @@ import { Component, registry } from "./utils/registry/customcomponentregistry";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import "@fontsource/inter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMoverState } from "./hooks/widgetmover";
 import MoverControlbar from "./components/widgetmover/movercontrolbar/MoverControlbar";
 import { SnapLineRenderer } from "./components/widgetmover/snaplinerenderer/SnapLineRenderer";
@@ -21,7 +21,13 @@ const App = (_) => {
 	const [justInstalled, setJustInstalled] = useState<boolean>(false);
 	const moverEnabled = useMoverState((state) => state.enabled);
 
+	// Fix for react 18+
+	const hasInitialized = useRef(false);
+
 	useEffect(() => {
+		if (hasInitialized.current) return;
+		hasInitialized.current = true;
+
 		metaDb.justInstalled().then((justInstalled) => {
 			setJustInstalled(justInstalled);
 		});
@@ -78,11 +84,6 @@ const App = (_) => {
 				}
 			}
 		);
-
-		return () => {
-			EventHandler.off("rerenderAll", "app");
-			EventHandler.off(EventType.INITIAL_LAYOUT_SELECT, "app");
-		};
 	}, []);
 
 	return (

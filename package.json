@@ -22,7 +22,6 @@
     "dexie-react-hooks": "^1.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-json-view": "^1.21.3",
     "react-scripts": "5.0.1",
     "web-vitals": "^3.3.2",
     "zustand": "^4.3.8"
@@ -34,6 +33,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "eslint": "eslint"
+  },
+  "overrides": {
+    "typescript": "^5.1.6"
   },
   "eslintConfig": {
     "extends": [
