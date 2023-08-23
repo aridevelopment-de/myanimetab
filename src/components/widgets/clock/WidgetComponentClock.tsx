@@ -11,18 +11,20 @@ import styles from "./clock.module.css";
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const timeFormatValues = ["24h", "12h"]; // if these values changes,  also change the if conditions
 const alignmentValues: string[] = [styles.left, styles.center, styles.right];
+const supportedTimezones: string[] = ["auto", ...Intl.supportedValuesOf('timeZone')];
 
 function Clock(props: { blur: boolean; id: string }) {
 	const widget = useWidget(props.id);
 	const [currentTime, setCurrentTime] = useState(
-		TimeUtils.convertTimeToClockFormat(new Date(), widget.time_format === 1)
+		TimeUtils.convertTimeToClockFormat(new Date(), widget.time_format === 1, supportedTimezones[widget.time_zone])
 	);
 
 	const updateClock = () => {
 		let currentDate = new Date();
 		let currentFmtDate = TimeUtils.convertTimeToClockFormat(
 			currentDate,
-			widget.time_format === 1
+			widget.time_format === 1,
+			supportedTimezones[widget.time_zone]
 		);
 		let lastFmtDate = currentTime;
 
@@ -36,7 +38,7 @@ function Clock(props: { blur: boolean; id: string }) {
 		const interval = setInterval(updateClock, 10000);
 		updateClock();
 		return () => clearInterval(interval);
-	}, [currentTime, widget.time_format]);
+	}, [currentTime, widget.time_format, widget.time_zone]);
 
 	return (
 		<WidgetMoverWrapper id={props.id}>
@@ -106,15 +108,8 @@ export default {
 			key: "time_zone",
 			type: "dropdown",
 			options: {
-				values: ["auto", 0, 1, 2, -1, -2],
-				displayedValues: [
-					"Auto",
-					"UTC",
-					"UTC+01",
-					"UTC+02",
-					"UTC-01",
-					"UTC-02",
-				],
+				values: supportedTimezones,
+				displayedValues: supportedTimezones
 			} as IDropdownOptions,
 		},
 		{
