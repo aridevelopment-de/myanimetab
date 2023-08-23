@@ -4,15 +4,31 @@
     transition: opacity 2s;
 }
 
-#time {
-    font-size: 3em;
-    margin-right: -8px;
-    font-weight: 300;
+.clock.center {
+    text-align: center;
 }
 
-#time_12hr {
+.clock.right {
+    text-align: right;
+}
+
+.time__container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.clock.center .time__container {
+    justify-content: center;
+}
+
+.clock.right .time__container {
+    justify-content: flex-end;
+}
+
+#time {
     font-size: 3em;
-    padding-left: 0;
+    line-height: 1;
     font-weight: 300;
 }
 

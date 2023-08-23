@@ -10,6 +10,7 @@ import styles from "./clock.module.css";
 
 const opacityValues = [1, 0, 0.7, 0.5, 0.3];
 const timeFormatValues = ["24h", "12h"]; // if these values changes,  also change the if conditions
+const alignmentValues: string[] = [styles.left, styles.center, styles.right];
 
 function Clock(props: { blur: boolean; id: string }) {
 	const widget = useWidget(props.id);
@@ -40,31 +41,29 @@ function Clock(props: { blur: boolean; id: string }) {
 	return (
 		<WidgetMoverWrapper id={props.id}>
 			<div
-				className={`${styles.clock} widget`}
+				className={`${styles.clock} widget ${alignmentValues[widget.align]}`}
 				style={{
 					opacity: props.blur ? opacityValues[widget.auto_hide] : 1,
 				}}
 			>
-				<div>
-					<span
-						id={
-							widget.time_format === 0
-								? styles.time_12hr
-								: styles.time
-						}
-					>
-						{" "}
-						{currentTime.time}{" "}
-					</span>
-					{widget.time_format === 1 ? (
-						<span id={styles.period}>{currentTime.timePeriod}</span>
-					) : null}
-				</div>
-				<div>
-					<span id={styles.weekday}>{currentTime.weekDay}</span>
-					<span id={styles.yeardate}>{currentTime.yearDate}</span>
-					<span id={styles.year}>{currentTime.year}</span>
-				</div>
+				{(widget.features === 0 || widget.features === 2) && (
+					<div className={styles.time__container}>
+						<span id={styles.time}>
+							{" "}
+							{currentTime.time}{" "}
+						</span>
+						{widget.time_format === 1 ? (
+							<span id={styles.period}>{currentTime.timePeriod}</span>
+						) : null}
+					</div>
+				)}
+				{(widget.features === 0 || widget.features === 1) && (
+					<div className={styles.date__container}>
+						<span id={styles.weekday}>{currentTime.weekDay}</span>
+						<span id={styles.yeardate}>{currentTime.yearDate}</span>
+						<span id={styles.year}>{currentTime.year}</span>
+					</div>
+				)}
 			</div>
 		</WidgetMoverWrapper>
 	);
@@ -90,6 +89,19 @@ export default {
 	},
 	contentSettings: [
 		{
+			name: "Features",
+			key: "features",
+			type: "dropdown",
+			options: {
+				values: ["date+time", "date", "time"],
+				displayedValues: [
+					"Date and Time",
+					"Only Date",
+					"Only Time"
+				]
+			}
+		},
+		{
 			name: "Time Zone",
 			key: "time_zone",
 			type: "dropdown",
@@ -104,6 +116,19 @@ export default {
 					"UTC-02",
 				],
 			} as IDropdownOptions,
+		},
+		{
+			name: "Alignment",
+			key: "align",
+			type: "dropdown",
+			options: {
+				values: alignmentValues,
+				displayedValues: [
+					"Left",
+					"Center",
+					"Right"
+				]
+			}
 		},
 		{
 			name: "Time Format",
