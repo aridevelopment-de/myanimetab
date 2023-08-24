@@ -34,6 +34,10 @@ export interface INumberInputOptions {
 	default: number;
 }
 
+export interface IColorInputOptions {
+	default: string;
+}
+
 type ParentSetting = {
 	name: string;
 	key: string;
@@ -48,7 +52,10 @@ export type Setting = ParentSetting & ({
 } | {
 	type: "number";
 	options: INumberInputOptions;
-})
+} | {
+	type: "color";
+	options: IColorInputOptions;
+});
 
 
 export interface Component {

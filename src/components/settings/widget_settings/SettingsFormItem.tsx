@@ -1,7 +1,10 @@
-import { NativeSelect, NumberInput, PasswordInput, TextInput } from "@mantine/core";
+import { ActionIcon, ColorInput, NativeSelect, NumberInput, PasswordInput, TextInput } from "@mantine/core";
 import { useCachedSetting } from "../../../utils/eventhooks";
 import { IDropdownOptions, Setting } from "../../../utils/registry/types";
 import styles from "./settingsformitem.module.css";
+import { Refresh } from "@mui/icons-material";
+
+const randomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 
 export const SettingsItemLabel = (props: {
 	name: string;
@@ -173,8 +176,44 @@ function SettingsFormItem(props: {
 						max={props.componentSetting.options.max ?? 100}
 						step={props.componentSetting.options.step ?? 1}
 						stepHoldDelay={500}
-        		stepHoldInterval={100}
+        				stepHoldInterval={100}
 						/>
+				</div>
+			</div>
+		)
+	} else if (props.componentSetting.type === "color") {
+		if (data === null) {
+			setData(props.componentSetting.options.default, true);
+		}
+
+		return (
+			<div>
+				<SettingsItemLabel
+					name={props.componentSetting.name}
+					searchValue={props.searchValue}
+					className={`${styles.item_label} ${
+						props.disabled ? styles.item_label__disabled : undefined
+					}`}
+				/>
+				<div>
+					<ColorInput
+						onChange={(v) =>
+							setData(v, true)
+						}
+						value={data}
+						variant="filled"
+						disabled={props.disabled}
+						classNames={{
+							input: styles.element,
+							icon: styles.element,
+							rightSection: styles.element,
+						}}
+						rightSection={
+							<ActionIcon onClick={() => setData(randomColor(), true)}>
+								<Refresh />
+							</ActionIcon>
+						}
+					/>
 				</div>
 			</div>
 		)
