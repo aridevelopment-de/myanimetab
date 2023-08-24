@@ -18,5 +18,9 @@
     {
         "name": "website_linkage",
         "entryPoint": "website_linkage/WidgetComponentWebsiteLinkage"
+    },
+    {
+        "name": "text_editor",
+        "entryPoint": "text_editor/WidgetComponentTextEditor"
     }
 ]

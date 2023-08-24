@@ -1,0 +1,27 @@
+.wrapper {
+    border-radius: 9px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.handle {
+    width: 100%;
+    padding: 0 5px;
+    background-color: var(--mantine-color-yellow-3);
+}
+
+.wrapper textarea {
+    resize: vertical;
+    min-height: calc(12 * 16px);
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.wrapper textarea:focus {
+    outline: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+}
