@@ -6,7 +6,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@floating-ui/react": "0.24.3",
+    "@floating-ui/react": "0.25.3",
     "@fontsource/inter": "^5.0.3",
     "@mantine/core": "^6.0.15",
     "@mantine/dates": "^6.0.15",
