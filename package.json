@@ -15,7 +15,7 @@
     "@mantine/modals": "^6.0.15",
     "@mantine/notifications": "^6.0.15",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.6",
+    "@mui/material": "^5.14.8",
     "axios": "^1.4.0",
     "dayjs": "^1.11.8",
     "dexie": "^3.2.4",
